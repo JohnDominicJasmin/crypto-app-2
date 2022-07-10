@@ -2,20 +2,20 @@ package com.mathroda.dashcoin.navigation
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.CoinDetailScreen
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.CoinScreen
-import com.mathroda.dashcoin.feature_coins.presentation.coins_news.components.NewsScreen
-import com.mathroda.dashcoin.feature_no_internet.presentation.components.NoInternetScreen
-import com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen.SavedListScreen
+import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailScreen
+import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.CoinScreen
+import com.mathroda.dashcoin.feature_coins.presentation.coins_news.NewsScreen
+import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListScreen
 
 @ExperimentalMaterialApi
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
 
-    //todo: convert this to navigate lambda
     NavHost(
         navController = navController,
         startDestination = Screens.CoinsScreen.route
@@ -25,8 +25,8 @@ fun BottomNavGraph(navController: NavHostController) {
             CoinScreen(navController = navController)
         }
 
-        composable(route = Screens.SavedWatchList.route){
-            SavedListScreen(navController = navController)
+        composable(route = Screens.FavoriteListScreen.route){
+            FavoriteListScreen(navController = navController)
         }
 
         composable(route = Screens.CoinsNews.route){
@@ -37,10 +37,23 @@ fun BottomNavGraph(navController: NavHostController) {
             CoinDetailScreen(navController = navController)
         }
 
-        composable(route = Screens.NoInternetScreen.route){
-            NoInternetScreen {
-                navController.popBackStack()
-            }
-        }
+
     }
+}
+
+
+ fun NavController.navigateScreen(
+    destination: String) {
+
+    navigate(destination) {
+
+        popUpTo(graph.findStartDestination().id){
+            saveState = true
+        }
+
+        launchSingleTop = true
+        restoreState =true
+    }
+
+
 }

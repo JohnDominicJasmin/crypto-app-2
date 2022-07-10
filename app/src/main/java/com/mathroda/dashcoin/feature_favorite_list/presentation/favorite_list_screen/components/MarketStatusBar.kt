@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen.components
+package com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
