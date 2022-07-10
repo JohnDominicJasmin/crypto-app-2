@@ -13,8 +13,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mathroda.dashcoin.presentation.ui.theme.LighterGray
-import com.mathroda.dashcoin.presentation.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.LighterGray
+import com.mathroda.dashcoin.ui.theme.TextWhite
 
 @ExperimentalMaterialApi
 @Composable
@@ -28,17 +28,15 @@ fun MainScreen() {
         else -> bottomBarState.value = true
     }
 
-    Scaffold (
-        bottomBar ={
-             BottomBar(
-                 navController = navController,
-                 state = bottomBarState
-             )
-        },
+    Scaffold(
+        bottomBar = {
+            BottomBar(
+                navController = navController,
+                state = bottomBarState
             )
-    {
-        BottomNavGraph(navController = navController)
-    }
+        }, content = {
+            BottomNavGraph(navController = navController)
+        })
 }
 
 @Composable
@@ -48,7 +46,7 @@ fun BottomBar(
 ) {
     val screens = listOf(
         Screens.CoinsScreen,
-        Screens.CoinsWatchList,
+        Screens.SavedWatchList,
         Screens.CoinsNews
     )
 

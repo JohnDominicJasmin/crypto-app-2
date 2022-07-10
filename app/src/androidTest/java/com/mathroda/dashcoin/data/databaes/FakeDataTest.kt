@@ -1,10 +1,10 @@
 package com.mathroda.dashcoin.data.databaes
 
-import com.mathroda.dashcoin.domain.model.CoinById
+import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
 
 object FakeDataTest {
 
-    val coinById = CoinById(
+    val coinDetailModel = CoinDetailModel(
         availableSupply = 1.0,
         icon = "icon",
         id = "id",

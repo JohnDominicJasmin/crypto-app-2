@@ -4,6 +4,8 @@
     package="com.mathroda.dashcoin">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
         android:name=".DashCoinApplication"
         android:allowBackup="true"
@@ -16,9 +18,8 @@
         android:theme="@style/Theme.DashCoin"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name="com.mathroda.dashcoin.ui.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.DashCoin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
