@@ -21,11 +21,6 @@ class CoinsViewModel @Inject constructor(
     val state by _state
 
 
-    private val _eventFlow = MutableSharedFlow<CoinsUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
-
-
     init {
         getCoins()
     }
@@ -35,20 +30,18 @@ class CoinsViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 _state.value = state.copy(isLoading = true)
-                coinUseCases.getCoins()
-            }.onSuccess { coinsFlow ->
-                coinsFlow.onEach { coins ->
+                coinUseCases.getCoins().collect { coins ->
                     _state.value = state.copy(isLoading = false, coinModels = coins)
-                    }.launchIn(this)
+                }
             }.onFailure { exception ->
                 _state.value = state.copy(isLoading = false)
 
                 when (exception) {
                     is CoinExceptions.UnexpectedErrorException -> {
-                        _eventFlow.emit(value = CoinsUiEvent.ShowToastMessage(exception.message!!))
+                        _state.value = state.copy(errorMessage = exception.message!!)
                     }
                     is CoinExceptions.NoInternetException -> {
-                        _eventFlow.emit(value = CoinsUiEvent.ShowNoInternetScreen)
+                        _state.value = state.copy(hasInternet = false)
                     }
                 }
                 this.cancel()
@@ -56,7 +49,22 @@ class CoinsViewModel @Inject constructor(
         }
     }
 
-    fun refresh() {
+    fun onEvent(event: CoinsEvent){
+        when(event){
+            is CoinsEvent.RefreshCoins -> {
+                refresh()
+            }
+
+            is CoinsEvent.CloseNoInternetDisplay -> {
+                _state.value = state.copy(hasInternet = true)
+            }
+
+            is CoinsEvent.EnteredSearchQuery -> {
+                _state.value = state.copy(searchQuery = event.searchQuery)
+            }
+        }
+    }
+    private fun refresh() {
         viewModelScope.launch {
             _state.value = state.copy(isRefreshing = true)
             getCoins()
