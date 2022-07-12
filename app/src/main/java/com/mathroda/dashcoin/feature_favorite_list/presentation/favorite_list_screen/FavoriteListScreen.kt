@@ -1,6 +1,5 @@
-package com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen
+package com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,17 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailUiEvent
 import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailViewModel
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
-import com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen.components.MarketStatusBar
-import com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen.components.WatchlistItem
+import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.components.MarketStatusBar
+import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.components.WatchlistItem
 import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import com.mathroda.dashcoin.ui.theme.LighterGray
@@ -28,39 +25,27 @@ import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterialApi
 @Composable
-fun SavedListScreen(
-    savedListViewModel: SavedListViewModel = hiltViewModel(),
+fun FavoriteListScreen(
+    favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
     coinDetailViewModel: CoinDetailViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController?
 ) {
-    val watchListState = savedListViewModel.state
-    val marketState = coinDetailViewModel.state
-    val context = LocalContext.current
+    val watchListState = favoriteListViewModel.state
+    val coinDetailState = coinDetailViewModel.state
 
 
-    LaunchedEffect(key1 = true){
-        coinDetailViewModel.eventFlow.collectLatest { coinDetailEvent ->
-            when(coinDetailEvent){
-                is CoinDetailUiEvent.ShowNoInternetScreen -> {
-                    //todo: show no internet screen here
-                }
 
-                is CoinDetailUiEvent.ShowToastMessage -> {
-                    Toast.makeText(context, coinDetailEvent.message, Toast.LENGTH_SHORT).show()
+
+    LaunchedEffect(true){
+        favoriteListViewModel.eventFlow.collectLatest { savedListEvent ->
+
+            when(savedListEvent){
+                is FavoriteListUiEvent.ShowSnackbar -> {
+                    //todo add snackbar
                 }
             }
-
         }
     }
-
-
-
-
-
-
-
-
-
 
     Box(
         modifier = Modifier
@@ -72,9 +57,9 @@ fun SavedListScreen(
 
         Column {
             TopBar(title = "Watch List")
-
-            marketState.coinDetailModel?.let { status ->
-                LazyColumn(modifier = Modifier.fillMaxWidth()){
+//todo: fix this it doesn't work
+            coinDetailState.coinDetailModel?.let { status ->
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     item {
                         MarketStatusBar(
                             marketStatus1h = status.priceChange1h,
@@ -91,30 +76,39 @@ fun SavedListScreen(
 
             Divider(color = LighterGray, modifier = Modifier.padding(bottom = 10.dp))
             LazyColumn {
-                items(watchListState.coin) { coin ->
+                items(watchListState.coins) { coin ->
                     WatchlistItem(
                         icon = coin.icon,
                         coinName = coin.name,
                         symbol = coin.symbol,
                         rank = coin.rank.toString(),
                         onClick = {
-                            navController.navigate(Screens.CoinDetailScreen.route + "/${coin.id}")
+                            navController?.navigate(Screens.CoinDetailScreen.route + "/${coin.id}"){
+                                popUpTo(Screens.FavoriteListScreen.route){
+                                    this.inclusive = true
+                                }
+                            }
+
                         }
                     )
                 }
             }
 
         }
-        if (marketState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier
-                .align(Alignment.Center),
+        if (coinDetailState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
                 color = CustomGreen
             )
         }
-        //todo: investigate this one
 
+
+
+
+        if (coinDetailState.errorMessage.isNotEmpty()) {
             Text(
-                text = "ERROR SAMPLE",
+                text = coinDetailState.errorMessage,
                 color = MaterialTheme.colors.error,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -123,5 +117,6 @@ fun SavedListScreen(
                     .align(Alignment.Center)
             )
         }
+    }
 
 }

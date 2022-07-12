@@ -1,10 +1,10 @@
-package com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen
+package com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mathroda.dashcoin.feature_watch_list.domain.use_case.SavedUseCase
+import com.mathroda.dashcoin.feature_favorite_list.domain.use_case.FavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,46 +16,45 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class SavedListViewModel @Inject constructor(
-    private val savedUseCase: SavedUseCase
+class FavoriteListViewModel @Inject constructor(
+    private val favoriteUseCase: FavoriteUseCase
 ): ViewModel() {
 
-    private val _state = mutableStateOf(SavedListState())
+    private val _state = mutableStateOf(FavoriteListState())
     val state by _state
 
-    private val _eventFlow = MutableSharedFlow<SavedListUiEvent>()
+    private val _eventFlow = MutableSharedFlow<FavoriteListUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var getNotesJob: Job? = null
 
     init {
         getAllCoins()
+
     }
 
-//todo: add event flows
-    fun onEvent(event: SavedListEvent) {
+
+    fun onEvent(event: FavoriteListEvent) {
         when(event) {
 
-
-
-            is SavedListEvent.AddCoin -> {
+            is FavoriteListEvent.AddCoin -> {
                 viewModelScope.launch {
                     runCatching{
-                        savedUseCase.addCoin(event.coin)
+                        favoriteUseCase.addCoin(event.coin)
                     }.onSuccess {
-                        _eventFlow.emit(value = SavedListUiEvent.ShowSnackbar(message = "Coin Saved Successfully", buttonText = "See list"))
+                        _eventFlow.emit(value = FavoriteListUiEvent.ShowSnackbar(message = "Coin saved", buttonAction = "See list"))
                     }.onFailure {
                         Timber.d("Failed to save coin")
                     }
                 }
             }
 
-            is SavedListEvent.DeleteCoin -> {
+            is FavoriteListEvent.DeleteCoin -> {
                 viewModelScope.launch {
                     runCatching {
-                        savedUseCase.deleteCoin(event.coin)
+                        favoriteUseCase.deleteCoin(event.coin)
                     }.onSuccess {
-                        _eventFlow.emit(value = SavedListUiEvent.ShowSnackbar(message = "You have deleted a coin", buttonText = "Undo"))
+                        _eventFlow.emit(value = FavoriteListUiEvent.ShowSnackbar(message = "Coin removed", buttonAction = "Undo"))
                         _state.value = state.copy(recentlyDeletedCoin = event.coin)
                     }.onFailure {
                         Timber.d("Failed to delete coin")
@@ -63,10 +62,10 @@ class SavedListViewModel @Inject constructor(
                 }
             }
 
-            is SavedListEvent.RestoreDeletedCoin -> {
+            is FavoriteListEvent.RestoreDeletedCoin -> {
                 viewModelScope.launch {
                     runCatching {
-                        savedUseCase.addCoin(state.recentlyDeletedCoin ?: return@launch)
+                        favoriteUseCase.addCoin(state.recentlyDeletedCoin ?: return@launch)
                     }.onSuccess {
                         _state.value = state.copy(recentlyDeletedCoin = null)
                     }.onFailure {
@@ -80,8 +79,8 @@ class SavedListViewModel @Inject constructor(
 
     private fun getAllCoins() {
         getNotesJob?.cancel()
-        getNotesJob = savedUseCase.getAllCoins().onEach {
-            _state.value = SavedListState(it)
+        getNotesJob = favoriteUseCase.getAllCoins().onEach { coins ->
+            _state.value = state.copy(coins = coins)
         }.launchIn(viewModelScope)
     }
 

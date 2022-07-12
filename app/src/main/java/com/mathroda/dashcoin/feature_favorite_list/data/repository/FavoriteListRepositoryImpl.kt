@@ -1,13 +1,13 @@
-package com.mathroda.dashcoin.feature_watch_list.data.repository
+package com.mathroda.dashcoin.feature_favorite_list.data.repository
 
-import com.mathroda.dashcoin.feature_watch_list.data.data_source.local.SavedCoinDao
+import com.mathroda.dashcoin.feature_favorite_list.data.data_source.local.FavoriteListDao
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
-import com.mathroda.dashcoin.feature_watch_list.domain.repository.SavedRepository
+import com.mathroda.dashcoin.feature_favorite_list.domain.repository.FavoriteListRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SavedRepositoryImpl @Inject constructor(
-    private val dao: SavedCoinDao): SavedRepository{
+class FavoriteListRepositoryImpl @Inject constructor(
+    private val dao: FavoriteListDao): FavoriteListRepository{
 
 
     override suspend fun insertCoin(coins: CoinDetailModel) {
