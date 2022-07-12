@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_no_internet.presentation.components
+package com.mathroda.dashcoin.feature_no_internet.presentation
 
 import android.content.Intent
 import android.provider.Settings
@@ -11,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -27,11 +26,10 @@ import com.mathroda.dashcoin.ui.theme.DashCoinTheme
 
 @Composable
 fun NoInternetScreen(
-    navigate: () -> Unit,
+    onTryButtonClick: () -> Unit,
 ) {
 
     val context = LocalContext.current
-
 
 
     Column(
@@ -95,11 +93,7 @@ fun NoInternetScreen(
 
             OutlinedButton(
                 shape = RoundedCornerShape(12.dp),
-                onClick = {
-                    if (ConnectionStatus.hasInternetConnection(context)) {
-                        navigate()
-                    }
-                },
+                onClick = onTryButtonClick,
                 modifier = Modifier
                     .padding(4.dp)
                     .width(150.dp)
