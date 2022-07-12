@@ -19,6 +19,7 @@ object FakeDataTest {
         totalSupply = 1.0,
         twitterUrl = "twitterUrl",
         volume = 1.0,
-        websiteUrl = "websiteUrl"
+        websiteUrl = "websiteUrl",
+        priceBtc = 2.44
     )
 }

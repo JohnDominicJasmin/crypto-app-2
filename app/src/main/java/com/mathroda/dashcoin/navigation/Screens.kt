@@ -17,11 +17,12 @@ sealed class Screens(
         icon = Icons.Default.Home
     )
 
-    object SavedWatchList: Screens(
-        route = "coins_watch_list",
-        title = "WatchList",
+    object FavoriteListScreen: Screens(
+        route = "favorite_list_screen",
+        title = "Favorites",
         icon = Icons.Default.Favorite
     )
+    //todo: change this icon later
 
     object CoinsNews: Screens(
         route = "coins_news",
@@ -29,7 +30,7 @@ sealed class Screens(
         icon = Icons.Default.List
     )
     object CoinDetailScreen: Screens("coin_detail_screen")
-    object NoInternetScreen: Screens("no_internet_screen")
+
 
 
 

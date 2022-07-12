@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_watch_list.data.data_source.local
+package com.mathroda.dashcoin.feature_favorite_list.data.data_source.local
 
 import androidx.room.*
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 @Dao
-interface SavedCoinDao {
+interface FavoriteListDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCoin(coinsById: CoinDetailModel)
