@@ -24,8 +24,8 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 fun SearchBar(
     hint: String,
     modifier: Modifier = Modifier,
-    state: MutableState<TextFieldValue>
-
+    searchQuery: String,
+    onValueChange: (String) -> Unit
 ) {
 
     var isHintDisplayed by remember {
@@ -58,10 +58,8 @@ fun SearchBar(
 
 
             BasicTextField(
-                value = state.value,
-                onValueChange = {
-                    state.value = it
-                },
+                value = searchQuery,
+                onValueChange = onValueChange,
                 maxLines = 1,
                 singleLine = true,
                 textStyle = TextStyle(color = TextWhite),

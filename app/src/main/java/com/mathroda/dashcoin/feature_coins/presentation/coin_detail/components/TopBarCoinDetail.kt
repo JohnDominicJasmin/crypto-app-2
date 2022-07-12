@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.mathroda.dashcoin.ui.theme.TextWhite
 
@@ -25,9 +24,9 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 fun TopBarCoinDetail(
     coinSymbol: String,
     icon: String,
-    navController: NavController,
+    backButtonOnClick: () -> Unit,
     isFavorite: Boolean,
-    onCLick: (Boolean) -> Unit
+    favoriteButtonOnClick: (Boolean) -> Unit
 
 ) {
     Row(
@@ -47,7 +46,7 @@ fun TopBarCoinDetail(
                 modifier = Modifier
                     .padding(8.dp)
                     .clickable {
-                        navController.popBackStack()
+                       backButtonOnClick()
                     }
             )
         }
@@ -80,7 +79,7 @@ fun TopBarCoinDetail(
                 FavoriteButton(
                     modifier = Modifier.padding(8.dp),
                     isFavorite = isFavorite,
-                    onCLick = onCLick
+                    onClick = favoriteButtonOnClick
                 )
         }
 
@@ -92,13 +91,13 @@ fun FavoriteButton(
     modifier: Modifier = Modifier,
     color: Color = TextWhite,
     isFavorite: Boolean,
-    onCLick: (Boolean) -> Unit
+    onClick: (Boolean) -> Unit
 
 
 ) {
     IconToggleButton(
         checked = isFavorite ,
-        onCheckedChange = onCLick
+        onCheckedChange = onClick
     ) {
         Icon(
             tint = color,

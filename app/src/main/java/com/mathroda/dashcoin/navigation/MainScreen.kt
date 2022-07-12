@@ -46,7 +46,7 @@ fun BottomBar(
 ) {
     val screens = listOf(
         Screens.CoinsScreen,
-        Screens.SavedWatchList,
+        Screens.FavoriteListScreen,
         Screens.CoinsNews
     )
 
@@ -74,13 +74,7 @@ fun BottomBar(
                     selected = currentRoute == screen.route,
 
                     onClick = {
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id){
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState =true
-                        }
+                        navController.navigateScreen(screen.route)
                     },
 
                     alwaysShowLabel = false,
