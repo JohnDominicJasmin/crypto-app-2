@@ -1,6 +1,5 @@
-package com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components
+package com.mathroda.dashcoin.feature_coins.presentation.coin_detail
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,71 +14,76 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailUiEvent
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.mathroda.dashcoin.core.util.ConnectionStatus
+import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.*
+import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.CoinDetailEvent
 import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import com.mathroda.dashcoin.ui.theme.LighterGray
 import com.mathroda.dashcoin.ui.theme.Twitter
-import com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen.SavedListEvent
-import com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen.SavedListUiEvent
-import com.mathroda.dashcoin.feature_watch_list.presentation.saved_list_screen.SavedListViewModel
+import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListEvent
+import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
+import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListViewModel
+import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
+import com.mathroda.dashcoin.navigation.Screens
+import com.mathroda.dashcoin.navigation.navigateScreen
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 import java.text.NumberFormat
 import java.util.*
 
 @Composable
 fun CoinDetailScreen(
     coinDetailViewModel: CoinDetailViewModel = hiltViewModel(),
-    savedListViewModel: SavedListViewModel = hiltViewModel(),
-    navController: NavController
+    favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
+    navController: NavController?
 ) {
 
     val coinState = coinDetailViewModel.state
-    val savedListState = savedListViewModel.state
+
+    val scaffoldState = rememberScaffoldState()
     val context = LocalContext.current
 
 
 
-    LaunchedEffect(key1 = true){
-        coinDetailViewModel.eventFlow.collectLatest { coinDetailEvent ->
-            when(coinDetailEvent){
-                is CoinDetailUiEvent.ShowNoInternetScreen -> {
-                    //todo: show no internet screen here
-                }
+    LaunchedEffect(true) {
 
-                is CoinDetailUiEvent.ShowToastMessage -> {
-                    Toast.makeText(context, coinDetailEvent.message, Toast.LENGTH_SHORT).show()
-                }
-            }
+        favoriteListViewModel.eventFlow.collectLatest { savedListEvent ->
+            when (savedListEvent) {
+                is FavoriteListUiEvent.ShowSnackbar -> {
 
-        }
+                    val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                        message = savedListEvent.message,
+                        actionLabel = savedListEvent.buttonAction
+                    )
+                    when (snackbarResult) {
+                        SnackbarResult.ActionPerformed -> {
+                            if (savedListEvent.buttonAction == "See list") {
+                                navController?.navigateScreen(Screens.FavoriteListScreen.route)
+                                return@collectLatest
+                            }
 
-        savedListViewModel.eventFlow.collectLatest { savedListEvent ->
-            when(savedListEvent){
-                is SavedListUiEvent.ShowSnackbar -> {
-
+                            favoriteListViewModel.onEvent(event = FavoriteListEvent.RestoreDeletedCoin)
+                            coinDetailViewModel.onEvent(event = CoinDetailEvent.ToggleFavoriteCoin)
+                        }
+                        else -> {}
+                    }
                 }
             }
         }
     }
 
 
-    if(savedListState.snackbarVisible){
-        Snackbar(
 
-            action = {
-                TextButton(onClick = {}) {
-                    Text("MyAction")
-                }
-            },
-            modifier = Modifier.padding(8.dp)
-        ) { Text(text = "This is a snackbar!") }
-    }
+    Scaffold(
+        modifier = Modifier,
+        scaffoldState = scaffoldState
+    ) {
+
     Box(
         modifier = Modifier
             .background(DarkGray)
@@ -90,19 +94,23 @@ fun CoinDetailScreen(
            LazyColumn(
                modifier = Modifier
                    .fillMaxSize()
+                   .padding(it)
            ) {
                item {
-                   var isFavorite by rememberSaveable { mutableStateOf(false) }
+
                    TopBarCoinDetail(
                        coinSymbol = coin.symbol,
                        icon = coin.icon,
-                       navController = navController,
-                       isFavorite = isFavorite,
-                       onCLick = {
-                           isFavorite = !isFavorite
-                           if (isFavorite){
-                               savedListViewModel.onEvent(SavedListEvent.AddCoin(coin))
+                       backButtonOnClick = { navController?.popBackStack() },
+                       isFavorite = coinState.isFavorite,
+                       favoriteButtonOnClick = {
+                           if (!coinState.isFavorite){
+                               favoriteListViewModel.onEvent(FavoriteListEvent.AddCoin(coin))
+                           }else{
+                               favoriteListViewModel.onEvent(FavoriteListEvent.DeleteCoin(coin))
                            }
+                           coinDetailViewModel.onEvent(event = CoinDetailEvent.ToggleFavoriteCoin)
+
                        }
                    )
 
@@ -172,10 +180,19 @@ fun CoinDetailScreen(
                 color = CustomGreen
             )
         }
-        //todo: investigate this one
 
+
+        if(!coinState.hasInternet){
+            NoInternetScreen(onTryButtonClick = {
+                if(ConnectionStatus.hasInternetConnection(context)){
+                    coinDetailViewModel.onEvent(event = CoinDetailEvent.CloseNoInternetDisplay)
+                }
+            })
+        }
+
+        if(coinState.errorMessage.isNotEmpty()) {
             Text(
-                text = "ERROR SAMPLE",
+                text = coinState.errorMessage,
                 color = MaterialTheme.colors.error,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -183,10 +200,10 @@ fun CoinDetailScreen(
                     .padding(horizontal = 20.dp)
                     .align(Alignment.Center)
             )
+        }
     }
 }
-
-
+}
 
 fun numbersToCurrency(number: Int): String? {
     val numberFormat = NumberFormat.getCurrencyInstance()
