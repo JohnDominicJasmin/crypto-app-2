@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.presentation.coins_news.components
+package com.mathroda.dashcoin.feature_coins.presentation.coins_news
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,48 +21,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailUiEvent
-import com.mathroda.dashcoin.feature_coins.presentation.coins_news.NewsEvent
-import com.mathroda.dashcoin.feature_coins.presentation.coins_news.NewsUiEvent
+import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.SearchBar
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
-import com.mathroda.dashcoin.feature_coins.presentation.coins_news.NewsViewModel
+import com.mathroda.dashcoin.feature_coins.presentation.coins_news.components.NewsCard
+import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.CoinsEvent
+import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
+import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onEach
 
 @ExperimentalMaterialApi
 @Composable
 fun NewsScreen(
     newsViewModel: NewsViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController?
 ) {
-    val searchNews = remember { mutableStateOf(TextFieldValue("")) }
     val state = newsViewModel.state
     val uriHandler = LocalUriHandler.current
-    val searchCoin = remember { mutableStateOf(TextFieldValue("")) }
     val context = LocalContext.current
-
-
-
-
-
-
-    LaunchedEffect(key1 = true){
-        newsViewModel.eventFlow.collectLatest { newsUiEvent ->
-            when(newsUiEvent){
-                is NewsUiEvent.ShowNoInternetScreen -> {
-                    //todo: show no internet screen here
-                }
-
-                is NewsUiEvent.ShowToastMessage -> {
-                    Toast.makeText(context, newsUiEvent.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-
-        }
-    }
 
 
 
@@ -77,15 +55,17 @@ fun NewsScreen(
             TopBar(title = "Trending News")
             SearchBar(
                 hint = "Search...",
-                state = searchNews,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                searchQuery = state.searchQuery,
+                onValueChange = {
+                    newsViewModel.onEvent(event = NewsEvent.EnteredSearchQuery(it))
+                }
             )
 
             Row(
                 modifier = Modifier.padding(12.dp)
             ) {
-                val isBeingSearched = searchCoin.value.text
                 SwipeRefresh(
                     state = rememberSwipeRefreshState(isRefreshing = state.isRefreshing),
                     onRefresh = { newsViewModel.onEvent(event = NewsEvent.RefreshNews) }) {
@@ -93,8 +73,8 @@ fun NewsScreen(
                     LazyColumn {
 
                         items(state.trendingNews.filter {
-                            it.title.contains(isBeingSearched, ignoreCase = true) ||
-                                    it.description.contains(isBeingSearched, ignoreCase = true)
+                            it.title.contains(state.searchQuery, ignoreCase = true) ||
+                                    it.description.contains(state.searchQuery, ignoreCase = true)
                         }, key = {it.title}) { news ->
                             NewsCard(
                                 newsThumb = news.imgURL,
@@ -117,16 +97,25 @@ fun NewsScreen(
                 color = CustomGreen
             )
         }
-        //todo: investigate this one
 
-      /*      Text(
-                text = "ERROR SAMPLE",
+        if(!state.hasInternet){
+            NoInternetScreen(onTryButtonClick = {
+                if(ConnectionStatus.hasInternetConnection(context)){
+                    newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
+                }
+            })
+        }
+
+        if (state.errorMessage.isNotEmpty()) {
+            Text(
+                text = state.errorMessage,
                 color = MaterialTheme.colors.error,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .align(Alignment.Center)
-            )*/
+            )
+        }
     }
 }

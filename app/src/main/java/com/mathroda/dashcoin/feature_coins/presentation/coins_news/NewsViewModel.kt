@@ -13,6 +13,7 @@ import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
 import com.mathroda.dashcoin.feature_coins.domain.models.NewsDetailModel
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,17 +33,13 @@ class NewsViewModel @Inject constructor(
     val state by _state
 
 
-    private val _eventFlow = MutableSharedFlow<NewsUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
-
 
 
     init {
         loadNews()
     }
     private fun loadNews(){
-        //todo: add Dispatchers.IO
+
         viewModelScope.launch {
             getNews(filter = HANDPICKED_NEWS, newsResult = { newsDetails ->
                 _state.value = state.copy(isLoading = false, handPickedNews = newsDetails)
@@ -71,21 +68,20 @@ class NewsViewModel @Inject constructor(
         coroutineScope {
 
             runCatching {
-                coinUseCases.getNews(filter)
-            }.onSuccess { newsDetailFlow ->
-                newsDetailFlow.onEach { newsDetails ->
+                _state.value = state.copy(isLoading = true)
+                coinUseCases.getNews(filter).collect{ newsDetails ->
                     _state.value = state.copy(isLoading = false)
                     newsResult(newsDetails)
-                }.launchIn(this)
+                }
             }.onFailure { exception ->
                 _state.value = state.copy(isLoading = false)
 
                 when (exception) {
                     is CoinExceptions.UnexpectedErrorException -> {
-                        _eventFlow.emit(value = NewsUiEvent.ShowToastMessage(exception.message!!))
+                        _state.value = state.copy(errorMessage = exception.message!!)
                     }
                     is CoinExceptions.NoInternetException -> {
-                        _eventFlow.emit(value = NewsUiEvent.ShowNoInternetScreen)
+                        _state.value = state.copy(hasInternet = false)
                     }
                 }
 
@@ -99,6 +95,12 @@ class NewsViewModel @Inject constructor(
         when(event){
             is NewsEvent.RefreshNews -> {
                 refreshNews()
+            }
+            is NewsEvent.CloseNoInternetDisplay -> {
+                _state.value = state.copy(hasInternet = true)
+            }
+            is NewsEvent.EnteredSearchQuery -> {
+                _state.value = state.copy(searchQuery = event.searchQuery)
             }
         }
     }

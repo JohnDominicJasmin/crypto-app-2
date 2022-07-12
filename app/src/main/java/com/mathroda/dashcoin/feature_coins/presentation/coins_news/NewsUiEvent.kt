@@ -4,5 +4,4 @@ import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailUi
 
 sealed class NewsUiEvent{
     object ShowNoInternetScreen: NewsUiEvent()
-    data class ShowToastMessage(val message: String): NewsUiEvent()
 }
