@@ -1,5 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coin_detail
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.*
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.CoinDetailEvent
@@ -32,7 +31,6 @@ import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
 import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.navigation.navigateScreen
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 import java.text.NumberFormat
 import java.util.*
 
@@ -119,10 +117,13 @@ fun CoinDetailScreen(
                        priceChange = coin.priceChange1d
                    )
 
-                   Chart(
+                   CoinDetailChart(
                        chartModel = coinState.chartModel,
                        oneDayChange = coin.priceChange1d,
-                       context = LocalContext.current
+                       context = LocalContext.current,
+                       modifier = Modifier
+                           .fillMaxWidth()
+                           .requiredHeight(300.dp)
                    )
 
                    CoinInformation(
@@ -153,7 +154,11 @@ fun CoinDetailScreen(
                                .background(Twitter)
                                .weight(1f)
                                .clickable {
-                                   uriHandler.openUri(coin.twitterUrl!!)
+                                   runCatching {
+                                       uriHandler.openUri(coin.twitterUrl!!)
+                                   }.onFailure {
+                                        Toast.makeText(context, "Twitter is not available", Toast.LENGTH_SHORT).show()
+                                   }
                                }
                        )
 
@@ -166,7 +171,11 @@ fun CoinDetailScreen(
                                .background(LighterGray)
                                .weight(1f)
                                .clickable {
-                                   uriHandler.openUri(coin.websiteUrl)
+                                   runCatching {
+                                       uriHandler.openUri(coin.websiteUrl!!)
+                                   }.onFailure {
+                                       Toast.makeText(context, "Website is not available", Toast.LENGTH_SHORT).show()
+                                   }
                                }
                        )
                    }
