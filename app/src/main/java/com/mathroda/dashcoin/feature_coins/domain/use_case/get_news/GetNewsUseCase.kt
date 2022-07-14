@@ -7,10 +7,9 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetNewsUseCase @Inject constructor(
-    private val repository: CoinRepository
-) {
+    private val repository: CoinRepository) {
 
-    operator fun invoke(filter: String): Flow<List<NewsDetailModel>> = flow {
-       emit(repository.getNews(filter))
+    suspend operator fun invoke(filter: String): List<NewsDetailModel> {
+       return repository.getNews(filter)
     }
 }
