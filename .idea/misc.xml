@@ -20,6 +20,11 @@
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable/ic_home.xml" value="0.1" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1155" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable/ic_search.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_negative_chart.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_positive_chart.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_transparent.xml" value="0.1" />
+        <entry key="app/src/main/res/layout-v28/marker_view.xml" value="0.35743589743589743" />
+        <entry key="app/src/main/res/layout/marker_view.xml" value="0.35743589743589743" />
       </map>
     </option>
   </component>

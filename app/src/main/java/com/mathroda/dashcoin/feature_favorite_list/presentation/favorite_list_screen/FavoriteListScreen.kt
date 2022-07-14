@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 @ExperimentalMaterialApi
 @Composable
 fun FavoriteListScreen(
+    modifier: Modifier = Modifier,
     favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
     coinDetailViewModel: CoinDetailViewModel = hiltViewModel(),
     navController: NavController?
@@ -48,7 +49,7 @@ fun FavoriteListScreen(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(DarkGray)
             .fillMaxSize()
             .padding(12.dp)

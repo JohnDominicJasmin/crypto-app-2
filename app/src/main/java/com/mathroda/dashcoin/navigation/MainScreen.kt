@@ -3,12 +3,14 @@ package com.mathroda.dashcoin.navigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -34,8 +36,8 @@ fun MainScreen() {
                 navController = navController,
                 state = bottomBarState
             )
-        }, content = {
-            BottomNavGraph(navController = navController)
+        }, content = {  innerPadding ->
+            BottomNavGraph(modifier = Modifier.padding(innerPadding),navController = navController)
         })
 }
 
