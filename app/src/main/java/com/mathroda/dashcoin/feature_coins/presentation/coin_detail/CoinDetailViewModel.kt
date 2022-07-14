@@ -19,7 +19,7 @@ import javax.inject.Inject
 class CoinDetailViewModel @Inject constructor(
     private val coinUseCase: CoinUseCases,
     private val favoriteUseCase: FavoriteUseCase,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
 
@@ -27,20 +27,17 @@ class CoinDetailViewModel @Inject constructor(
     val state by _state
 
     init {
+        loadCoinDetail()
+    }
 
+    private fun loadCoinDetail(){
         viewModelScope.launch {
             savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
                 getCoin(coinId)
                 getChart(coinId)
-                getMarketStatus(coinId)
                 isFavoriteCoin()
             }
-
         }
-
-
-
-
     }
 
 
@@ -48,6 +45,7 @@ class CoinDetailViewModel @Inject constructor(
         when(event){
             is CoinDetailEvent.CloseNoInternetDisplay -> {
                 _state.value = state.copy(hasInternet = true)
+                loadCoinDetail()
             }
             is CoinDetailEvent.ToggleFavoriteCoin -> {
                 _state.value = state.copy(isFavorite = !state.isFavorite)
@@ -118,18 +116,7 @@ class CoinDetailViewModel @Inject constructor(
 
 
 
-    private suspend fun getMarketStatus(coinId: String) {
 
-        coroutineScope {
-            runCatching {
-                _state.value = state.copy(isLoading = true)
-                coinUseCase.getCoin(coinId).collect{ coinDetail ->
-                    _state.value = state.copy(isLoading = false, coinDetailModel = coinDetail)
-                }
-            }.onFailure { exception ->
-                handleException(exception)
-                this.cancel()
-            }
-        }
-    }
+
+
 }
