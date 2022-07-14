@@ -21,6 +21,6 @@ data class CoinDetailModel (
     val totalSupply: Double,
     val twitterUrl: String? = null,
     val volume: Double,
-    val websiteUrl: String,
+    val websiteUrl: String? = null,
     val priceBtc: Double,
     )
