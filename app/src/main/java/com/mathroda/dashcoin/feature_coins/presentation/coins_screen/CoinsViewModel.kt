@@ -1,53 +1,82 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.mikephil.charting.charts.LineChart
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
+import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
+import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CoinsViewModel @Inject constructor(
-    private val coinUseCases: CoinUseCases
+    private val coinUseCase: CoinUseCases
 ): ViewModel() {
 
-    private val _state = mutableStateOf(CoinsState())
-    val state by _state
+    private val _state = MutableStateFlow(CoinsState())
+    val state = _state.asStateFlow()
 
 
     init {
-        getCoins()
+        viewModelScope.launch{
+            getCoins()
+
+        }
     }
 
 
-    private fun getCoins() {
-        viewModelScope.launch {
-            runCatching {
-                _state.value = state.copy(isLoading = true)
-                coinUseCases.getCoins().collect { coins ->
-                    _state.value = state.copy(isLoading = false, coinModels = coins)
-                }
-            }.onFailure { exception ->
-                _state.value = state.copy(isLoading = false)
+    private suspend fun getCoins() {
 
-                when (exception) {
-                    is CoinExceptions.UnexpectedErrorException -> {
-                        _state.value = state.copy(errorMessage = exception.message!!)
-                    }
-                    is CoinExceptions.NoInternetException -> {
-                        _state.value = state.copy(hasInternet = false)
-                    }
+        coroutineScope {
+            runCatching {
+                _state.update { it.copy(isLoading = true) }
+                withContext(Dispatchers.IO) {
+                    coinUseCase.getCoins().collect { coins ->
+                        _state.update { it.copy(coinModels = coins) }
+                        _state.update { it.copy(chartModels = getCharts(coins)) }
+                        }
                 }
+
+
+            }.onFailure { exception ->
+
+                    when (exception) {
+                        is CoinExceptions.UnexpectedErrorException -> {
+                            _state.update { it.copy(errorMessage = exception.message!!) }
+                        }
+                        is CoinExceptions.NoInternetException -> {
+                            _state.update { it.copy(hasInternet = false) }
+                        }
+                    }
+
                 this.cancel()
+
+            }.also{
+                _state.update { it.copy(isLoading = false) }
             }
         }
     }
+
+
+    private suspend fun getCharts(coins: List<CoinModel>): List<ChartModel> =
+        mutableListOf<Deferred<ChartModel>>().run {
+            coroutineScope {
+                coins.forEach { coin ->
+                    val chart = async {
+                        coinUseCase.getChart(coinId = coin.id).first()
+                    }
+                    add(chart)
+                }
+            }
+            return awaitAll()
+}
 
     fun onEvent(event: CoinsEvent){
         when(event){
@@ -56,19 +85,21 @@ class CoinsViewModel @Inject constructor(
             }
 
             is CoinsEvent.CloseNoInternetDisplay -> {
-                _state.value = state.copy(hasInternet = true)
+                _state.update { it.copy(hasInternet = true, isRefreshing = false) }
+                refresh()
             }
 
             is CoinsEvent.EnteredSearchQuery -> {
-                _state.value = state.copy(searchQuery = event.searchQuery)
+
+                _state.update { it.copy(searchQuery = event.searchQuery) }
             }
         }
     }
     private fun refresh() {
         viewModelScope.launch {
-            _state.value = state.copy(isRefreshing = true)
+            _state.update { it.copy(isRefreshing = true) }
             getCoins()
-            _state.value = state.copy(isRefreshing = false)
+            _state.update { it.copy(isRefreshing = false) }
         }
 
     }
