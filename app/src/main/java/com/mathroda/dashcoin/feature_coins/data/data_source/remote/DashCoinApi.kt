@@ -13,7 +13,8 @@ interface DashCoinApi {
     @GET("v1/coins")
     suspend fun getCoins(
         @Query("currency") currency: String = "USD",
-        @Query("skip") skip: Int = 0
+        @Query("skip") skip: Int = 0,
+        @Query("limit") limit: Int = 200
     ): CoinsDto
 
     @GET("v1/coins/{coinId}")
@@ -38,7 +39,7 @@ interface DashCoinApi {
          * 4. bullish
          * 5. bearish
          */
-        @Query("limit") limit: Int = 20,
+        @Query("limit") limit: Int = 50,
         @Query("skip") skip: Int = 0
     ): NewsDto
 }
