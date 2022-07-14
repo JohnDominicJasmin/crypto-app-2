@@ -69,10 +69,10 @@ class NewsViewModel @Inject constructor(
 
             runCatching {
                 _state.value = state.copy(isLoading = true)
-                coinUseCases.getNews(filter).collect{ newsDetails ->
+
                     _state.value = state.copy(isLoading = false)
-                    newsResult(newsDetails)
-                }
+                    newsResult(coinUseCases.getNews(filter))
+
             }.onFailure { exception ->
                 _state.value = state.copy(isLoading = false)
 
@@ -97,7 +97,8 @@ class NewsViewModel @Inject constructor(
                 refreshNews()
             }
             is NewsEvent.CloseNoInternetDisplay -> {
-                _state.value = state.copy(hasInternet = true)
+                _state.value = state.copy(hasInternet = true, isRefreshing = false)
+                refreshNews()
             }
             is NewsEvent.EnteredSearchQuery -> {
                 _state.value = state.copy(searchQuery = event.searchQuery)
