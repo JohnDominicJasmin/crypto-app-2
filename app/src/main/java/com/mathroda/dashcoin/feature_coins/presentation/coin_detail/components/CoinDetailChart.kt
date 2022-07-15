@@ -1,5 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components
 
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +28,8 @@ import com.mathroda.dashcoin.feature_coins.domain.models.ChartTimeSpan
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.setLineDataSet
 import com.mathroda.dashcoin.ui.theme.Black850
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @Composable
@@ -190,4 +193,8 @@ fun CoinDetailChart(
 fun addEntry(x: Float, y: Float) =
     BarEntry(x, y)
 
-
+@SuppressLint("SimpleDateFormat")
+fun Long.millisToDate(format:String): String {
+    val dateFormat = SimpleDateFormat(format)
+    return dateFormat.format(Date(this * 1000))
+}

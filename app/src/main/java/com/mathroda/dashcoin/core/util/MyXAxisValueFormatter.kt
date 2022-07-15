@@ -2,17 +2,13 @@ package com.mathroda.dashcoin.core.util
 
 import android.annotation.SuppressLint
 import com.github.mikephil.charting.formatter.ValueFormatter
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
+import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.millisToDate
+
 
 class MyXAxisValueFormatter(var format: String = "HH:mm") : ValueFormatter() {
 
     @SuppressLint("SimpleDateFormat")
     override fun getFormattedValue(value: Float): String {
-        val date = Date(value.toLong() * 1000)
-        val simpleDateFormat = SimpleDateFormat(format)
-        return simpleDateFormat.format(date)
-
+            return value.toLong().millisToDate(format = format)
     }
 }
