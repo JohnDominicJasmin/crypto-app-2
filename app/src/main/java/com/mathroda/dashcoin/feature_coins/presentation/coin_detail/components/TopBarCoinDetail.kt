@@ -24,6 +24,7 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 fun TopBarCoinDetail(
     coinSymbol: String,
     icon: String,
+    modifier: Modifier,
     backButtonOnClick: () -> Unit,
     isFavorite: Boolean,
     favoriteButtonOnClick: (Boolean) -> Unit
@@ -32,7 +33,7 @@ fun TopBarCoinDetail(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
             .requiredHeight(40.dp)

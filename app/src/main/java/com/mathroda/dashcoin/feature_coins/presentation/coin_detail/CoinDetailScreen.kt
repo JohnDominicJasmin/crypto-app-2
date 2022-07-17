@@ -86,7 +86,7 @@ fun CoinDetailScreen(
         modifier = Modifier
             .background(DarkGray)
             .fillMaxSize()
-            .padding(12.dp)
+
     ) {
        coinState.coinDetailModel?.let { coin ->
            LazyColumn(
@@ -99,6 +99,7 @@ fun CoinDetailScreen(
                    TopBarCoinDetail(
                        coinSymbol = coin.symbol,
                        icon = coin.icon,
+                       modifier = Modifier.padding(horizontal = 12.dp),
                        backButtonOnClick = { navController?.popBackStack() },
                        isFavorite = coinState.isFavorite,
                        favoriteButtonOnClick = {
@@ -113,6 +114,7 @@ fun CoinDetailScreen(
                    )
 
                    CoinDetailSection(
+                       modifier = Modifier.padding(horizontal = 12.dp),
                        price = coin.price,
                        priceChange = coin.priceChange1d
                    )
@@ -123,12 +125,16 @@ fun CoinDetailScreen(
                        context = LocalContext.current,
                        modifier = Modifier
                            .fillMaxWidth()
-                           .requiredHeight(300.dp)
+                           .requiredHeight(300.dp),
+                       onChartGesture = { yValue ->
+                           //todo observe here
+                       }
                    )
 
                    CoinInformation(
                        modifier = Modifier
                            .fillMaxWidth()
+                           .padding(horizontal = 12.dp)
                            .background(
                                color = LighterGray,
                                shape = RoundedCornerShape(25.dp)
@@ -143,7 +149,8 @@ fun CoinDetailScreen(
 
                    val uriHandler = LocalUriHandler.current
                    Row (
-                       horizontalArrangement = Arrangement.Center
+                       horizontalArrangement = Arrangement.Center,
+                       modifier = Modifier.padding(horizontal = 12.dp)
                            ){
                        LinkButton(
                            title = "Twitter",

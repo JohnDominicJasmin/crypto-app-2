@@ -1,22 +1,22 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -47,7 +47,7 @@ fun CoinsItem(
                 model = coinModel.icon,
                 contentDescription = "Icon",
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(52.dp)
                     .padding(end = 12.dp)
             )
 
@@ -58,33 +58,20 @@ fun CoinsItem(
                 modifier = Modifier
                     .weight(2f)
             ) {
-                Text(
-                    text = coinModel.symbol,
-                    style = MaterialTheme.typography.body1,
-                    fontWeight = FontWeight.Bold,
-                    color = TextWhite,
+                Text(overflow = TextOverflow.Ellipsis,
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)){
+                            append(coinModel.symbol+"\n")
+                        }
+
+                        withStyle(style = SpanStyle(color = Black500, fontSize = 12.sp, fontWeight = FontWeight.Light)){
+                            append(coinModel.name)
+                        }
+                    },
                     textAlign = TextAlign.Start
                 )
 
-                Row {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(2.dp))
-                            .background(LighterGray)
-                            .size(16.dp)
-                            .align(CenterVertically)
-                    ) {
-                        Text(
-                            text = coinModel.rank.toString(),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Gold,
-                            modifier = Modifier
-                                .align(Center)
-                        )
-                    }
 
-                }
 
             }
 
@@ -112,7 +99,7 @@ fun CoinsItem(
                 )
 
                 Text(
-                    text = coinModel.priceChange1d.toString() + "%",
+                    text = (if(coinModel.priceChange1d < 0) "" else "+") + coinModel.priceChange1d.toString() + "%",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = if (coinModel.priceChange1d < 0) CustomRed else CustomGreen

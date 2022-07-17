@@ -22,11 +22,12 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 
 @Composable
 fun CoinDetailSection(
+    modifier: Modifier,
     price: Double,
     priceChange: Double
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(top = 40.dp),
         contentAlignment = Alignment.Center

@@ -23,8 +23,9 @@
         <entry key="app/src/main/res/drawable/background_negative_chart.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_positive_chart.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_transparent.xml" value="0.1" />
-        <entry key="app/src/main/res/layout-v28/marker_view.xml" value="0.35743589743589743" />
-        <entry key="app/src/main/res/layout/marker_view.xml" value="0.35743589743589743" />
+        <entry key="app/src/main/res/drawable/circle_chart_indicator.xml" value="0.18" />
+        <entry key="app/src/main/res/layout-v28/marker_view.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/marker_view.xml" value="0.75" />
       </map>
     </option>
   </component>
