@@ -7,14 +7,14 @@ import com.mathroda.dashcoin.feature_coins.data.dto.NewsDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-
+import kotlinx.coroutines.flow.Flow
 interface DashCoinApi {
 
     @GET("v1/coins")
     suspend fun getCoins(
         @Query("currency") currency: String = "USD",
         @Query("skip") skip: Int = 0,
-        @Query("limit") limit: Int = 200
+        @Query("limit") limit: Int = 500
     ): CoinsDto
 
     @GET("v1/coins/{coinId}")
@@ -25,8 +25,10 @@ interface DashCoinApi {
     @GET("v1/charts")
     suspend fun getChartsData(
         @Query("coinId") coinId: String,
-        @Query("period") period: String = "24h" //available periods - 24h | 1w | 1m | 3m | 6m | 1y | all
+        @Query("period") period: String,
     ): ChartDto
+    //available periods - 24h | 1w | 1m | 3m | 6m | 1y | all
+
 
     @GET("v1/news/{filter}")
     suspend fun getNews(

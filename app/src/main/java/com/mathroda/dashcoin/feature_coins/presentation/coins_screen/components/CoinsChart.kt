@@ -10,7 +10,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.mathroda.dashcoin.R
-import com.mathroda.dashcoin.core.util.CustomMarkerView
+import com.mathroda.dashcoin.core.util.Constants.LAST_FIVE_HOURS
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.addEntry
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartScreenViewState
@@ -30,7 +30,7 @@ fun CoinsChart(
 
     val dataSet = mutableListOf<Entry>()
     chartModel?.let { chartsValue ->
-        chartsValue.chart.map { value ->
+        chartsValue.chart.takeLast(LAST_FIVE_HOURS).map { value ->
             for (i in value){
                 dataSet.add(addEntry(value[0], value[1]))
             }

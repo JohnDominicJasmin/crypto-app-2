@@ -10,7 +10,7 @@ class GetChartUseCase @Inject constructor(
     private val repository: CoinRepository
 ) {
 
-    operator fun invoke(coinId: String): Flow<ChartModel> = flow {
-            emit(repository.getChartsData(coinId))
+    operator fun invoke(coinId: String, period: String): Flow<ChartModel> = flow {
+            emit(repository.getChartsData(coinId, period))
     }
 }

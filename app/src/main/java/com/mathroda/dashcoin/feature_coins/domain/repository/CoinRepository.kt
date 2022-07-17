@@ -11,7 +11,7 @@ interface CoinRepository {
 
     suspend fun getCoinById(coinId: String): CoinDetailModel
 
-    suspend fun getChartsData(coinId: String): ChartModel
+    suspend fun getChartsData(coinId: String, period: String): ChartModel
 
     suspend fun getNews(filter: String): List<NewsDetailModel>
 

@@ -41,10 +41,10 @@ class CoinRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getChartsData(coinId: String): ChartModel {
+    override suspend fun getChartsData(coinId: String, period: String): ChartModel {
 
         return try{
-            api.getChartsData(coinId).toChart()
+            api.getChartsData(coinId, period).toChart()
         }catch (e: HttpException){
             throw CoinExceptions.UnexpectedErrorException()
         }catch (e: IOException){
