@@ -20,6 +20,8 @@ class CoinsViewModel @Inject constructor(
     private val _state = MutableStateFlow(CoinsState())
     val state = _state.asStateFlow()
 
+    private val _eventFlow = MutableSharedFlow<CoinsUiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         viewModelScope.launch{
@@ -52,7 +54,7 @@ class CoinsViewModel @Inject constructor(
                             _state.update { it.copy(errorMessage = exception.message!!) }
                         }
                         is CoinExceptions.NoInternetException -> {
-                            _state.update { it.copy(hasInternet = false) }
+                            _eventFlow.emit(CoinsUiEvent.ShowToastMessage(message = exception.message!!))
                         }
                     }
 
@@ -79,11 +81,6 @@ class CoinsViewModel @Inject constructor(
     fun onEvent(event: CoinsEvent){
         when(event){
             is CoinsEvent.RefreshCoins -> {
-                refresh()
-            }
-
-            is CoinsEvent.CloseNoInternetDisplay -> {
-                _state.update { it.copy(hasInternet = true, isRefreshing = false) }
                 refresh()
             }
 

@@ -7,7 +7,6 @@ import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 data class CoinsState(
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
-    val hasInternet: Boolean = true,
     val coinModels: List<CoinModel> = emptyList(),
     val chartModels: List<ChartModel> = emptyList(),
     val errorMessage: String = "",

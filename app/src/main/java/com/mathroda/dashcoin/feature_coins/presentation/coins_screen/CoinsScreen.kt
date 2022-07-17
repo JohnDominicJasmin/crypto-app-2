@@ -3,7 +3,6 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -18,12 +17,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.CoinsItem
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.SearchBar
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
-import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
 import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
@@ -88,15 +85,6 @@ fun CoinsScreen(
                 .align(Alignment.Center),
                 color = CustomGreen
             )
-        }
-
-
-        if(!coinsState.hasInternet){
-            NoInternetScreen(onTryButtonClick = {
-                if(ConnectionStatus.hasInternetConnection(context)){
-                    coinsViewModel.onEvent(event = CoinsEvent.CloseNoInternetDisplay)
-                }
-            })
         }
 
         if(coinsState.errorMessage.isNotEmpty()) {

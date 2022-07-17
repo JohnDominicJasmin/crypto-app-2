@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.*
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.CoinDetailEvent
 import com.mathroda.dashcoin.ui.theme.CustomGreen
@@ -27,7 +26,6 @@ import com.mathroda.dashcoin.ui.theme.Twitter
 import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListEvent
 import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
 import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListViewModel
-import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
 import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.navigation.navigateScreen
 import kotlinx.coroutines.flow.collectLatest
@@ -70,6 +68,16 @@ fun CoinDetailScreen(
                         }
                         else -> {}
                     }
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true){
+        coinDetailViewModel.eventFlow.collectLatest { event ->
+            when(event){
+                is CoinDetailUiEvent.ShowToastMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -164,7 +172,12 @@ fun CoinDetailScreen(
                                    runCatching {
                                        uriHandler.openUri(coin.twitterUrl!!)
                                    }.onFailure {
-                                        Toast.makeText(context, "Twitter is not available", Toast.LENGTH_SHORT).show()
+                                       Toast
+                                           .makeText(
+                                               context,
+                                               "Twitter is not available",
+                                               Toast.LENGTH_SHORT)
+                                           .show()
                                    }
                                }
                        )
@@ -181,7 +194,12 @@ fun CoinDetailScreen(
                                    runCatching {
                                        uriHandler.openUri(coin.websiteUrl!!)
                                    }.onFailure {
-                                       Toast.makeText(context, "Website is not available", Toast.LENGTH_SHORT).show()
+                                       Toast
+                                           .makeText(
+                                               context,
+                                               "Website is not available",
+                                               Toast.LENGTH_SHORT)
+                                           .show()
                                    }
                                }
                        )
@@ -197,14 +215,6 @@ fun CoinDetailScreen(
             )
         }
 
-
-        if(!coinState.hasInternet){
-            NoInternetScreen(onTryButtonClick = {
-                if(ConnectionStatus.hasInternetConnection(context)){
-                    coinDetailViewModel.onEvent(event = CoinDetailEvent.CloseNoInternetDisplay)
-                }
-            })
-        }
 
         if(coinState.errorMessage.isNotEmpty()) {
             Text(

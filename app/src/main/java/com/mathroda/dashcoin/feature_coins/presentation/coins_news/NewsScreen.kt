@@ -25,9 +25,6 @@ import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.SearchBar
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
 import com.mathroda.dashcoin.feature_coins.presentation.coins_news.components.NewsCard
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.CoinsEvent
-import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
-import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import kotlinx.coroutines.flow.collectLatest
@@ -45,6 +42,16 @@ fun NewsScreen(
 
 
 
+
+    LaunchedEffect(key1 = true ){
+        newsViewModel.eventFlow.collectLatest { event ->
+            when(event){
+                is NewsUiEvent.ShowToastMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Box(
         modifier = modifier
@@ -99,13 +106,6 @@ fun NewsScreen(
             )
         }
 
-        if(!state.hasInternet){
-            NoInternetScreen(onTryButtonClick = {
-                if(ConnectionStatus.hasInternetConnection(context)){
-                    newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
-                }
-            })
-        }
 
         if (state.errorMessage.isNotEmpty()) {
             Text(
