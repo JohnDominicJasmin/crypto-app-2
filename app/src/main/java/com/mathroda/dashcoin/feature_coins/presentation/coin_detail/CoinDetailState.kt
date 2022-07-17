@@ -8,6 +8,7 @@ data class CoinDetailState(
     val isLoading: Boolean = false,
     val coinDetailModel: CoinDetailModel?= null,
     val errorMessage: String = "",
+    val hasInternet: Boolean = true,
     val isFavorite: Boolean = false
 
     )

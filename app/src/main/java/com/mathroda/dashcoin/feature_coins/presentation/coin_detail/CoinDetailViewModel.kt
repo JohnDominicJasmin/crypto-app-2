@@ -27,9 +27,6 @@ class CoinDetailViewModel @Inject constructor(
     private val _state = mutableStateOf(CoinDetailState())
     val state by _state
 
-    private val _eventFlow = MutableSharedFlow<CoinDetailUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
     init {
         loadCoinDetail()
     }
@@ -45,6 +42,10 @@ class CoinDetailViewModel @Inject constructor(
 
     fun onEvent(event: CoinDetailEvent){
         when(event){
+            is CoinDetailEvent.CloseNoInternetDisplay -> {
+                _state.value = state.copy(hasInternet = true)
+                loadCoinDetail()
+            }
             is CoinDetailEvent.ToggleFavoriteCoin -> {
                 _state.value = state.copy(isFavorite = !state.isFavorite)
             }
@@ -97,10 +98,7 @@ class CoinDetailViewModel @Inject constructor(
                _state.value = state.copy(errorMessage = exception.message!!)
             }
             is CoinExceptions.NoInternetException -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(CoinDetailUiEvent.ShowToastMessage(message = exception.message!!))
-                }
-
+               _state.value = state.copy(hasInternet = false)
             }
         }
     }

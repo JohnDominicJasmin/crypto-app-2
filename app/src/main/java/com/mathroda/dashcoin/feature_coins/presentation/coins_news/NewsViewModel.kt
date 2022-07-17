@@ -32,8 +32,7 @@ class NewsViewModel @Inject constructor(
     private val _state = mutableStateOf(NewsState())
     val state by _state
 
-    private val _eventFlow = MutableSharedFlow<NewsUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+
 
 
     init {
@@ -82,7 +81,7 @@ class NewsViewModel @Inject constructor(
                         _state.value = state.copy(errorMessage = exception.message!!)
                     }
                     is CoinExceptions.NoInternetException -> {
-                        _eventFlow.emit(NewsUiEvent.ShowToastMessage(message = exception.message!!))
+                        _state.value = state.copy(hasInternet = false)
                     }
                 }
 
@@ -97,7 +96,10 @@ class NewsViewModel @Inject constructor(
             is NewsEvent.RefreshNews -> {
                 refreshNews()
             }
-
+            is NewsEvent.CloseNoInternetDisplay -> {
+                _state.value = state.copy(hasInternet = true, isRefreshing = false)
+                refreshNews()
+            }
             is NewsEvent.EnteredSearchQuery -> {
                 _state.value = state.copy(searchQuery = event.searchQuery)
             }
