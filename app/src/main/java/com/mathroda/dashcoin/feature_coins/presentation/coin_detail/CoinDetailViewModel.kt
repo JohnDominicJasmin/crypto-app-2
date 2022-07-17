@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class CoinDetailViewModel @Inject constructor(
@@ -31,13 +32,11 @@ class CoinDetailViewModel @Inject constructor(
     }
 
     private fun loadCoinDetail(){
-        viewModelScope.launch {
             savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
                 getCoin(coinId)
                 getChart(coinId)
                 isFavoriteCoin()
             }
-        }
     }
 
 
@@ -55,10 +54,10 @@ class CoinDetailViewModel @Inject constructor(
     }
 
 
-    private suspend fun isFavoriteCoin() {
+    private fun isFavoriteCoin() {
 
-        coroutineScope {
-            favoriteUseCase.getAllCoins().cancellable().onEach { coins ->
+        viewModelScope.launch {
+            favoriteUseCase.getAllCoins().distinctUntilChanged().cancellable().onEach { coins ->
                 coins.any { it.name == state.coinDetailModel?.name  }
                     .let { isFavoriteCoin ->
                         _state.value = state.copy(isFavorite = isFavoriteCoin)
@@ -73,19 +72,23 @@ class CoinDetailViewModel @Inject constructor(
 
 
 
-    private suspend fun getCoin(coinId: String) {
-        coroutineScope {
-             runCatching {
-                 _state.value = state.copy(isLoading = true)
-                 coinUseCase.getCoin(coinId).collect { coinDetail ->
-                     _state.value = state.copy(isLoading = false, coinDetailModel = coinDetail)
-                 }
+    private fun getCoin(coinId: String) {
+            viewModelScope.launch {
+                runCatching {
+                    _state.value = state.copy(isLoading = true)
+                    while (isActive) {
+                        coinUseCase.getCoin(coinId).distinctUntilChanged().collect { coinDetail ->
+                            _state.value =
+                                state.copy(isLoading = false, coinDetailModel = coinDetail)
+                        }
+                        delay(30.seconds)
+                    }
 
-             }.onFailure { exception ->
-                 handleException(exception)
-                 this.cancel()
-             }
-         }
+                }.onFailure { exception ->
+                    handleException(exception)
+                    this.cancel()
+                }
+            }
      }
     private fun handleException(exception: Throwable){
         _state.value = state.copy(isLoading = false)
@@ -99,14 +102,16 @@ class CoinDetailViewModel @Inject constructor(
             }
         }
     }
-    private suspend fun getChart(coinId: String) {
+    private fun getChart(coinId: String) {
 
-        coroutineScope {
+        viewModelScope.launch {
             runCatching {
                 _state.value = state.copy(isLoading = true)
-                coinUseCase.getChart(coinId).collect{ chart ->
-                    _state.value = state.copy(isLoading = false, chartModel = chart)
-                }
+                    while(isActive) {
+                        val chartModel = coinUseCase.getChart(coinId, period = "24h").distinctUntilChanged().first()
+                        _state.value = state.copy(isLoading = false, chartModel = chartModel)
+                        delay(30.seconds)
+                    }
             }.onFailure { exception ->
                 handleException(exception)
                 this.cancel()

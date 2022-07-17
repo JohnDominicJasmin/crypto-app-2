@@ -1,11 +1,7 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.mikephil.charting.charts.LineChart
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
@@ -14,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class CoinsViewModel @Inject constructor(
@@ -26,8 +23,8 @@ class CoinsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch{
+            _state.update { it.copy(isLoading = true) }
             getCoins()
-
         }
     }
 
@@ -36,17 +33,20 @@ class CoinsViewModel @Inject constructor(
 
         coroutineScope {
             runCatching {
-                _state.update { it.copy(isLoading = true) }
+
                 withContext(Dispatchers.IO) {
-                    coinUseCase.getCoins().collect { coins ->
-                        _state.update { it.copy(coinModels = coins) }
-                        _state.update { it.copy(chartModels = getCharts(coins)) }
+                    while(isActive) {
+                        coinUseCase.getCoins().distinctUntilChanged().collect { coins ->
+                            _state.update { it.copy(coinModels = coins) }
+                            _state.update { it.copy(chartModels = getCharts(coins), isLoading = false, isRefreshing = false)}
                         }
+                        delay(30.seconds)
+                    }
                 }
 
 
             }.onFailure { exception ->
-
+                    _state.update { it.copy(isLoading = false, isRefreshing = false)}
                     when (exception) {
                         is CoinExceptions.UnexpectedErrorException -> {
                             _state.update { it.copy(errorMessage = exception.message!!) }
@@ -58,8 +58,6 @@ class CoinsViewModel @Inject constructor(
 
                 this.cancel()
 
-            }.also{
-                _state.update { it.copy(isLoading = false) }
             }
         }
     }
@@ -70,7 +68,7 @@ class CoinsViewModel @Inject constructor(
             coroutineScope {
                 coins.forEach { coin ->
                     val chart = async {
-                        coinUseCase.getChart(coinId = coin.id).first()
+                        coinUseCase.getChart(coinId = coin.id, period = "24h").first()
                     }
                     add(chart)
                 }
@@ -99,7 +97,6 @@ class CoinsViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isRefreshing = true) }
             getCoins()
-            _state.update { it.copy(isRefreshing = false) }
         }
 
     }
