@@ -5,8 +5,8 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import com.mathroda.dashcoin.feature_favorite_list.data.data_source.local.FavoriteListDatabase
-import com.mathroda.dashcoin.feature_favorite_list.data.data_source.local.FavoriteListDao
+import com.mathroda.dashcoin.feature_favorite_list.data.local.FavoriteListDatabase
+import com.mathroda.dashcoin.feature_favorite_list.data.local.FavoriteListDao
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest

@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_favorite_list.data.data_source.local
+package com.mathroda.dashcoin.feature_favorite_list.data.local
 
 import androidx.room.*
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel

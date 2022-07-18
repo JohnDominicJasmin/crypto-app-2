@@ -1,6 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.data.repository
 
-import com.mathroda.dashcoin.feature_coins.data.data_source.remote.DashCoinApi
+import com.mathroda.dashcoin.feature_coins.data.remote.DashCoinApi
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toChart
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toCoinDetail
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toCoins

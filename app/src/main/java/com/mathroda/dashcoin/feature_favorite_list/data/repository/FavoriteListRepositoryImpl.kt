@@ -1,6 +1,6 @@
 package com.mathroda.dashcoin.feature_favorite_list.data.repository
 
-import com.mathroda.dashcoin.feature_favorite_list.data.data_source.local.FavoriteListDao
+import com.mathroda.dashcoin.feature_favorite_list.data.local.FavoriteListDao
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
 import com.mathroda.dashcoin.feature_favorite_list.domain.repository.FavoriteListRepository
 import kotlinx.coroutines.flow.Flow

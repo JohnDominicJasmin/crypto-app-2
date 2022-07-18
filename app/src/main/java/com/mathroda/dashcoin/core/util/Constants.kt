@@ -9,5 +9,9 @@ object Constants {
     const val LATEST_NEWS = "latest"
     const val BULLISH_NEWS = "bullish"
     const val BEARISH_NEWS = "bearish"
-    const val LAST_FIVE_HOURS = 60 //api update is every 5 minutes
+    const val LAST_FIVE_HOURS = 60
+
+    const val HEADER_CACHE_CONTROL = "Cache-Control"
+    const val HEADER_PRAGMA = "Pragma"
+    const val VISIBLE_ITEM_COUNT:Int = 11
 }

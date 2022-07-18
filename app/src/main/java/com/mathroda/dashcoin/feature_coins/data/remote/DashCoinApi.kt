@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.data.data_source.remote
+package com.mathroda.dashcoin.feature_coins.data.remote
 
 import com.mathroda.dashcoin.feature_coins.data.dto.ChartDto
 import com.mathroda.dashcoin.feature_coins.data.dto.CoinDetailDto
