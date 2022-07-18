@@ -45,15 +45,6 @@ object CoinsModule {
             .create(DashCoinApi::class.java)
     }
 
- /*   @Provides
-    @Singleton
-    fun providesDashCoinDatabase(app: Application): FavoriteListDatabase {
-        return Room.databaseBuilder(
-            app,
-            FavoriteListDatabase::class.java,
-            FavoriteListDatabase.DATABASE_NAME
-        ).build()
-    }*/
 
     @Provides
     @Singleton

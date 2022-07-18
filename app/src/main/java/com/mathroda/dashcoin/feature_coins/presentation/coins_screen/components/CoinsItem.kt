@@ -3,6 +3,8 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -20,12 +22,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.shimmer
+import com.google.accompanist.placeholder.placeholder
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.ui.theme.*
 
 @Composable
 fun CoinsItem(
+    isLoading: Boolean,
     context: Context,
     chartModel: ChartModel?,
     coinModel: CoinModel,
@@ -33,20 +39,29 @@ fun CoinsItem(
 ) {
 
 
+    val defaultModifier = Modifier.placeholder(
+        visible = isLoading,
+        color = Black930,
+        shape = RoundedCornerShape(4.dp),
+        highlight = PlaceholderHighlight.shimmer(highlightColor = Black910),
+    )
+
+
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 12.dp)
+                .padding(vertical = 8.dp, horizontal = 6.dp)
                 .clickable { onItemClick(coinModel) },
             verticalAlignment = CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(if(isLoading) 15.dp else 0.dp),
         ) {
 
 
             AsyncImage(
                 model = coinModel.icon,
                 contentDescription = "Icon",
-                modifier = Modifier
+                modifier = defaultModifier
                     .size(52.dp)
                     .padding(end = 12.dp)
             )
@@ -55,8 +70,9 @@ fun CoinsItem(
 
             Column(
                 horizontalAlignment = Alignment.Start,
-                modifier = Modifier
+                modifier = defaultModifier
                     .weight(2f)
+
             ) {
                 Text(overflow = TextOverflow.Ellipsis,
                     text = buildAnnotatedString {
@@ -79,7 +95,7 @@ fun CoinsItem(
                 chartModel = chartModel,
                 oneDayChange = coinModel.priceChange1d,
                 context = context,
-                modifier = Modifier
+                modifier = defaultModifier
                     .height(75.dp)
                     .weight(3.8f)
 
@@ -88,9 +104,11 @@ fun CoinsItem(
 
             Column(
                 horizontalAlignment = Alignment.End,
-                modifier = Modifier
+                modifier = defaultModifier
                     .weight(3f)
+
             ) {
+
                 Text(
                     text = "$" + coinModel.price.toFloat().toString(),
                     style = MaterialTheme.typography.body2,

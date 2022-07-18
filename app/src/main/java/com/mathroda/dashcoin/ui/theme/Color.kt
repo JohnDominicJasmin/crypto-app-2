@@ -11,7 +11,7 @@ val TextWhite = Color(0xFFEEEEEE)
 val Gold = Color(0xFFE6C149)
 val Twitter = Color(0xFF00ACEE)
 
-
+val Black930 = Color(0xFF292929)
 val Black910 = Color(0xFF313131)
 val Black900 = Color(0xFF303234)
 val Black850 = Color(0xFF5A5A5A)

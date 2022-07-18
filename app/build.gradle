@@ -138,4 +138,8 @@ dependencies {
     //logging interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation "com.squareup.okhttp3:okhttp-urlconnection:4.2.1"
+
+
+    //placeholder
+    implementation("com.google.accompanist:accompanist-placeholder:0.24.13-rc")
 }

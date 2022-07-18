@@ -39,7 +39,7 @@ class CoinsViewModel @Inject constructor(
                             coins.forEach { coin ->
                                 coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chartModels)
                                 val hasItemsRendered = state.value.chartModels.size > VISIBLE_ITEM_COUNT
-                                _state.update { it.copy(isRendered = hasItemsRendered, isLoading = !hasItemsRendered, isRefreshing = !hasItemsRendered) }
+                                _state.update { it.copy(isLoading = !hasItemsRendered, isRefreshing = !hasItemsRendered) }
                             }
                         }
                         delay(30.seconds)

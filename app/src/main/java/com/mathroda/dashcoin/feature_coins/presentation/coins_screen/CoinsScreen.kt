@@ -56,7 +56,6 @@ fun CoinsScreen(
                     coinsViewModel.onEvent(event = CoinsEvent.EnteredSearchQuery(it))
                 }
             )
-                if (coinsState.isRendered) {
 
                     SwipeRefresh(
                         state = rememberSwipeRefreshState(isRefreshing = coinsState.isRefreshing),
@@ -73,6 +72,7 @@ fun CoinsScreen(
                             }, key = { _, item -> item.id }) { index: Int, coinModel: CoinModel ->
 
                                 CoinsItem(
+                                    isLoading = coinsState.isLoading,
                                     context = context,
                                     coinModel = coinModel,
                                     chartModel = coinsState.chartModels.takeIf { it.isNotEmpty() && it.size > index }
@@ -85,7 +85,6 @@ fun CoinsScreen(
                         }
                     }
                 }
-        }
 
 
         if (coinsState.isLoading) {
@@ -96,13 +95,13 @@ fun CoinsScreen(
         }
 
 
-        if(!coinsState.hasInternet){
+        if (coinsState.coinModels.isEmpty() && !coinsState.hasInternet ) {
             NoInternetScreen(onTryButtonClick = {
-                if(ConnectionStatus.hasInternetConnection(context)){
+                if (ConnectionStatus.hasInternetConnection(context)) {
                     coinsViewModel.onEvent(event = CoinsEvent.CloseNoInternetDisplay)
                 }
             })
-        }
+     }
 
         if(coinsState.errorMessage.isNotEmpty()) {
             Text(

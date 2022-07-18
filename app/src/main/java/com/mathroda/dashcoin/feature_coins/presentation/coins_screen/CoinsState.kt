@@ -12,6 +12,5 @@ data class CoinsState(
     val chartModels: MutableList<ChartModel> = mutableListOf(),
     val errorMessage: String = "",
     val searchQuery: String = "",
-    val isRendered:Boolean = false
 
 )
