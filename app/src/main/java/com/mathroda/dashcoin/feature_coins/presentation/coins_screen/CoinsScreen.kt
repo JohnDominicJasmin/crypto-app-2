@@ -3,7 +3,6 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -44,7 +43,9 @@ fun CoinsScreen(
             .background(DarkGray)
             .fillMaxSize()
     ) {
-        Column {
+
+
+            Column {
             TopBar(title = "Live Prices")
             SearchBar(
                 hint = "Search...",
@@ -55,31 +56,35 @@ fun CoinsScreen(
                     coinsViewModel.onEvent(event = CoinsEvent.EnteredSearchQuery(it))
                 }
             )
+                if (coinsState.isRendered) {
 
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing = coinsState.isRefreshing),
-                onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins) }) {
+                    SwipeRefresh(
+                        state = rememberSwipeRefreshState(isRefreshing = coinsState.isRefreshing),
+                        onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins) }) {
 
-                LazyColumn {
+                        LazyColumn {
 
-                    itemsIndexed(items = coinsState.coinModels.filter {
-                        it.name.contains(coinsState.searchQuery.trim(), ignoreCase = true) ||
-                        it.id.contains(coinsState.searchQuery.trim(), ignoreCase = true) ||
-                        it.symbol.contains(coinsState.searchQuery.trim(), ignoreCase = true)
-                    }, key = {_,item -> item.id}){ index: Int, coinModel: CoinModel->
+                            itemsIndexed(items = coinsState.coinModels.filter {
+                                it.name.contains(
+                                    coinsState.searchQuery.trim(),
+                                    ignoreCase = true) ||
+                                it.id.contains(coinsState.searchQuery.trim(), ignoreCase = true) ||
+                                it.symbol.contains(coinsState.searchQuery.trim(), ignoreCase = true)
+                            }, key = { _, item -> item.id }) { index: Int, coinModel: CoinModel ->
 
-                    CoinsItem(
-                            context = context,
-                            coinModel = coinModel,
-                            chartModel = coinsState.chartModels.takeIf{it.isNotEmpty() && it.size > index }?.get(index),
-                            onItemClick = {
-                                navController?.navigate(Screens.CoinDetailScreen.route + "/${coinModel.id}")
+                                CoinsItem(
+                                    context = context,
+                                    coinModel = coinModel,
+                                    chartModel = coinsState.chartModels.takeIf { it.isNotEmpty() && it.size > index }
+                                        ?.get(index),
+                                    onItemClick = {
+                                        navController?.navigate(Screens.CoinDetailScreen.route + "/${coinModel.id}")
+                                    }
+                                )
                             }
-                        )
+                        }
                     }
                 }
-            }
-
         }
 
 

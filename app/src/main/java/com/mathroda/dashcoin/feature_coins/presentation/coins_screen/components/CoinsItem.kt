@@ -80,8 +80,8 @@ fun CoinsItem(
                 oneDayChange = coinModel.priceChange1d,
                 context = context,
                 modifier = Modifier
-                    .height(80.dp)
-                    .weight(4f)
+                    .height(75.dp)
+                    .weight(3.8f)
 
 
             )

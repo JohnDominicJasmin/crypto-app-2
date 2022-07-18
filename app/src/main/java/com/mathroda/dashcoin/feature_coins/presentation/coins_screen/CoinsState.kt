@@ -9,7 +9,9 @@ data class CoinsState(
     val isRefreshing: Boolean = false,
     val hasInternet: Boolean = true,
     val coinModels: List<CoinModel> = emptyList(),
-    val chartModels: List<ChartModel> = emptyList(),
+    val chartModels: MutableList<ChartModel> = mutableListOf(),
     val errorMessage: String = "",
-    val searchQuery: String = ""
+    val searchQuery: String = "",
+    val isRendered:Boolean = false
+
 )

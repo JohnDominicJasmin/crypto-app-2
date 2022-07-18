@@ -2,9 +2,8 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mathroda.dashcoin.core.util.Constants.VISIBLE_ITEM_COUNT
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
-import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
-import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -34,14 +33,16 @@ class CoinsViewModel @Inject constructor(
         coroutineScope {
             runCatching {
 
-                withContext(Dispatchers.IO) {
                     while(isActive) {
                         coinUseCase.getCoins().distinctUntilChanged().collect { coins ->
                             _state.update { it.copy(coinModels = coins) }
-                            _state.update { it.copy(chartModels = getCharts(coins), isLoading = false, isRefreshing = false)}
+                            coins.forEach { coin ->
+                                coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chartModels)
+                                val hasItemsRendered = state.value.chartModels.size > VISIBLE_ITEM_COUNT
+                                _state.update { it.copy(isRendered = hasItemsRendered, isLoading = !hasItemsRendered, isRefreshing = !hasItemsRendered) }
+                            }
                         }
                         delay(30.seconds)
-                    }
                 }
 
 
@@ -62,19 +63,6 @@ class CoinsViewModel @Inject constructor(
         }
     }
 
-
-    private suspend fun getCharts(coins: List<CoinModel>): List<ChartModel> =
-        mutableListOf<Deferred<ChartModel>>().run {
-            coroutineScope {
-                coins.forEach { coin ->
-                    val chart = async {
-                        coinUseCase.getChart(coinId = coin.id, period = "24h").first()
-                    }
-                    add(chart)
-                }
-            }
-            return awaitAll()
-}
 
     fun onEvent(event: CoinsEvent){
         when(event){
