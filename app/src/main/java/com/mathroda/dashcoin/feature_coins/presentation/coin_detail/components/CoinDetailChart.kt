@@ -43,6 +43,19 @@ fun CoinDetailChart(
 
     AndroidView(
         factory = { contextFactory ->
+
+            val lineDataSet =
+                ChartScreenViewState().getLineDataSet(
+                    lineData = dataSet,
+                    label = "chart values",
+                    oneDayChange = oneDayChange,
+                    context = context,
+                ).apply {
+                    mode = LineDataSet.Mode.LINEAR
+
+
+                }
+
             LineChart(contextFactory).apply {
                 onChartGestureListener = object: OnChartGestureListener{
                     override fun onChartGestureStart(
@@ -96,31 +109,20 @@ fun CoinDetailChart(
                 setTouchEnabled(true)
                 setScaleEnabled(false)
                 setDrawGridBackground(false)
-                animateX(1, Easing.EaseInOutBounce)
                 setDrawBorders(false)
                 setDrawMarkers(true)
-
+                setLineDataSet(lineDataSet)
+                animateX(1500, Easing.Linear)
+                setNoDataText("No Data Available")
                 marker = markerView
             }
         },
         update = { lineChart ->
 
-             val lineDataSet =
-                ChartScreenViewState().getLineDataSet(
-                    lineData = dataSet,
-                    label = "chart values",
-                    oneDayChange = oneDayChange,
-                    context = context,
-                ).apply {
-                   mode = LineDataSet.Mode.LINEAR
 
-
-                }
 
 
             lineChart.apply {
-                setLineDataSet(lineDataSet)
-                setNoDataText("No Data Available")
                 invalidate()
             }
         },

@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.mathroda.dashcoin.R
@@ -17,7 +18,6 @@ import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartS
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.getCompatDrawable
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.setLineDataSet
 import com.mathroda.dashcoin.ui.theme.TextWhite
-
 
 
 @Composable
@@ -31,7 +31,7 @@ fun CoinsChart(
     val dataSet = mutableListOf<Entry>()
     chartModel?.let { chartsValue ->
         chartsValue.chart.takeLast(LAST_FIVE_HOURS).map { value ->
-            for (i in value){
+            for (i in value) {
                 dataSet.add(addEntry(value[0], value[1]))
             }
         }
@@ -39,29 +39,34 @@ fun CoinsChart(
 
     AndroidView(
         factory = { contextFactory ->
-           LineChart(contextFactory).apply {
-               description.isEnabled = false
-               isDragEnabled = false
-               xAxis.isEnabled = false
-               axisLeft.setDrawAxisLine(false)
-               axisLeft.textColor = TextWhite.toArgb()
-               axisLeft.isEnabled = false
-               axisRight.isEnabled = false
-               legend.isEnabled = false
-               isDoubleTapToZoomEnabled = false
-               isHighlightPerDragEnabled = false
-               setTouchEnabled(false)
-               zoom(1f,1f,100f,1f)
-               setScaleEnabled(false)
-               animateX(1)
-               setDrawGridBackground(false)
-               setDrawBorders(false)
-               setDrawMarkers(false)
-           }
+
+
+
+            LineChart(contextFactory).apply {
+
+
+                description.isEnabled = false
+                isDragEnabled = false
+                xAxis.isEnabled = false
+                axisLeft.setDrawAxisLine(false)
+                axisLeft.textColor = TextWhite.toArgb()
+                axisLeft.isEnabled = false
+                axisRight.isEnabled = false
+                legend.isEnabled = false
+                isDoubleTapToZoomEnabled = false
+                isHighlightPerDragEnabled = false
+                setTouchEnabled(false)
+                zoom(1f, 1f, 100f, 1f)
+                setScaleEnabled(false)
+                setDrawGridBackground(false)
+                setDrawBorders(false)
+                setDrawMarkers(false)
+                setNoDataText("No Data Available")
+
+            }
 
         },
         update = { lineChart ->
-
             val lineDataSet =
                 ChartScreenViewState().getLineDataSet(
                     lineData = dataSet,
@@ -69,14 +74,13 @@ fun CoinsChart(
                     oneDayChange = oneDayChange,
                     context = context,
 
-                ).apply{
-                    fillDrawable = context.getCompatDrawable(R.drawable.background_transparent_chart)
-                    lineWidth =  1.4f
+                    ).apply {
+                    fillDrawable =
+                        context.getCompatDrawable(R.drawable.background_transparent_chart)
+                    lineWidth = 1.4f
                 }
-
-            lineChart.apply{
-                setLineDataSet(lineDataSet)
-                setNoDataText("No Data Available")
+            lineChart.apply {
+                setLineDataSet(lineDataSet, 100)
                 invalidate()
             }
 
