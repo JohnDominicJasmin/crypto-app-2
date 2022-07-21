@@ -1,6 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.data.dto
-
-import com.mathroda.dashcoin.feature_coins.domain.models.NewsDetailModel
+package com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto
 
 data class News(
     val coins: List<Any>,
