@@ -1,9 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.domain.repository
 
-import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
-import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
-import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
-import com.mathroda.dashcoin.feature_coins.domain.models.NewsDetailModel
+import com.mathroda.dashcoin.feature_coins.domain.models.*
 
 interface CoinRepository {
 
@@ -15,6 +12,7 @@ interface CoinRepository {
 
     suspend fun getNews(filter: String): List<NewsDetailModel>
 
+    suspend fun getGlobalMarket():GlobalMarketModel
 
 
 }

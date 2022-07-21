@@ -6,13 +6,15 @@ import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.core.util.Constants
 import com.mathroda.dashcoin.core.util.Constants.HEADER_CACHE_CONTROL
 import com.mathroda.dashcoin.core.util.Constants.HEADER_PRAGMA
-import com.mathroda.dashcoin.feature_coins.data.remote.DashCoinApi
+import com.mathroda.dashcoin.feature_coins.data.remote.CoinPaprikaApi
+import com.mathroda.dashcoin.feature_coins.data.remote.CoinStatsApi
 import com.mathroda.dashcoin.feature_coins.data.repository.CoinRepositoryImpl
 import com.mathroda.dashcoin.feature_coins.domain.repository.CoinRepository
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_chart.GetChartUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coin.GetCoinUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coins.GetCoinsUseCase
+import com.mathroda.dashcoin.feature_coins.domain.use_case.get_market_status.GetGlobalMarketUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_news.GetNewsUseCase
 import dagger.Module
 import dagger.Provides
@@ -36,24 +38,35 @@ object CoinsModule {
 
     @Provides
     @Singleton
-    fun providesDashCoinApi(okHttpClient: OkHttpClient): DashCoinApi {
+    fun providesCoinStatsApi(okHttpClient: OkHttpClient): CoinStatsApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
+            .baseUrl(Constants.COIN_STATS_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
-            .create(DashCoinApi::class.java)
+            .create(CoinStatsApi::class.java)
     }
 
 
     @Provides
     @Singleton
-    fun providesCoinRepository(api: DashCoinApi): CoinRepository {
-        return CoinRepositoryImpl(api)
+    fun providesCoinPaprikaApi(okHttpClient: OkHttpClient): CoinPaprikaApi {
+        return Retrofit.Builder()
+            .baseUrl(Constants.COIN_PAPRIKA_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+            .create(CoinPaprikaApi::class.java)
     }
 
 
-
+    @Provides
+    @Singleton
+    fun providesCoinRepository(
+        coinStatsApi: CoinStatsApi,
+        coinPaprikaAPi: CoinPaprikaApi): CoinRepository {
+        return CoinRepositoryImpl(coinStatsApi, coinPaprikaAPi)
+    }
 
 
     @Provides
@@ -64,13 +77,11 @@ object CoinsModule {
             getCoin = GetCoinUseCase(repository),
             getChart = GetChartUseCase(repository),
             getNews = GetNewsUseCase(repository),
+            getGlobalMarket = GetGlobalMarketUseCase(repository)
 
 
-        )
+            )
     }
-
-
-
 
 
     @Provides
@@ -90,9 +101,8 @@ object CoinsModule {
                 .header(HEADER_CACHE_CONTROL, cacheControl.toString())
                 .build()
 
-            }
         }
-
+    }
 
 
     @Provides
@@ -101,7 +111,7 @@ object CoinsModule {
     fun providesOfflineInterceptor(@ApplicationContext context: Context): Interceptor {
         return Interceptor { chain ->
             var request = chain.request()
-            if(!ConnectionStatus.hasInternetConnection(context)){
+            if (!ConnectionStatus.hasInternetConnection(context)) {
                 val cacheControl = CacheControl.Builder()
                     .maxStale(7, TimeUnit.DAYS)
                     .build()
@@ -120,10 +130,10 @@ object CoinsModule {
     @Provides
     @Singleton
     @Named("LoggingInterceptor")
-    fun providesLoggingInterceptor():Interceptor{
-        return HttpLoggingInterceptor{
+    fun providesLoggingInterceptor(): Interceptor {
+        return HttpLoggingInterceptor {
             Timber.d("LOGGING INTERCEPTOR: $it")
-        }.also{
+        }.also {
             it.setLevel(HttpLoggingInterceptor.Level.BODY)
         }
 
@@ -132,7 +142,7 @@ object CoinsModule {
 
     @Provides
     @Singleton
-    fun providesCache(@ApplicationContext context : Context):Cache{
+    fun providesCache(@ApplicationContext context: Context): Cache {
         val httpCacheDirectory = File(context.cacheDir, "offlineCache")
         val cacheSize = 50 * 1024 * 1024
         return Cache(httpCacheDirectory, cacheSize.toLong())
@@ -144,7 +154,8 @@ object CoinsModule {
         cache: Cache,
         @Named("LoggingInterceptor") loggingInterceptor: Interceptor,
         @Named("OfflineInterceptor") offlineInterceptor: Interceptor,
-        @Named("NetworkInterceptor") networkInterceptor: Interceptor,): OkHttpClient {
+        @Named("NetworkInterceptor") networkInterceptor: Interceptor,
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .cache(cache)
             .addInterceptor(loggingInterceptor)

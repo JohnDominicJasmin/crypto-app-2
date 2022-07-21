@@ -1,10 +1,8 @@
 package com.mathroda.dashcoin.feature_coins.data.mapper
 
-import com.mathroda.dashcoin.feature_coins.data.dto.*
-import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
-import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
-import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
-import com.mathroda.dashcoin.feature_coins.domain.models.NewsDetailModel
+import com.mathroda.dashcoin.feature_coins.data.dto.coin_paprika_dto.GlobalMarketDto
+import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.*
+import com.mathroda.dashcoin.feature_coins.domain.models.*
 
 object CoinMapper {
 
@@ -18,14 +16,17 @@ object CoinMapper {
 
     fun Coin.toCoins(): CoinModel {
         return CoinModel(
-            id,
-            icon,
-            marketCap,
-            name,
-            price,
-            priceChange1d,
-            rank,
-            symbol
+            id = id,
+            icon = icon,
+            marketCap = marketCap,
+            name = name,
+            price = price,
+            priceChange1d = priceChange1d,
+            rank = rank,
+            symbol = symbol,
+            priceChange1h = priceChange1h,
+            priceChange1w = priceChange1w,
+            volume = volume
         )
     }
 
@@ -65,6 +66,17 @@ object CoinMapper {
         )
     }
 
+
+    fun GlobalMarketDto.toGlobalMarket():GlobalMarketModel{
+        return GlobalMarketModel(
+            marketCapUsd = marketCapUsd,
+            volume24hUsd = volume24hUsd,
+            cryptocurrenciesNumber = cryptocurrenciesNumber,
+            bitcoinDominancePercentage = bitcoinDominancePercentage,
+            marketCapAllTimeHigh = marketCapAthValue,
+            volume24hAllTimeHigh = volume24hAthValue,
+        )
+    }
 
 
 }

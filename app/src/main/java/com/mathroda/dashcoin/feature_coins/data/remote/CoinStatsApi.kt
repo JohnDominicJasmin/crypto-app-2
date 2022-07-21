@@ -1,14 +1,14 @@
 package com.mathroda.dashcoin.feature_coins.data.remote
 
-import com.mathroda.dashcoin.feature_coins.data.dto.ChartDto
-import com.mathroda.dashcoin.feature_coins.data.dto.CoinDetailDto
-import com.mathroda.dashcoin.feature_coins.data.dto.CoinsDto
-import com.mathroda.dashcoin.feature_coins.data.dto.NewsDto
+import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.ChartDto
+import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.CoinDetailDto
+import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.CoinsDto
+import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.NewsDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import kotlinx.coroutines.flow.Flow
-interface DashCoinApi {
+
+interface CoinStatsApi {
 
     @GET("v1/coins")
     suspend fun getCoins(

@@ -1,7 +1,8 @@
 package com.mathroda.dashcoin.core.util
 
 object Constants {
-    const val BASE_URL = "https://api.coinstats.app/public/"
+    const val COIN_STATS_BASE_URL = "https://api.coinstats.app/public/"
+    const val COIN_PAPRIKA_BASE_URL = "https://api.coinpaprika.com/"
     const val PARAM_COIN_ID = "coinId" //default value for get coin by id parameter
     const val DATABASE_NAME = "coins_db"
     const val HANDPICKED_NEWS = "handpicked"
@@ -9,7 +10,7 @@ object Constants {
     const val LATEST_NEWS = "latest"
     const val BULLISH_NEWS = "bullish"
     const val BEARISH_NEWS = "bearish"
-    const val LAST_FIVE_HOURS = 60
+    const val LAST_TWELVE_HOURS = 144
 
     const val HEADER_CACHE_CONTROL = "Cache-Control"
     const val HEADER_PRAGMA = "Pragma"
