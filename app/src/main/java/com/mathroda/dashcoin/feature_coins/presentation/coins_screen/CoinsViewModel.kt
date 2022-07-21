@@ -14,80 +14,91 @@ import kotlin.time.Duration.Companion.seconds
 @HiltViewModel
 class CoinsViewModel @Inject constructor(
     private val coinUseCase: CoinUseCases
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(CoinsState())
     val state = _state.asStateFlow()
 
 
     init {
-        viewModelScope.launch{
-            _state.update { it.copy(isLoading = true) }
-            getCoins()
-        }
+        getGlobalMarket()
+        getCoins()
     }
 
 
-    private suspend fun getCoins() {
+    private fun getGlobalMarket() {
+        viewModelScope.launch {
+            runCatching {
+                  coinUseCase.getGlobalMarket()
+            }.onSuccess { globalMarket ->
+                _state.update { it.copy(globalMarket = globalMarket, tickerVisible = true, isLoading = false) }
+            }.onFailure { exception ->
+                handleException(exception)
+            }
+        }
+    }
 
-        coroutineScope {
+    private fun getCoins() {
+
+        viewModelScope.launch {
             runCatching {
 
-                    while(isActive) {
-                        coinUseCase.getCoins().distinctUntilChanged().collect { coins ->
-                            _state.update { it.copy(coinModels = coins) }
-                            coins.forEach { coin ->
-                                coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chartModels)
-                                val hasItemsRendered = state.value.chartModels.size > VISIBLE_ITEM_COUNT
-                                _state.update { it.copy(isLoading = !hasItemsRendered, isRefreshing = !hasItemsRendered) }
+                while (isActive) {
+                    coinUseCase.getCoins().distinctUntilChanged().collect { coins ->
+                        _state.update { it.copy(coin = coins) }
+                        coins.forEach { coin ->
+                            coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chart)
+                            val isItemsRendered = state.value.chart.size > VISIBLE_ITEM_COUNT
+                            _state.update {
+                                it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered, isRefreshing = false)
                             }
                         }
-                        delay(30.seconds)
+                    }
+                    delay(30.seconds)
                 }
 
 
             }.onFailure { exception ->
-                    _state.update { it.copy(isLoading = false, isRefreshing = false)}
-                    when (exception) {
-                        is CoinExceptions.UnexpectedErrorException -> {
-                            _state.update { it.copy(errorMessage = exception.message!!) }
-                        }
-                        is CoinExceptions.NoInternetException -> {
-                            _state.update { it.copy(hasInternet = false) }
-                        }
-                    }
-
-                this.cancel()
-
+                handleException(exception)
             }
         }
     }
 
+    private suspend fun handleException(exception: Throwable) {
+        coroutineScope {
+            _state.update { it.copy(isLoading = false, isRefreshing = false,) }
+            when (exception) {
+                is CoinExceptions.UnexpectedErrorException -> {
+                    _state.update { it.copy(errorMessage = exception.message!!) }
+                }
+                is CoinExceptions.NoInternetException -> {
+                    _state.update { it.copy(hasInternet = false,) }
+                }
+            }
+            this.cancel()
+        }
+    }
 
-    fun onEvent(event: CoinsEvent){
-        when(event){
+    fun onEvent(event: CoinsEvent) {
+        when (event) {
             is CoinsEvent.RefreshCoins -> {
-                refresh()
+                _state.update { it.copy(isRefreshing = true) }
+                getCoins()
+                getGlobalMarket()
             }
 
             is CoinsEvent.CloseNoInternetDisplay -> {
-                _state.update { it.copy(hasInternet = true, isRefreshing = false) }
-                refresh()
+                _state.update { it.copy(hasInternet = true) }
             }
 
             is CoinsEvent.EnteredSearchQuery -> {
-
                 _state.update { it.copy(searchQuery = event.searchQuery) }
             }
         }
     }
-    private fun refresh() {
-        viewModelScope.launch {
-            _state.update { it.copy(isRefreshing = true) }
-            getCoins()
-        }
 
-    }
+
+
 
 
 }
