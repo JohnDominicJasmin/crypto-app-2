@@ -33,6 +33,7 @@ import com.mathroda.dashcoin.navigation.navigateScreen
 import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.*
 
 @Composable
 fun CoinDetailScreen(
@@ -164,7 +165,12 @@ fun CoinDetailScreen(
                                    runCatching {
                                        uriHandler.openUri(coin.twitterUrl!!)
                                    }.onFailure {
-                                        Toast.makeText(context, "Twitter is not available", Toast.LENGTH_SHORT).show()
+                                       Toast
+                                           .makeText(
+                                               context,
+                                               "Twitter is not available",
+                                               Toast.LENGTH_SHORT)
+                                           .show()
                                    }
                                }
                        )
@@ -181,7 +187,12 @@ fun CoinDetailScreen(
                                    runCatching {
                                        uriHandler.openUri(coin.websiteUrl!!)
                                    }.onFailure {
-                                       Toast.makeText(context, "Website is not available", Toast.LENGTH_SHORT).show()
+                                       Toast
+                                           .makeText(
+                                               context,
+                                               "Website is not available",
+                                               Toast.LENGTH_SHORT)
+                                           .show()
                                    }
                                }
                        )
@@ -202,6 +213,7 @@ fun CoinDetailScreen(
             NoInternetScreen(onTryButtonClick = {
                 if(ConnectionStatus.hasInternetConnection(context)){
                     coinDetailViewModel.onEvent(event = CoinDetailEvent.CloseNoInternetDisplay)
+                    coinDetailViewModel.onEvent(event = CoinDetailEvent.LoadCoinDetail)
                 }
             })
         }
@@ -231,5 +243,7 @@ fun numbersToFormat(number: Int): String? {
     val numberFormat = NumberFormat.getNumberInstance()
     return numberFormat.format(number)
 }
+
+
 
 

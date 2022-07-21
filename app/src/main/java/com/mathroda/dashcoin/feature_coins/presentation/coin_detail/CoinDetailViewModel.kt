@@ -44,10 +44,13 @@ class CoinDetailViewModel @Inject constructor(
         when(event){
             is CoinDetailEvent.CloseNoInternetDisplay -> {
                 _state.value = state.copy(hasInternet = true)
-                loadCoinDetail()
             }
             is CoinDetailEvent.ToggleFavoriteCoin -> {
                 _state.value = state.copy(isFavorite = !state.isFavorite)
+            }
+            is CoinDetailEvent.LoadCoinDetail -> {
+                loadCoinDetail()
+
             }
         }
 
