@@ -12,6 +12,12 @@
         <entry key="../../../../layout/compose-model-1657555649049.xml" value="0.22037037037037038" />
         <entry key="../../../../layout/compose-model-1657626973438.xml" value="0.1" />
         <entry key="../../../../layout/compose-model-1658161728052.xml" value="0.33425925925925926" />
+        <entry key="../../../../layout/compose-model-1658232142728.xml" value="0.9" />
+        <entry key="../../../../layout/compose-model-1658232904355.xml" value="0.7931818181818182" />
+        <entry key="../../../../layout/compose-model-1658239749262.xml" value="0.31672297297297297" />
+        <entry key="../../../../layout/compose-model-1658241750168.xml" value="0.31756756756756754" />
+        <entry key="../../../../layout/compose-model-1658242135701.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1658252066289.xml" value="0.14392803598200898" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1155" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable/background_negative_chart.xml" value="0.1" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable/background_negative_rate.xml" value="0.1" />
@@ -25,6 +31,7 @@
         <entry key="app/src/main/res/drawable/background_positive_chart.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_transparent.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/circle_chart_indicator.xml" value="0.18" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.2235" />
         <entry key="app/src/main/res/layout-v28/marker_view.xml" value="0.22" />
         <entry key="app/src/main/res/layout/marker_view.xml" value="0.75" />
       </map>
