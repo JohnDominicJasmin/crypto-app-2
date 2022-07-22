@@ -1,9 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.data.remote
 
-import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.ChartDto
-import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.CoinDetailDto
-import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.CoinsDto
-import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.NewsDto
+import com.mathroda.dashcoin.feature_coins.data.dto.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -44,4 +41,9 @@ interface CoinStatsApi {
         @Query("limit") limit: Int = 50,
         @Query("skip") skip: Int = 0
     ): NewsDto
+
+
+    @GET("v1/fiats")
+    suspend fun getFiats():FiatCurrencyDto
+
 }

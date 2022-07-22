@@ -1,6 +1,7 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -14,11 +15,10 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mathroda.dashcoin.R
-import com.mathroda.dashcoin.ui.theme.LighterGray
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.*
 
 @Composable
 fun SearchBar(
@@ -36,24 +36,23 @@ fun SearchBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
-            .padding(16.dp)
-            .clip(RoundedCornerShape(35.dp))
-            .background(LighterGray)
-            .padding(5.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .border(width = 1.dp, color = Black850, shape = RoundedCornerShape(12.dp))
+            .background(Black920)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_search),
             contentDescription = "Search",
-            tint = Color.White,
+            tint = Black450,
             modifier = Modifier
-                .size(35.dp)
+                .size(30.dp)
                 .padding(start = 12.dp),
         )
 
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(9.dp)
         ) {
 
 
@@ -62,7 +61,7 @@ fun SearchBar(
                 onValueChange = onValueChange,
                 maxLines = 1,
                 singleLine = true,
-                textStyle = TextStyle(color = TextWhite),
+                textStyle = TextStyle(color = Color.White, fontSize = 10.sp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged {
@@ -73,7 +72,7 @@ fun SearchBar(
             if (isHintDisplayed) {
                 Text(
                     text = hint,
-                    color = TextWhite,
+                    color = Black450,
                     modifier = Modifier
                 )
             }

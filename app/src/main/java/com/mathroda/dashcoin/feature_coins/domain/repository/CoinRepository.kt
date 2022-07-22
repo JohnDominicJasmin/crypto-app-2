@@ -14,5 +14,6 @@ interface CoinRepository {
 
     suspend fun getGlobalMarket():GlobalMarketModel
 
+    suspend fun getFiats():CoinFiatModel
 
 }

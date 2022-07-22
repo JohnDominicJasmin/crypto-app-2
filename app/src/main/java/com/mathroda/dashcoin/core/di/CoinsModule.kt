@@ -14,6 +14,7 @@ import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_chart.GetChartUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coin.GetCoinUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coins.GetCoinsUseCase
+import com.mathroda.dashcoin.feature_coins.domain.use_case.get_fiats.GetFiatsUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_market_status.GetGlobalMarketUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_news.GetNewsUseCase
 import dagger.Module
@@ -77,8 +78,8 @@ object CoinsModule {
             getCoin = GetCoinUseCase(repository),
             getChart = GetChartUseCase(repository),
             getNews = GetNewsUseCase(repository),
-            getGlobalMarket = GetGlobalMarketUseCase(repository)
-
+            getGlobalMarket = GetGlobalMarketUseCase(repository),
+            getFiats = GetFiatsUseCase(repository)
 
             )
     }

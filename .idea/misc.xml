@@ -18,6 +18,16 @@
         <entry key="../../../../layout/compose-model-1658241750168.xml" value="0.31756756756756754" />
         <entry key="../../../../layout/compose-model-1658242135701.xml" value="0.25" />
         <entry key="../../../../layout/compose-model-1658252066289.xml" value="0.14392803598200898" />
+        <entry key="../../../../layout/compose-model-1658408211798.xml" value="0.33" />
+        <entry key="../../../../layout/compose-model-1658409376007.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1658409632942.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1658410121432.xml" value="0.9" />
+        <entry key="../../../../layout/compose-model-1658413025194.xml" value="0.5" />
+        <entry key="../../../../layout/compose-model-1658414444004.xml" value="0.2" />
+        <entry key="../../../../layout/compose-model-1658416969408.xml" value="0.28055555555555556" />
+        <entry key="../../../../layout/compose-model-1658417705884.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1658418255883.xml" value="0.31672297297297297" />
+        <entry key="../../../../layout/compose-model-1658427710614.xml" value="0.31672297297297297" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1155" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable/background_negative_chart.xml" value="0.1" />
         <entry key="..\:/Users/gtx/AndroidStudioProjects/DashCoin/app/src/main/res/drawable/background_negative_rate.xml" value="0.1" />
@@ -31,7 +41,8 @@
         <entry key="app/src/main/res/drawable/background_positive_chart.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_transparent.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/circle_chart_indicator.xml" value="0.18" />
-        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.2235" />
+        <entry key="app/src/main/res/drawable/ic_baseline_manage_search_24.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
         <entry key="app/src/main/res/layout-v28/marker_view.xml" value="0.22" />
         <entry key="app/src/main/res/layout/marker_view.xml" value="0.75" />
       </map>

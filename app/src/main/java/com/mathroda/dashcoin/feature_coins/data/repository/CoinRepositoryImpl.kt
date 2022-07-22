@@ -3,6 +3,7 @@ package com.mathroda.dashcoin.feature_coins.data.repository
 import com.mathroda.dashcoin.feature_coins.data.remote.CoinStatsApi
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toChart
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toCoinDetail
+import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toCoinFiat
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toCoins
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toGlobalMarket
 import com.mathroda.dashcoin.feature_coins.data.mapper.CoinMapper.toNewsDetail
@@ -16,9 +17,14 @@ import javax.inject.Inject
 
 class CoinRepositoryImpl @Inject constructor(
     private val coinStatsApi: CoinStatsApi,
-    private val coinPaprikaAPi: CoinPaprikaApi
+    private val coinPaprikaAPi: CoinPaprikaApi,
 ) : CoinRepository {
 
+
+    override suspend fun getFiats(): CoinFiatModel =
+        handleException {
+            coinStatsApi.getFiats().toCoinFiat()
+        }
 
     override suspend fun getGlobalMarket(): GlobalMarketModel =
         handleException {
