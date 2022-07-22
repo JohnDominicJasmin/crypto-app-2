@@ -36,7 +36,7 @@ fun CustomDialog(
 }
 
 @Composable
-fun CustomDialogUI(
+private fun CustomDialogUI(
     modifier: Modifier = Modifier,
     openDialogCustom: MutableState<Boolean>,
     coinName: String,

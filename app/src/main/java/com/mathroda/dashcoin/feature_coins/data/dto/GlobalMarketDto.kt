@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.data.dto.coin_paprika_dto
+package com.mathroda.dashcoin.feature_coins.data.dto
 
 
 import com.google.gson.annotations.SerializedName
@@ -27,7 +27,7 @@ data class GlobalMarketDto(
     @SerializedName("volume_24h_change_24h")
     val volume24hChange24h: Double,
     @SerializedName("volume_24h_percent_from_ath")
-    val volume24hPercentFromAth: Int,
+    val volume24hPercentFromAth: Double,
     @SerializedName("volume_24h_percent_to_ath")
     val volume24hPercentToAth: Double,
     @SerializedName("volume_24h_usd")

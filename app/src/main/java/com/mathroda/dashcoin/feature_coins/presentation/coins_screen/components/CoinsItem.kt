@@ -102,7 +102,7 @@ fun CoinsItem(
 
             CoinsChart(
                 chartModel = chartModel,
-                oneDayChange = coinModel.priceChange1d,
+                priceChange = coinModel.priceChange1w,
                 context = context,
                 modifier = defaultModifier
                     .height(75.dp)
@@ -122,7 +122,7 @@ fun CoinsItem(
                     text = "$ " + DecimalFormat("###,##0.###").format(coinModel.price.toFloat()),
                     style = MaterialTheme.typography.body2,
                     fontWeight = FontWeight.Bold,
-                    color = if (coinModel.priceChange1h < 0) CustomRed else CustomGreen,
+                    color = if (coinModel.priceChange1w < 0) CustomRed else CustomGreen,
                     modifier = Modifier.padding(bottom = 7.dp),
                     textAlign = TextAlign.End
                 )

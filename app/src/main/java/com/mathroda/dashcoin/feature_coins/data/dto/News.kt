@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto
+package com.mathroda.dashcoin.feature_coins.data.dto
 
 data class News(
     val coins: List<Any>,

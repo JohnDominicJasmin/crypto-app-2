@@ -21,7 +21,7 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 fun CoinsChart(
     modifier: Modifier,
     chartModel: ChartModel?,
-    oneDayChange: Double,
+    priceChange: Double,
     context: Context
 ) {
 
@@ -68,7 +68,7 @@ fun CoinsChart(
                 ChartScreenViewState().getLineDataSet(
                     lineData = dataSet,
                     label = "chart values",
-                    oneDayChange = oneDayChange,
+                    priceChange = priceChange,
                     context = context,
 
                     ).apply {

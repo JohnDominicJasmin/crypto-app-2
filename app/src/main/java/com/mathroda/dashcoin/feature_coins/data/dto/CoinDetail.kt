@@ -1,10 +1,10 @@
-package com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto
+package com.mathroda.dashcoin.feature_coins.data.dto
 
 
-data class Coin(
+
+
+data class CoinDetail(
     val availableSupply: Double,
-    val contractAddress: String,
-    val decimals: Int,
     val exp: List<String>,
     val icon: String,
     val id: String,
@@ -16,10 +16,10 @@ data class Coin(
     val priceChange1h: Double,
     val priceChange1w: Double,
     val rank: Int,
-    val redditUrl: String,
     val symbol: String,
     val totalSupply: Double,
     val twitterUrl: String,
     val volume: Double,
     val websiteUrl: String
 )
+

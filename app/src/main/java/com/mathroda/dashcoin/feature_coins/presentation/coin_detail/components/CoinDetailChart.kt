@@ -48,7 +48,7 @@ fun CoinDetailChart(
                 ChartScreenViewState().getLineDataSet(
                     lineData = dataSet,
                     label = "chart values",
-                    oneDayChange = oneDayChange,
+                    priceChange = oneDayChange,
                     context = context,
                 ).apply {
                     mode = LineDataSet.Mode.LINEAR

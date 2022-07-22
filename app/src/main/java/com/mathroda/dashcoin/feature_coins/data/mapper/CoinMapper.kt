@@ -1,7 +1,7 @@
 package com.mathroda.dashcoin.feature_coins.data.mapper
 
-import com.mathroda.dashcoin.feature_coins.data.dto.coin_paprika_dto.GlobalMarketDto
-import com.mathroda.dashcoin.feature_coins.data.dto.coin_stats_dto.*
+import com.mathroda.dashcoin.feature_coins.data.dto.*
+import com.mathroda.dashcoin.feature_coins.data.dto.GlobalMarketDto
 import com.mathroda.dashcoin.feature_coins.domain.models.*
 
 object CoinMapper {
@@ -78,5 +78,10 @@ object CoinMapper {
         )
     }
 
+    fun FiatCurrencyDto.toCoinFiat(): CoinFiatModel{
+        return CoinFiatModel(
+            currencies = this
+        )
+    }
 
 }

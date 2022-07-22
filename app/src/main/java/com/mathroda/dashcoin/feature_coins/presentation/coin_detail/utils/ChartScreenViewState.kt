@@ -13,14 +13,14 @@ class ChartScreenViewState {
     fun getLineDataSet(
         lineData: List<Entry>,
         label: String,
-        oneDayChange: Double,
+        priceChange: Double,
         context: Context
     ) =
         LineDataSet(lineData, label).apply {
             mode = LineDataSet.Mode.CUBIC_BEZIER
-             color = getColorStatus(oneDayChange)
-             highLightColor = getColorStatus(oneDayChange)
-            fillDrawable = getBackground(oneDayChange,context)
+             color = getColorStatus(priceChange)
+             highLightColor = getColorStatus(priceChange)
+            fillDrawable = getBackground(priceChange,context)
             lineWidth = 2f
             setDrawFilled(true)
             setDrawCircles(false)
