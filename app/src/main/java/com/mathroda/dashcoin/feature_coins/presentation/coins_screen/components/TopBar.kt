@@ -23,7 +23,11 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 
 @Composable
 fun TopBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onToggleThemeClick: () -> Unit,
+    onCurrencyClick: () -> Unit,
+    onSearchClick: () -> Unit,
+
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -71,12 +75,14 @@ fun TopBar(
                     painter = painterResource(id = R.drawable.ic_sun),
                     contentDescription = "Toggle theme icon",
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(20.dp).clickable {
-                        /*TODO*/
-                    }
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clickable {
+                            onToggleThemeClick()
+                        }
                 )
 
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = onCurrencyClick) {
                 Text(
                     text = "USD",
                     style = MaterialTheme.typography.button,
@@ -88,9 +94,11 @@ fun TopBar(
                     painter = painterResource(id = R.drawable.ic_search),
                     contentDescription = "Search icon",
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(20.dp).clickable {
-                        /*TODO*/
-                    }
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clickable {
+                            onSearchClick()
+                        }
                 )
 
         }
@@ -104,5 +112,9 @@ fun TopBar(
 @Preview
 @Composable
 fun TopBarPreview() {
-    TopBar(modifier = Modifier.wrapContentSize())
+    TopBar(
+        modifier = Modifier.wrapContentSize(),
+        onCurrencyClick = {},
+        onToggleThemeClick = {},
+        onSearchClick = {})
 }

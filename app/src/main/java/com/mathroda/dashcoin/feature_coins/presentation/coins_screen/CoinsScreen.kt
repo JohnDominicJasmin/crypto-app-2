@@ -25,6 +25,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
+import com.mathroda.dashcoin.feature_coins.presentation.coin_currency.CoinCurrencyScreen
+import com.mathroda.dashcoin.feature_coins.presentation.coin_currency.CoinCurrencyViewModel
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.CoinsItem
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.MarqueeText
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
@@ -38,11 +40,14 @@ import com.mathroda.dashcoin.ui.theme.DarkGray
 fun CoinsScreen(
     modifier: Modifier = Modifier,
     coinsViewModel: CoinsViewModel = hiltViewModel(),
+    coinsCurrenciesViewModel: CoinCurrencyViewModel = hiltViewModel(),
     navController: NavController?
 ) {
 
+    val coinsCurrenciesState = coinsCurrenciesViewModel.state
     val coinsState by coinsViewModel.state.collectAsState()
     val context = LocalContext.current
+    val (dialogStateVisible, onDialogToggle) = remember{ mutableStateOf(false) }
 
 
     Box(
@@ -60,8 +65,22 @@ fun CoinsScreen(
                         .height(55.dp)
                         .padding(bottom = 5.dp, top = 14.dp)
                         .fillMaxWidth()
-                        .padding(horizontal = 15.dp))
+                        .padding(horizontal = 15.dp),
+                    onToggleThemeClick = {
 
+                    }, onCurrencyClick = {
+                        onDialogToggle(!dialogStateVisible)
+                    }, onSearchClick = {
+
+                    })
+
+                if (dialogStateVisible) {
+                    CoinCurrencyScreen(
+                        currencies = coinsCurrenciesState.currencies,
+                        onDismissRequest = {
+                            onDialogToggle(!dialogStateVisible)
+                        })
+                }
 
                 if (coinsState.tickerVisible) {
 

@@ -60,8 +60,13 @@ fun FavoriteListScreen(
     ) {
 
         Column {
-            TopBar(title = "Watch List")
-//todo: fix this it doesn't work
+            TopBar(onToggleThemeClick = {
+
+            }, onCurrencyClick = {
+
+            }, onSearchClick = {
+
+            })
             coinDetailState.coinDetailModel?.let { status ->
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     item {

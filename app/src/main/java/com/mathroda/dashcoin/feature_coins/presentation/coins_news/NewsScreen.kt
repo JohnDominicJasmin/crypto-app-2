@@ -53,7 +53,14 @@ fun NewsScreen(
             .padding(12.dp)
     ) {
         Column {
-            TopBar(title = "Trending News")
+            TopBar(
+                onSearchClick = {
+
+            }, onToggleThemeClick = {
+
+            }, onCurrencyClick = {
+
+            })
             SearchBar(
                 hint = "Search...",
                 modifier = Modifier
@@ -103,6 +110,7 @@ fun NewsScreen(
             NoInternetScreen(onTryButtonClick = {
                 if(ConnectionStatus.hasInternetConnection(context)){
                     newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
+                    newsViewModel.onEvent(event = NewsEvent.RefreshNews)
                 }
             })
         }
