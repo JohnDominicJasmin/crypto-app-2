@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.collectLatest
 @ExperimentalMaterialApi
 @Composable
 fun NewsScreen(
+    modifier: Modifier = Modifier,
     newsViewModel: NewsViewModel = hiltViewModel(),
     navController: NavController?
 ) {
@@ -46,7 +47,7 @@ fun NewsScreen(
 
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(DarkGray)
             .fillMaxSize()
             .padding(12.dp)
@@ -73,8 +74,8 @@ fun NewsScreen(
                     LazyColumn {
 
                         items(state.trendingNews.filter {
-                            it.title.contains(state.searchQuery, ignoreCase = true) ||
-                                    it.description.contains(state.searchQuery, ignoreCase = true)
+                            it.title.contains(state.searchQuery.trim(), ignoreCase = true) ||
+                                    it.description.contains(state.searchQuery.trim(), ignoreCase = true)
                         }, key = {it.title}) { news ->
                             NewsCard(
                                 newsThumb = news.imgURL,
