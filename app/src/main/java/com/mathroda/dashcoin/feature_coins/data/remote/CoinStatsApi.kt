@@ -9,7 +9,7 @@ interface CoinStatsApi {
 
     @GET("v1/coins")
     suspend fun getCoins(
-        @Query("currency") currency: String = "USD",
+        @Query("currency") currency: String,
         @Query("skip") skip: Int = 0,
         @Query("limit") limit: Int = 500
     ): CoinsDto

@@ -24,9 +24,9 @@ import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mathroda.dashcoin.core.util.ConnectionStatus
+import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
-import com.mathroda.dashcoin.feature_coins.presentation.coin_currency.CoinCurrencyScreen
-import com.mathroda.dashcoin.feature_coins.presentation.coin_currency.CoinCurrencyViewModel
+import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.CoinCurrencyScreen
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.CoinsItem
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.MarqueeText
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
@@ -40,14 +40,12 @@ import com.mathroda.dashcoin.ui.theme.DarkGray
 fun CoinsScreen(
     modifier: Modifier = Modifier,
     coinsViewModel: CoinsViewModel = hiltViewModel(),
-    coinsCurrenciesViewModel: CoinCurrencyViewModel = hiltViewModel(),
     navController: NavController?
 ) {
 
-    val coinsCurrenciesState = coinsCurrenciesViewModel.state
     val coinsState by coinsViewModel.state.collectAsState()
     val context = LocalContext.current
-    val (dialogStateVisible, onDialogToggle) = remember{ mutableStateOf(false) }
+    val (dialogStateVisible, onDialogToggle) = remember { mutableStateOf(false) }
 
 
     Box(
@@ -61,6 +59,7 @@ fun CoinsScreen(
             Column {
 
                 TopBar(
+                    currencyValue = coinsState.coinCurrencyPreference?.currency ?: "",
                     modifier = Modifier
                         .height(55.dp)
                         .padding(bottom = 5.dp, top = 14.dp)
@@ -76,10 +75,14 @@ fun CoinsScreen(
 
                 if (dialogStateVisible) {
                     CoinCurrencyScreen(
-                        currencies = coinsCurrenciesState.currencies,
-                        onDismissRequest = {
+                        currencies = coinsState.currencies,
+                        onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
+
                             onDialogToggle(!dialogStateVisible)
+                            coinsViewModel.onEvent(event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
+
                         })
+
                 }
 
                 if (coinsState.tickerVisible) {
@@ -174,20 +177,21 @@ fun CoinsScreen(
 
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = coinsState.isRefreshing),
-                onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins) }) {
+                onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference?.currency)) }) {
 
                 if (coinsState.isItemsRendered) {
                     LazyColumn {
 
-                        itemsIndexed(items = coinsState.coin.filter {
+                        itemsIndexed(items = coinsState.coinModels.filter {
                             it.name.contains(coinsState.searchQuery.trim(), ignoreCase = true) ||
                             it.id.contains(coinsState.searchQuery.trim(), ignoreCase = true) ||
                             it.symbol.contains(coinsState.searchQuery.trim(), ignoreCase = true)
                         }, key = { _, item -> item.id }) { index: Int, coinModel: CoinModel ->
 
                             CoinsItem(
-                                isLoading = coinsState.isLoading,
                                 context = context,
+                                isLoading = coinsState.isLoading,
+                                currencySymbol = coinsState.coinCurrencyPreference?.currencySymbol ?: "N/A",
                                 coinModel = coinModel,
                                 chartModel = coinsState.chart.takeIf { it.isNotEmpty() && it.size > index }
                                     ?.get(index),
@@ -212,11 +216,11 @@ fun CoinsScreen(
         }
 
 
-        if (coinsState.coin.isEmpty() && !coinsState.hasInternet) {
+        if (coinsState.coinModels.isEmpty() && !coinsState.hasInternet) {
             NoInternetScreen(onTryButtonClick = {
                 if (ConnectionStatus.hasInternetConnection(context)) {
                     coinsViewModel.onEvent(event = CoinsEvent.CloseNoInternetDisplay)
-                    coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins)
+                    coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference?.currency))
                 }
             })
         }
@@ -235,6 +239,8 @@ fun CoinsScreen(
     }
 
 }
+
+
 fun Long.formatToShortNumber(): String {
     return when {
         this >= 1000000000000 -> String.format("%.2f T", this / 1000000000000.0)
