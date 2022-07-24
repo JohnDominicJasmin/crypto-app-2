@@ -26,7 +26,7 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 fun CoinDetailChart(
     modifier: Modifier,
     chartModel: ChartModel?,
-    oneDayChange: Double,
+    priceChange: Double,
     context: Context,
     onChartGesture:(Float) -> Unit
 ) {
@@ -48,7 +48,7 @@ fun CoinDetailChart(
                 ChartScreenViewState().getLineDataSet(
                     lineData = dataSet,
                     label = "chart values",
-                    priceChange = oneDayChange,
+                    priceChange = priceChange,
                     context = context,
                 ).apply {
                     mode = LineDataSet.Mode.LINEAR

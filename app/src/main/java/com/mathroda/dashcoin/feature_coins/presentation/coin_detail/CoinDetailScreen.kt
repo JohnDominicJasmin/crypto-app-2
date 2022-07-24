@@ -33,7 +33,6 @@ import com.mathroda.dashcoin.navigation.navigateScreen
 import kotlinx.coroutines.flow.collectLatest
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.*
 
 @Composable
 fun CoinDetailScreen(
@@ -122,7 +121,7 @@ fun CoinDetailScreen(
 
                    CoinDetailChart(
                        chartModel = coinState.chartModel,
-                       oneDayChange = coin.priceChange1d,
+                       priceChange = coin.priceChange1w,
                        context = LocalContext.current,
                        modifier = Modifier
                            .fillMaxWidth()
