@@ -29,8 +29,11 @@ class CoinsViewModel @Inject constructor(
             getCurrency()
             getGlobalMarket()
             getCoinCurrencies()
-            delay(500)
-            getCoins(_state.value.coinCurrencyPreference?.currency)
+            delay(700)
+            getCoins(state.value.coinCurrencyPreference)
+            delay(1000)
+            getChart(state.value.coinModels)
+
         }
     }
 
@@ -60,14 +63,13 @@ class CoinsViewModel @Inject constructor(
         }
     }
 
-    private fun getCoins(currency: String?) {
+    private fun getCoins(coinCurrencyPreference: CoinCurrencyPreference?) {
         job?.cancel()
         job = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 while (isActive) {
-                    coinUseCase.getCoins(currency ?: "USD").distinctUntilChanged().collect { coins ->
-                        _state.update { it.copy(coinModels = coins) }
-                        getChart(coins)//todo: remove getChart here
+                    coinUseCase.getCoins(coinCurrencyPreference?.currency ?: "USD").distinctUntilChanged().collect { coins ->
+                        _state.update { it.copy(coinModels = coins, coinCurrencyPreference = coinCurrencyPreference, isLoading = false) }
                     }
                     delay(UPDATE_INTERVAL)
                 }
@@ -77,7 +79,8 @@ class CoinsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getChart(coinModels: List<CoinModel>){
+    private fun getChart(coinModels: List<CoinModel>){
+        viewModelScope.launch(Dispatchers.IO) {
         coinModels.forEach { coin ->
             runCatching {
                 coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chart)
@@ -89,7 +92,7 @@ class CoinsViewModel @Inject constructor(
             }.onFailure { exception ->
                 handleException(exception)
             }
-
+        }
         }
     }
     private suspend fun handleException(exception: Throwable) {
@@ -121,13 +124,12 @@ class CoinsViewModel @Inject constructor(
 
     private suspend fun updateCoinCurrency(coinCurrencyPreference: CoinCurrencyPreference){
         coinUseCase.updateCurrency(coinCurrencyPreference)
-        _state.update { it.copy(coinCurrencyPreference = coinCurrencyPreference) }
     }
     fun onEvent(event: CoinsEvent) {
         when (event) {
             is CoinsEvent.RefreshCoins -> {
                 _state.update { it.copy(isRefreshing = true) }
-                getCoins(event.currency)
+                getCoins(event.coinCurrencyPreference)
             }
 
             is CoinsEvent.CloseNoInternetDisplay -> {
@@ -139,10 +141,12 @@ class CoinsViewModel @Inject constructor(
             }
 
             is CoinsEvent.SelectCurrency -> {
-                _state.update { it.copy(isLoading = true) }
-                viewModelScope.launch(Dispatchers.IO) {
+
+                viewModelScope.launch {
+                    _state.update { it.copy(isLoading = true) }
                     updateCoinCurrency(event.coinCurrencyPreference)
-                    getCoins(event.coinCurrencyPreference.currency)
+                    getCoins(event.coinCurrencyPreference)
+
                 }
             }
         }

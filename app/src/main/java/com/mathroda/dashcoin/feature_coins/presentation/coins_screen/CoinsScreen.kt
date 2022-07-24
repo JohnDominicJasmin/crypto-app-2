@@ -177,7 +177,7 @@ fun CoinsScreen(
 
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing = coinsState.isRefreshing),
-                onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference?.currency)) }) {
+                onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference)) }) {
 
                 if (coinsState.isItemsRendered) {
                     LazyColumn {
@@ -220,7 +220,7 @@ fun CoinsScreen(
             NoInternetScreen(onTryButtonClick = {
                 if (ConnectionStatus.hasInternetConnection(context)) {
                     coinsViewModel.onEvent(event = CoinsEvent.CloseNoInternetDisplay)
-                    coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference?.currency))
+                    coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference))
                 }
             })
         }
