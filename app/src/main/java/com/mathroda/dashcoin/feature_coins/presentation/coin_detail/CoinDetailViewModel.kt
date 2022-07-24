@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mathroda.dashcoin.core.util.Constants
+import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.CoinDetailEvent
@@ -84,7 +85,7 @@ class CoinDetailViewModel @Inject constructor(
                             _state.value =
                                 state.copy(isLoading = false, coinDetailModel = coinDetail)
                         }
-                        delay(30.seconds)
+                        delay(UPDATE_INTERVAL)
                     }
 
                 }.onFailure { exception ->
@@ -113,7 +114,7 @@ class CoinDetailViewModel @Inject constructor(
                     while(isActive) {
                         val chartModel = coinUseCase.getChart(coinId, period = "24h").distinctUntilChanged().first()
                         _state.value = state.copy(isLoading = false, chartModel = chartModel)
-                        delay(30.seconds)
+                        delay(UPDATE_INTERVAL)
                     }
             }.onFailure { exception ->
                 handleException(exception)
