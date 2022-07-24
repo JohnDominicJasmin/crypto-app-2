@@ -3,12 +3,13 @@ package com.mathroda.dashcoin
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.formatToShortNumber
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.text.DecimalFormat
 import java.util.*
 
 
 class ExampleUnitTest {
     @Test
-    fun decimalFormat() {
+    fun shortDecimalFormat() {
 
 
        val marketCapUsd = 1123211459238L
@@ -18,25 +19,31 @@ class ExampleUnitTest {
 
 
     @Test
-    fun currencyTest() {
-        val currency = Currency.getInstance("AUD")
-        val initialResult = currency.getDisplayName(Locale.getDefault())
-        val finalResult = initialResult.replace("Piso", "Peso")
-        assertEquals("Australian Dollar", finalResult)
+    fun decimalFormat(){
+        val price = 1123211459238L
+        val format = DecimalFormat("#,###,###.###")
+        print(format.format(price))
     }
+
+    @Test
+    fun currencyTest() {
+
+        val currency = Currency.getInstance("EUR")
+        val result = currency.symbol
+        assertEquals("₱", result)
+    }
+
 
 
     @Test
     fun getAllCurrencies() {
 
 
-        Locale.getAvailableLocales().distinct().forEach { locale ->
+        Locale.getAvailableLocales().distinct().forEach { l ->
             try {
-                val currency = Currency.getInstance(locale)
-                if (currency != null) {
-                    println(locale.country)
-                    println(
-                        "key: " + currency.displayName + ", curr: " + currency)
+                val c = Currency.getInstance(l)
+                if (c != null) {
+                    System.out.println("key: " + l.getCountry() + ", loc: " + l + ", curr: " + c + " (" + c.getSymbol(l) + ")");
 
 
                 }
