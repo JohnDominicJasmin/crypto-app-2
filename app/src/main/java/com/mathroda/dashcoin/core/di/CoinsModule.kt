@@ -98,7 +98,7 @@ object CoinsModule {
 
             val response = chain.proceed(chain.request())
             val cacheControl = CacheControl.Builder()
-                .maxAge(30, TimeUnit.SECONDS)
+                .maxAge(40, TimeUnit.SECONDS)
                 .build()
 
             response.newBuilder()
