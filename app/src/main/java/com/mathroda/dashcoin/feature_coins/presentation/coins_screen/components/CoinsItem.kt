@@ -1,6 +1,8 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
 import android.content.Context
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,12 +31,14 @@ import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.ui.theme.*
 import java.text.DecimalFormat
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CoinsItem(
     isLoading: Boolean,
     context: Context,
     chartModel: ChartModel?,
     coinModel: CoinModel,
+    currencySymbol: String,
     onItemClick: (CoinModel) -> Unit
 ) {
 
@@ -54,8 +58,7 @@ fun CoinsItem(
                 .wrapContentHeight()
                 .padding(vertical = 8.dp, horizontal = 10.dp)
                 .clickable { onItemClick(coinModel) },
-            verticalAlignment = CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(if(isLoading) 15.dp else 0.dp),
+            verticalAlignment = CenterVertically
         ) {
 
 
@@ -63,8 +66,9 @@ fun CoinsItem(
                     model = coinModel.icon,
                     contentDescription = "Icon",
                     modifier = defaultModifier
-                        .size(52.dp)
-                        .padding(end = 12.dp)
+                        .size(45.dp)
+                        .padding(end = 6.dp)
+                        .animateContentSize()
                 )
 
 
@@ -72,7 +76,8 @@ fun CoinsItem(
                 Column(
                     horizontalAlignment = Alignment.Start,
                     modifier = defaultModifier
-                        .weight(1.5f)
+                        .weight(1.2f)
+                        .animateContentSize()
 
 
                 ) {
@@ -95,7 +100,8 @@ fun CoinsItem(
                                 append(coinModel.name)
                             }
                         },
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.animateContentSize()
                     )
                 }
 
@@ -106,8 +112,8 @@ fun CoinsItem(
                 context = context,
                 modifier = defaultModifier
                     .height(75.dp)
-                    .weight(3.0f)
-
+                    .weight(2.1f)
+                    .animateContentSize()
 
             )
 
@@ -115,17 +121,38 @@ fun CoinsItem(
                 horizontalAlignment = Alignment.End,
                 modifier = defaultModifier
                     .weight(2f)
+                    .animateContentSize()
+
             ) {
 
-                Text(
-                    fontSize = 14.sp,
-                    text = "$ " + DecimalFormat("###,##0.###").format(coinModel.price.toFloat()),
-                    style = MaterialTheme.typography.body2,
-                    fontWeight = FontWeight.Bold,
-                    color = if (coinModel.priceChange1w < 0) CustomRed else CustomGreen,
-                    modifier = Modifier.padding(bottom = 7.dp),
-                    textAlign = TextAlign.End
-                )
+
+
+                val duration = 800
+                val formattedPrice = DecimalFormat("#,###,###.##").format(coinModel.price.toFloat())
+                AnimatedContent(targetState = "$currencySymbol $formattedPrice",
+                    transitionSpec = {
+                        slideInVertically(
+                            animationSpec = tween(
+                                durationMillis = duration)) { it } +
+                                fadeIn(animationSpec = tween(durationMillis = duration)) with slideOutVertically(
+                            animationSpec = tween(durationMillis = duration)) { -it } + fadeOut(tween(durationMillis = duration))
+                    }){ price:String ->
+
+                    Text(
+                        fontSize = 14.sp,
+                        text = price,
+                        style = MaterialTheme.typography.body2,
+                        fontWeight = FontWeight.Bold,
+                        color = if (coinModel.priceChange1w < 0) CustomRed else CustomGreen,
+                        modifier = Modifier.padding(bottom = 7.dp),
+                        textAlign = TextAlign.End,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+
+
+
 
                 Text(
                     text = buildAnnotatedString {
@@ -139,7 +166,9 @@ fun CoinsItem(
                     fontSize = 10.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.animateContentSize()
 
                 )
 
@@ -156,7 +185,9 @@ fun CoinsItem(
                     fontSize = 10.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.animateContentSize()
                 )
 
 
@@ -172,7 +203,9 @@ fun CoinsItem(
                     fontSize = 10.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.animateContentSize()
                 )
 
 
