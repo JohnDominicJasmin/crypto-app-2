@@ -3,6 +3,7 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 import android.content.Context
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -76,7 +77,7 @@ fun CoinsItem(
                 Column(
                     horizontalAlignment = Alignment.Start,
                     modifier = defaultModifier
-                        .weight(1.2f)
+                        .weight(1.6f)
                         .animateContentSize()
 
 
@@ -112,7 +113,7 @@ fun CoinsItem(
                 context = context,
                 modifier = defaultModifier
                     .height(75.dp)
-                    .weight(2.1f)
+                    .weight(2f)
                     .animateContentSize()
 
             )
@@ -120,7 +121,7 @@ fun CoinsItem(
             Column(
                 horizontalAlignment = Alignment.End,
                 modifier = defaultModifier
-                    .weight(2f)
+                    .weight(2.1f)
                     .animateContentSize()
 
             ) {
