@@ -79,11 +79,17 @@ class CoinsViewModel @Inject constructor(
 
     private suspend fun getChart(coinModels: List<CoinModel>){
         coinModels.forEach { coin ->
-            coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chart)
-            val isItemsRendered = state.value.chart.size > VISIBLE_ITEM_COUNT
-            _state.update {
-                it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered, isRefreshing = false)
+            runCatching {
+                coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chart)
+            }.onSuccess { chartModels ->
+                val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
+                _state.update {
+                    it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered, isRefreshing = false)
+                }
+            }.onFailure { exception ->
+                handleException(exception)
             }
+
         }
     }
     private suspend fun handleException(exception: Throwable) {
@@ -143,8 +149,6 @@ class CoinsViewModel @Inject constructor(
 
     }
 
-//todo:
-    // handle errors
 
     override fun onCleared() {
         super.onCleared()
