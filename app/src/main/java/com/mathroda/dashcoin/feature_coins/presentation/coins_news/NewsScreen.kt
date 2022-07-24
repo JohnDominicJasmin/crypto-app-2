@@ -60,7 +60,7 @@ fun NewsScreen(
 
             }, onCurrencyClick = {
 
-            })
+            }, currencyValue = null)
             SearchBar(
                 hint = "Search...",
                 modifier = Modifier

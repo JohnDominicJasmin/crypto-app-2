@@ -23,6 +23,7 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 
 @Composable
 fun TopBar(
+    currencyValue: String? ,
     modifier: Modifier = Modifier,
     onToggleThemeClick: () -> Unit,
     onCurrencyClick: () -> Unit,
@@ -82,12 +83,14 @@ fun TopBar(
                         }
                 )
 
-            TextButton(onClick = onCurrencyClick) {
-                Text(
-                    text = "USD",
-                    style = MaterialTheme.typography.button,
-                    color = Color.White
-                )
+            currencyValue?.let { currency ->
+                TextButton(onClick = onCurrencyClick) {
+                    Text(
+                        text = currency,
+                        style = MaterialTheme.typography.button,
+                        color = Color.White
+                    )
+                }
             }
 
                 Icon(
@@ -116,5 +119,5 @@ fun TopBarPreview() {
         modifier = Modifier.wrapContentSize(),
         onCurrencyClick = {},
         onToggleThemeClick = {},
-        onSearchClick = {})
+        onSearchClick = {}, currencyValue = "USD")
 }

@@ -19,7 +19,6 @@ fun TimeSpanPickerPreview() {
     TimeSpanPicker(modifier = Modifier.fillMaxWidth())
 }
 
-//todo: use this
 @Composable
 fun TimeSpanPicker(
     modifier: Modifier = Modifier,

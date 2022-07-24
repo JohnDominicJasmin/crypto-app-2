@@ -22,7 +22,6 @@ sealed class Screens(
         title = "Favorites",
         icon = Icons.Default.Favorite
     )
-    //todo: change this icon later
 
     object CoinsNews: Screens(
         route = "coins_news",

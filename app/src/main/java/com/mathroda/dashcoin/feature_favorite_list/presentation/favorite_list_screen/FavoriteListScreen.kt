@@ -66,7 +66,7 @@ fun FavoriteListScreen(
 
             }, onSearchClick = {
 
-            })
+            }, currencyValue = null)
             coinDetailState.coinDetailModel?.let { status ->
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     item {
