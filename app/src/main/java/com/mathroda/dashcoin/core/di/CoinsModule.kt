@@ -14,9 +14,11 @@ import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_chart.GetChartUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coin.GetCoinUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coins.GetCoinsUseCase
+import com.mathroda.dashcoin.feature_coins.domain.use_case.get_currency.GetCurrencyUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_fiats.GetFiatsUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_market_status.GetGlobalMarketUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_news.GetNewsUseCase
+import com.mathroda.dashcoin.feature_coins.domain.use_case.update_currency.UpdateCurrencyUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,9 +66,10 @@ object CoinsModule {
     @Provides
     @Singleton
     fun providesCoinRepository(
+        @ApplicationContext context: Context,
         coinStatsApi: CoinStatsApi,
         coinPaprikaAPi: CoinPaprikaApi): CoinRepository {
-        return CoinRepositoryImpl(coinStatsApi, coinPaprikaAPi)
+        return CoinRepositoryImpl(coinStatsApi, coinPaprikaAPi,context)
     }
 
 
@@ -79,7 +82,9 @@ object CoinsModule {
             getChart = GetChartUseCase(repository),
             getNews = GetNewsUseCase(repository),
             getGlobalMarket = GetGlobalMarketUseCase(repository),
-            getFiats = GetFiatsUseCase(repository)
+            getFiats = GetFiatsUseCase(repository),
+            getCurrency = GetCurrencyUseCase(repository),
+            updateCurrency = UpdateCurrencyUseCase(repository)
 
             )
     }
@@ -114,7 +119,7 @@ object CoinsModule {
             var request = chain.request()
             if (!ConnectionStatus.hasInternetConnection(context)) {
                 val cacheControl = CacheControl.Builder()
-                    .maxStale(7, TimeUnit.DAYS)
+                    .maxStale(900, TimeUnit.DAYS)
                     .build()
 
                 request = request.newBuilder()
@@ -153,13 +158,11 @@ object CoinsModule {
     @Singleton
     fun providesOkHttpClient(
         cache: Cache,
-        @Named("LoggingInterceptor") loggingInterceptor: Interceptor,
         @Named("OfflineInterceptor") offlineInterceptor: Interceptor,
         @Named("NetworkInterceptor") networkInterceptor: Interceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .cache(cache)
-            .addInterceptor(loggingInterceptor)
             .addNetworkInterceptor(networkInterceptor)
             .addInterceptor(offlineInterceptor)
             .build()
