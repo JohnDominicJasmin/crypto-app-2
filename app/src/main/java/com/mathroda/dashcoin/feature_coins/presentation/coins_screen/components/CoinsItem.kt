@@ -129,7 +129,7 @@ fun CoinsItem(
 
 
                 val duration = 800
-                val formattedPrice = DecimalFormat("#,###,###.##").format(coinModel.price.toFloat())
+                val formattedPrice = DecimalFormat("#,###,###.##").format(coinModel.price)
                 AnimatedContent(targetState = "$currencySymbol $formattedPrice",
                     transitionSpec = {
                         slideInVertically(

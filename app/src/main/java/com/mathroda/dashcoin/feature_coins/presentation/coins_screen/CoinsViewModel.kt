@@ -24,7 +24,31 @@ class CoinsViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
+        val infoJob: Job = loadInformation().also { job ->
+            job.invokeOnCompletion {
+                _state.update { it.copy(isLoading = false) }
+            }
+        }
 
+        if(infoJob.isActive){
+            subscribeToCoinChanges()
+        }
+    }
+
+    private fun subscribeToCoinChanges(){
+        job = viewModelScope.launch(Dispatchers.IO) {
+            while(isActive){
+                getCoins(state.value.coinCurrencyPreference)
+                delay(UPDATE_INTERVAL)
+            }
+        }
+    }
+    private fun unSubscribeToCoinChanges(){
+        job?.cancel()
+    }
+
+
+    private fun loadInformation() =
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(isLoading = true) }
             getGlobalMarket()
@@ -35,11 +59,9 @@ class CoinsViewModel @Inject constructor(
                 })
             })
 
-        }.invokeOnCompletion {
-            _state.update { it.copy(isLoading = false) }
         }
-        //todo add subscription for changes
-    }
+
+
 
     private suspend fun getCurrency(onCurrencyCollected: suspend (CoinCurrencyPreference) -> Unit = {}) {
         coroutineScope {
@@ -179,6 +201,6 @@ class CoinsViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        job?.cancel()
+        unSubscribeToCoinChanges()
     }
 }
