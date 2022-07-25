@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class CoinsViewModel @Inject constructor(
@@ -25,76 +24,86 @@ class CoinsViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
-        viewModelScope.launch {
-            getCurrency()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(isLoading = true) }
             getGlobalMarket()
             getCoinCurrencies()
-            delay(700)
-            getCoins(state.value.coinCurrencyPreference)
-            delay(1000)
-            getChart(state.value.coinModels)
+            getCurrency(onCurrencyCollected = { coinCurrencyPreference ->
+                getCoins(coinCurrencyPreference, onCoinsCollected = {
+                    getChart(state.value.coinModels)
+                })
+            })
 
+        }.invokeOnCompletion {
+            _state.update { it.copy(isLoading = false) }
         }
+        //todo add subscription for changes
     }
 
-    private fun getCurrency(){
-        viewModelScope.launch(Dispatchers.IO) {
+    private suspend fun getCurrency(onCurrencyCollected: suspend (CoinCurrencyPreference) -> Unit = {}) {
+        coroutineScope {
             runCatching {
                 coinUseCase.getCurrency().first()
             }.onSuccess { coinCurrencyPreference ->
                 _state.update { it.copy(coinCurrencyPreference = coinCurrencyPreference) }
+                onCurrencyCollected(coinCurrencyPreference)
             }.onFailure { exception ->
                 handleException(exception)
-            }.also {
-                this.cancel()
             }
         }
     }
 
-    private fun getGlobalMarket() {
-        viewModelScope.launch(Dispatchers.IO) {
+    private suspend fun getGlobalMarket() {
+        coroutineScope {
             runCatching {
-                  coinUseCase.getGlobalMarket()
+                coinUseCase.getGlobalMarket()
             }.onSuccess { globalMarket ->
-                _state.update { it.copy(globalMarket = globalMarket, tickerVisible = true, isLoading = false) }
+                _state.update { it.copy(globalMarket = globalMarket, tickerVisible = true) }
             }.onFailure { exception ->
                 handleException(exception)
             }
         }
     }
 
-    private fun getCoins(coinCurrencyPreference: CoinCurrencyPreference?) {
-        job?.cancel()
-        job = viewModelScope.launch(Dispatchers.IO) {
+    private suspend fun getCoins(
+        coinCurrencyPreference: CoinCurrencyPreference,
+        onCoinsCollected: suspend (List<CoinModel>) -> Unit = {}) {
+        coroutineScope {
             runCatching {
-                while (isActive) {
-                    coinUseCase.getCoins(coinCurrencyPreference?.currency ?: "USD").distinctUntilChanged().collect { coins ->
-                        _state.update { it.copy(coinModels = coins, coinCurrencyPreference = coinCurrencyPreference, isLoading = false) }
+                coinUseCase.getCoins(coinCurrencyPreference.currency ?: "USD")
+                    .distinctUntilChanged().collect { coins ->
+                        _state.update {
+                            it.copy(
+                                coinModels = coins,
+                                coinCurrencyPreference = coinCurrencyPreference)
+                        }
+                        onCoinsCollected(coins)
                     }
-                    delay(UPDATE_INTERVAL)
-                }
             }.onFailure { exception ->
                 handleException(exception)
             }
         }
     }
 
-    private fun getChart(coinModels: List<CoinModel>){
-        viewModelScope.launch(Dispatchers.IO) {
-        coinModels.forEach { coin ->
-            runCatching {
-                coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chart)
-            }.onSuccess { chartModels ->
-                val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
-                _state.update {
-                    it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered, isRefreshing = false)
+    private suspend fun getChart(coinModels: List<CoinModel>) {
+        coroutineScope {
+            coinModels.forEach { coin ->
+                runCatching {
+                    coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chart)
+                }.onSuccess { chartModels ->
+                    val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
+
+                    _state.update {
+                        it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered)
+                    }
+                }.onFailure { exception ->
+                    handleException(exception)
                 }
-            }.onFailure { exception ->
-                handleException(exception)
             }
         }
-        }
     }
+
     private suspend fun handleException(exception: Throwable) {
         withContext(Dispatchers.Main) {
             _state.update { it.copy(isLoading = false, isRefreshing = false) }
@@ -110,8 +119,8 @@ class CoinsViewModel @Inject constructor(
         }
     }
 
-    private fun getCoinCurrencies(){
-        viewModelScope.launch(Dispatchers.IO) {
+    private suspend fun getCoinCurrencies() {
+        coroutineScope {
             runCatching {
                 coinUseCase.getFiats().currencies
             }.onSuccess { currencies ->
@@ -122,23 +131,35 @@ class CoinsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateCoinCurrency(coinCurrencyPreference: CoinCurrencyPreference){
+    private suspend fun updateCoinCurrency(coinCurrencyPreference: CoinCurrencyPreference) {
         coinUseCase.updateCurrency(coinCurrencyPreference)
     }
+
     fun onEvent(event: CoinsEvent) {
         when (event) {
             is CoinsEvent.RefreshCoins -> {
-                _state.update { it.copy(isRefreshing = true) }
-                getCoins(event.coinCurrencyPreference)
+                viewModelScope.launch {
+                    _state.update { it.copy(isRefreshing = true) }
+                    event.coinCurrencyPreference?.let {
+                        getCoins(it)
+                    }
+                }.invokeOnCompletion {
+                    _state.update { it.copy(isRefreshing = false) }
+                }
             }
 
             is CoinsEvent.CloseNoInternetDisplay -> {
                 _state.update { it.copy(hasInternet = true) }
             }
 
-            is CoinsEvent.EnteredSearchQuery -> {
-                _state.update { it.copy(searchQuery = event.searchQuery) }
+            is CoinsEvent.EnteredCoinsSearchQuery -> {
+                _state.update { it.copy(searchCoinsQuery = event.searchQuery) }
             }
+
+            is CoinsEvent.EnteredCurrencySearchQuery -> {
+                _state.update { it.copy(searchCurrencyQuery = event.searchQuery) }
+            }
+
 
             is CoinsEvent.SelectCurrency -> {
 
@@ -147,6 +168,8 @@ class CoinsViewModel @Inject constructor(
                     updateCoinCurrency(event.coinCurrencyPreference)
                     getCoins(event.coinCurrencyPreference)
 
+                }.invokeOnCompletion {
+                    _state.update { it.copy(isLoading = false) }
                 }
             }
         }
