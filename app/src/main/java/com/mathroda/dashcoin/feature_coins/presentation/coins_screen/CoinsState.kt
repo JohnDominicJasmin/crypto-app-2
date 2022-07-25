@@ -15,12 +15,13 @@ data class CoinsState(
     val coinModels: List<CoinModel> = emptyList(),
     val chart: MutableList<ChartModel> = mutableListOf(),
     val globalMarket: GlobalMarketModel = GlobalMarketModel(),
-    val searchQuery: String = "",
+    val searchCoinsQuery: String = "",
+    val searchCurrencyQuery: String = "",
     val tickerVisible:Boolean = false,
 
     val currencies: List<FiatCurrencyItem> = emptyList(),
     val errorMessage: String = "",
-    val coinCurrencyPreference: CoinCurrencyPreference? = null
+    val coinCurrencyPreference: CoinCurrencyPreference = CoinCurrencyPreference()
 
 
     )

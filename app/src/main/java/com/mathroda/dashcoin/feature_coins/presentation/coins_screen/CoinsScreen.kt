@@ -59,7 +59,7 @@ fun CoinsScreen(
             Column {
 
                 TopBar(
-                    currencyValue = coinsState.coinCurrencyPreference?.currency ?: "",
+                    currencyValue = coinsState.coinCurrencyPreference.currency ?: "",
                     modifier = Modifier
                         .height(55.dp)
                         .padding(bottom = 5.dp, top = 14.dp)
@@ -76,10 +76,17 @@ fun CoinsScreen(
                 if (dialogStateVisible) {
                     CoinCurrencyScreen(
                         currencies = coinsState.currencies,
+                        searchCurrencyQuery = coinsState.searchCurrencyQuery,
+                        onValueChange = {
+                             coinsViewModel.onEvent(event = CoinsEvent.EnteredCurrencySearchQuery(it))
+                        },
                         onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
 
                             onDialogToggle(!dialogStateVisible)
-                            coinsViewModel.onEvent(event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
+                            coinsViewModel.onEvent(
+                                event = CoinsEvent.SelectCurrency(
+                                    coinCurrencyPreference = selectedCurrency
+                                                             ?: return@CoinCurrencyScreen))
 
                         })
 
@@ -181,17 +188,16 @@ fun CoinsScreen(
 
                 if (coinsState.isItemsRendered) {
                     LazyColumn {
-
                         itemsIndexed(items = coinsState.coinModels.filter {
-                            it.name.contains(coinsState.searchQuery.trim(), ignoreCase = true) ||
-                            it.id.contains(coinsState.searchQuery.trim(), ignoreCase = true) ||
-                            it.symbol.contains(coinsState.searchQuery.trim(), ignoreCase = true)
+                            it.name.contains(coinsState.searchCoinsQuery.trim(), ignoreCase = true) ||
+                            it.id.contains(coinsState.searchCoinsQuery.trim(), ignoreCase = true) ||
+                            it.symbol.contains(coinsState.searchCoinsQuery.trim(), ignoreCase = true)
                         }, key = { _, item -> item.id }) { index: Int, coinModel: CoinModel ->
 
                             CoinsItem(
                                 context = context,
                                 isLoading = coinsState.isLoading,
-                                currencySymbol = coinsState.coinCurrencyPreference?.currencySymbol ?: "N/A",
+                                currencySymbol = coinsState.coinCurrencyPreference.currencySymbol ?: "N/A",
                                 coinModel = coinModel,
                                 chartModel = coinsState.chart.takeIf { it.isNotEmpty() && it.size > index }
                                     ?.get(index),

@@ -22,6 +22,8 @@ import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 @Composable
 fun CoinCurrencyScreen(
     currencies: List<FiatCurrencyItem>,
+    searchCurrencyQuery: String,
+    onValueChange: (String) -> Unit,
     onDismissRequest: (CoinCurrencyPreference? ) -> Unit
 ) {
 
@@ -43,10 +45,8 @@ fun CoinCurrencyScreen(
                             .fillMaxWidth()
                             .wrapContentHeight()
                             .padding(top = 20.dp, start = 12.dp, end = 12.dp),
-                        searchQuery = "",
-                        onValueChange = {
-                        //todo do some searching
-                        }
+                        searchQuery = searchCurrencyQuery,
+                        onValueChange = onValueChange
                     )
                     LazyColumn(
                         modifier = Modifier
@@ -55,16 +55,15 @@ fun CoinCurrencyScreen(
                             .clipToBounds()
                     ) {
 
-
-
-
-
-
-                        items(items = currencies) { currency ->
+                        items(items = currencies.filter {
+                            it.name.contains(searchCurrencyQuery.trim(), ignoreCase = true) ||
+                            it.symbol.contains(searchCurrencyQuery.trim(), ignoreCase = true)||
+                            toCountryName(it.name).contains(searchCurrencyQuery.trim(), ignoreCase = true)
+                        }) { currency ->
                             CurrencyItem(
                                 imageModel = currency.imageUrl,
                                 currency = currency.name,
-                                currencyName = toCountryName(currency.name),
+                                currencyName = toCountryName(currency.name),//todo fix this cant be search
                                 currencySymbol = currency.symbol,
                                 onClickItem = { selectedCurrency ->
                                     onDismissRequest(selectedCurrency)
