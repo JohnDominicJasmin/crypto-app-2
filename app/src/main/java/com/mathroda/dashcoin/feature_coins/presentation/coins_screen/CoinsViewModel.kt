@@ -178,9 +178,7 @@ class CoinsViewModel @Inject constructor(
                 _state.update { it.copy(searchCoinsQuery = event.searchQuery) }
             }
 
-            is CoinsEvent.EnteredCurrencySearchQuery -> {
-                _state.update { it.copy(searchCurrencyQuery = event.searchQuery) }
-            }
+
 
 
             is CoinsEvent.SelectCurrency -> {

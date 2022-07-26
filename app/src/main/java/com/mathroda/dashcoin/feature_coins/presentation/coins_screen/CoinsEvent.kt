@@ -6,6 +6,5 @@ sealed class CoinsEvent{
     data class RefreshCoins(val coinCurrencyPreference: CoinCurrencyPreference?): CoinsEvent()
     object CloseNoInternetDisplay: CoinsEvent()
     data class EnteredCoinsSearchQuery(val searchQuery: String): CoinsEvent()
-    data class EnteredCurrencySearchQuery(val searchQuery: String): CoinsEvent()
     data class SelectCurrency(val coinCurrencyPreference: CoinCurrencyPreference): CoinsEvent()
 }

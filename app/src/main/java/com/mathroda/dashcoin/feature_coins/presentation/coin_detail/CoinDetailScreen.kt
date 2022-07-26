@@ -19,7 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.*
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.CoinDetailEvent
 import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import com.mathroda.dashcoin.ui.theme.LighterGray

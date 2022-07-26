@@ -3,7 +3,6 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -13,6 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.runtime.*
 import com.mathroda.dashcoin.feature_coins.data.dto.FiatCurrencyItem
 import com.mathroda.dashcoin.ui.theme.Black920
 import java.util.*
@@ -22,11 +22,10 @@ import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 @Composable
 fun CoinCurrencyScreen(
     currencies: List<FiatCurrencyItem>,
-    searchCurrencyQuery: String,
-    onValueChange: (String) -> Unit,
     onDismissRequest: (CoinCurrencyPreference? ) -> Unit
 ) {
 
+    var searchQuery by remember{mutableStateOf("")}
         Dialog(onDismissRequest = { onDismissRequest(null) }) {
 
             Card(
@@ -45,8 +44,10 @@ fun CoinCurrencyScreen(
                             .fillMaxWidth()
                             .wrapContentHeight()
                             .padding(top = 20.dp, start = 12.dp, end = 12.dp),
-                        searchQuery = searchCurrencyQuery,
-                        onValueChange = onValueChange
+                        searchQuery = searchQuery,
+                        onValueChange = {
+                            searchQuery = it
+                        }
                     )
                     LazyColumn(
                         modifier = Modifier
@@ -56,14 +57,14 @@ fun CoinCurrencyScreen(
                     ) {
 
                         items(items = currencies.filter {
-                            it.name.contains(searchCurrencyQuery.trim(), ignoreCase = true) ||
-                            it.symbol.contains(searchCurrencyQuery.trim(), ignoreCase = true)||
-                            toCountryName(it.name).contains(searchCurrencyQuery.trim(), ignoreCase = true)
+                            it.name.contains(searchQuery.trim(), ignoreCase = true) ||
+                            it.symbol.contains(searchQuery.trim(), ignoreCase = true)||
+                            toCountryName(it.name).contains(searchQuery.trim(), ignoreCase = true)
                         }) { currency ->
                             CurrencyItem(
                                 imageModel = currency.imageUrl,
                                 currency = currency.name,
-                                currencyName = toCountryName(currency.name),//todo fix this cant be search
+                                currencyName = toCountryName(currency.name),
                                 currencySymbol = currency.symbol,
                                 onClickItem = { selectedCurrency ->
                                     onDismissRequest(selectedCurrency)

@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils
+package com.mathroda.dashcoin.feature_coins.presentation.coin_detail
 
 
 sealed class CoinDetailEvent{

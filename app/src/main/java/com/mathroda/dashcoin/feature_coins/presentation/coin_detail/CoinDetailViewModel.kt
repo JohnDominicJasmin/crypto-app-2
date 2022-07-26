@@ -9,13 +9,11 @@ import com.mathroda.dashcoin.core.util.Constants
 import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.CoinDetailEvent
 import com.mathroda.dashcoin.feature_favorite_list.domain.use_case.FavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class CoinDetailViewModel @Inject constructor(
