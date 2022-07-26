@@ -62,7 +62,6 @@ class CoinsViewModel @Inject constructor(
         }
 
 
-
     private suspend fun getCurrency(onCurrencyCollected: suspend (CoinCurrencyPreference) -> Unit = {}) {
         coroutineScope {
             runCatching {

@@ -31,19 +31,19 @@ fun CoinDetailChart(
     onChartGesture:(Float) -> Unit
 ) {
 
-    val markerView = CustomMarkerView(context, R.layout.marker_view)
-    val dataSet = mutableListOf<Entry>()
-    chartModel?.let { chartsValue ->
-        chartsValue.chart.map { value ->
-            for (i in value){
-                dataSet.add(addEntry(value[0], value[1]))
-            }
-        }
-    }
+
 
     AndroidView(
         factory = { contextFactory ->
-
+            val markerView = CustomMarkerView(context, R.layout.marker_view)
+            val dataSet = mutableListOf<Entry>()
+            chartModel?.let { chartsValue ->
+                chartsValue.chart.map { value ->
+                    for (i in value){
+                        dataSet.add(addEntry(value[0], value[1]))
+                    }
+                }
+            }
             val lineDataSet =
                 ChartScreenViewState().getLineDataSet(
                     lineData = dataSet,

@@ -11,6 +11,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ import coil.compose.AsyncImage
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.shimmer
 import com.google.accompanist.placeholder.placeholder
+import com.mathroda.dashcoin.core.util.Constants.PRICE_ANIMATION_INTERVAL
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.ui.theme.*
@@ -43,13 +45,15 @@ fun CoinsItem(
     onItemClick: (CoinModel) -> Unit
 ) {
 
-
-    val defaultModifier = Modifier.placeholder(
-        visible = isLoading,
-        color = Black930,
-        shape = RoundedCornerShape(4.dp),
-        highlight = PlaceholderHighlight.shimmer(highlightColor = Black910),
-    )
+    val formattedPrice = remember { DecimalFormat("#,###,###.##").format(coinModel.price) }
+    val defaultModifier = remember {
+        Modifier.placeholder(
+            visible = isLoading,
+            color = Black930,
+            shape = RoundedCornerShape(4.dp),
+            highlight = PlaceholderHighlight.shimmer(highlightColor = Black910),
+        )
+    }
 
 
     Column {
@@ -128,15 +132,13 @@ fun CoinsItem(
 
 
 
-                val duration = 800
-                val formattedPrice = DecimalFormat("#,###,###.##").format(coinModel.price)
                 AnimatedContent(targetState = "$currencySymbol $formattedPrice",
                     transitionSpec = {
                         slideInVertically(
                             animationSpec = tween(
-                                durationMillis = duration)) { it } +
-                                fadeIn(animationSpec = tween(durationMillis = duration)) with slideOutVertically(
-                            animationSpec = tween(durationMillis = duration)) { -it } + fadeOut(tween(durationMillis = duration))
+                                durationMillis = PRICE_ANIMATION_INTERVAL)) { it } +
+                                fadeIn(animationSpec = tween(durationMillis = PRICE_ANIMATION_INTERVAL)) with slideOutVertically(
+                            animationSpec = tween(durationMillis = PRICE_ANIMATION_INTERVAL)) { -it } + fadeOut(tween(durationMillis = PRICE_ANIMATION_INTERVAL))
                     }){ price:String ->
 
                     Text(

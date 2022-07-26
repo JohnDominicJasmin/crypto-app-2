@@ -1,24 +1,26 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.mathroda.dashcoin.R
 import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
@@ -39,9 +42,9 @@ import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
 import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
 import com.mathroda.dashcoin.navigation.Screens
-import com.mathroda.dashcoin.ui.theme.Black450
-import com.mathroda.dashcoin.ui.theme.CustomGreen
-import com.mathroda.dashcoin.ui.theme.DarkGray
+import com.mathroda.dashcoin.ui.theme.*
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @Composable
 fun CoinsScreen(
@@ -53,6 +56,21 @@ fun CoinsScreen(
     val coinsState by coinsViewModel.state.collectAsState()
     val context = LocalContext.current
     val (dialogStateVisible, onDialogToggle) = remember { mutableStateOf(false) }
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    val visibleItemScrollOffSet = remember(true) { derivedStateOf { listState.firstVisibleItemScrollOffset } }
+
+    val isScrollingUp = listState.isScrollingUp() && visibleItemScrollOffSet.value > 0
+
+
+
+
+
+
+
+
+
 
 
     Scaffold(topBar = {
@@ -81,7 +99,6 @@ fun CoinsScreen(
                     }, onSearchClick = {
 
                     })
-
 
                 MarqueeText(
                     textModifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
@@ -170,7 +187,36 @@ fun CoinsScreen(
             }
         }
 
-    }) {
+    }, floatingActionButtonPosition = FabPosition.Center, floatingActionButton = {
+
+            AnimatedVisibility(
+                visible = isScrollingUp,
+                enter = fadeIn(animationSpec = tween(durationMillis = 3000,delayMillis = 50,), initialAlpha = 1f),
+                exit = fadeOut(
+                    animationSpec = tween()
+                )) {
+
+
+            FloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        listState.scrollToItem(index = 0)
+                    }
+                },
+                modifier = Modifier
+                    .offset(x = 0.dp, y = (-70).dp)
+                    .size(50.dp),
+                backgroundColor = Color.Black,
+                contentColor = GREEN600
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_back_to_top),
+                    contentDescription = "Back to top button ",
+                    modifier = Modifier.padding(all = 15.3.dp), )
+            }
+        }
+
+    }   ) {
 
 
         Box(
@@ -189,7 +235,8 @@ fun CoinsScreen(
 
                             coinsViewModel.onEvent(
                                 event = CoinsEvent.SelectCurrency(
-                                    coinCurrencyPreference = selectedCurrency  ?: return@CoinCurrencyScreen))
+                                    coinCurrencyPreference = selectedCurrency
+                                                             ?: return@CoinCurrencyScreen))
 
 
                         })
@@ -202,18 +249,18 @@ fun CoinsScreen(
                     onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference)) }) {
 
                     if (coinsState.isItemsRendered) {
-                        LazyColumn {
-                            itemsIndexed(items = coinsState.coinModels.filter {
+                        LazyColumn(state = listState) {
+                            itemsIndexed(items = coinsState.coinModels/*.filter {
                                 it.name.contains(
                                     coinsState.searchCoinsQuery.trim(),
                                     ignoreCase = true) ||
                                 it.id.contains(
-                                    coinsState.searchCoinsQuery.trim(),
+                                    coinsState.searchCoinsQuery.trim(), //todo: this filtering causes lag try using derivedStateOf
                                     ignoreCase = true) ||
                                 it.symbol.contains(
                                     coinsState.searchCoinsQuery.trim(),
                                     ignoreCase = true)
-                            }, key = { _, item -> item.id }) { index: Int, coinModel: CoinModel ->
+                            }*/, key = { _, item -> item.id }) { index: Int, coinModel: CoinModel ->
 
                                 CoinsItem(
                                     context = context,
@@ -269,7 +316,23 @@ fun CoinsScreen(
     }
 }
 
-
+@Composable
+private fun LazyListState.isScrollingUp(): Boolean {
+    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
+}
 fun Long.formatToShortNumber(): String {
     return when {
         this >= 1000000000000 -> String.format("%.2f T", this / 1000000000000.0)

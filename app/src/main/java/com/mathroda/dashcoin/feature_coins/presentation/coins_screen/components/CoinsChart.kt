@@ -1,7 +1,7 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
 import android.content.Context
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
@@ -25,22 +25,18 @@ fun CoinsChart(
     context: Context
 ) {
 
-    val dataSet = mutableListOf<Entry>()
-    chartModel?.let { chartsValue ->
-        chartsValue.chart.takeLast(LAST_HOURS).map { value ->
-            for (i in value) {
-                dataSet.add(addEntry(value[0], value[1]))
-            }
-        }
-    }
 
     AndroidView(
         factory = { contextFactory ->
-
-
-
             LineChart(contextFactory).apply {
-
+                val dataSet = mutableListOf<Entry>()
+                chartModel?.let { chartsValue ->
+                    chartsValue.chart.takeLast(LAST_HOURS).map { value ->
+                        for (i in value) {
+                            dataSet.add(addEntry(value[0], value[1]))
+                        }
+                    }
+                }
                 val lineDataSet =
                     ChartScreenViewState().getLineDataSet(
                         lineData = dataSet,
