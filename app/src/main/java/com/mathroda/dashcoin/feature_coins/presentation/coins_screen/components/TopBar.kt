@@ -1,10 +1,11 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,13 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mathroda.dashcoin.R
-import com.mathroda.dashcoin.ui.theme.TextWhite
 
 @Composable
 fun TopBar(
     currencyValue: String? ,
     modifier: Modifier = Modifier,
-    onToggleThemeClick: () -> Unit,
     onCurrencyClick: () -> Unit,
     onSearchClick: () -> Unit,
 
@@ -68,9 +67,11 @@ fun TopBar(
         Row(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(vertical = 1.dp),
+                .padding(vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(11.dp, alignment = Alignment.End)) {
+            horizontalArrangement = Arrangement.spacedBy(3.dp, alignment = Alignment.End)) {
+
+         /*   IconButton(onClick = onToggleThemeClick) {
 
                 Icon(
                     painter = painterResource(id = R.drawable.ic_sun),
@@ -78,13 +79,12 @@ fun TopBar(
                     tint = Color.Unspecified,
                     modifier = Modifier
                         .size(20.dp)
-                        .clickable {
-                            onToggleThemeClick()
-                        }
+
                 )
+            }*/
 
             currencyValue?.let { currency ->
-                TextButton(onClick = onCurrencyClick) {
+                IconButton(onClick = onCurrencyClick) {
                     Text(
                         text = currency,
                         style = MaterialTheme.typography.button,
@@ -93,24 +93,24 @@ fun TopBar(
                 }
             }
 
+
+            IconButton(onClick = onSearchClick) {
+
                 Icon(
                     painter = painterResource(id = R.drawable.ic_search),
                     contentDescription = "Search icon",
                     tint = Color.Unspecified,
                     modifier = Modifier
                         .size(20.dp)
-                        .clickable {
-                            onSearchClick()
-                        }
+
                 )
+            }
 
         }
     }
 
-
-
-    
 }
+
 
 @Preview
 @Composable
@@ -118,6 +118,5 @@ fun TopBarPreview() {
     TopBar(
         modifier = Modifier.wrapContentSize(),
         onCurrencyClick = {},
-        onToggleThemeClick = {},
         onSearchClick = {}, currencyValue = "USD")
 }

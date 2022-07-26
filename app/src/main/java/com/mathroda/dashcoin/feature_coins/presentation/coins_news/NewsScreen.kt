@@ -4,11 +4,8 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,88 +40,91 @@ fun NewsScreen(
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
+    Scaffold(topBar = {
+        TopBar(
+            currencyValue = null,
+            modifier = Modifier
+                .height(55.dp)
+                .padding(bottom = 5.dp, top = 14.dp, start = 15.dp, end = 5.dp)
+                .fillMaxWidth(),
+            onCurrencyClick = {
+            }, onSearchClick = {
 
+            })
+    }) {
 
+        Box(
+            modifier = modifier
+                .background(DarkGray)
+                .fillMaxSize()
+        ) {
+            Column {
 
-    Box(
-        modifier = modifier
-            .background(DarkGray)
-            .fillMaxSize()
-            .padding(12.dp)
-    ) {
-        Column {
-            TopBar(
-                onSearchClick = {
+                SearchBar(
+                    hint = "Search...",
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    searchQuery = state.searchQuery,
+                    onValueChange = {
+                        newsViewModel.onEvent(event = NewsEvent.EnteredSearchQuery(it))
+                    }
+                )
 
-            }, onToggleThemeClick = {
+                Row(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    SwipeRefresh(
+                        state = rememberSwipeRefreshState(isRefreshing = state.isRefreshing),
+                        onRefresh = { newsViewModel.onEvent(event = NewsEvent.RefreshNews) }) {
 
-            }, onCurrencyClick = {
+                        LazyColumn {
 
-            }, currencyValue = null)
-            SearchBar(
-                hint = "Search...",
-                modifier = Modifier
-                    .fillMaxWidth(),
-                searchQuery = state.searchQuery,
-                onValueChange = {
-                    newsViewModel.onEvent(event = NewsEvent.EnteredSearchQuery(it))
-                }
-            )
-
-            Row(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = state.isRefreshing),
-                    onRefresh = { newsViewModel.onEvent(event = NewsEvent.RefreshNews) }) {
-
-                    LazyColumn {
-
-                        items(state.trendingNews.filter {
-                            it.title.contains(state.searchQuery.trim(), ignoreCase = true) ||
-                                    it.description.contains(state.searchQuery.trim(), ignoreCase = true)
-                        }, key = {it.title}) { news ->
-                            NewsCard(
-                                newsThumb = news.imgURL,
-                                title = news.title,
-                                onClick = {
-                                    uriHandler.openUri(news.link)
-                                }
-                            )
-                            Spacer(Modifier.height(15.dp))
+                            items(state.trendingNews.filter {
+                                it.title.contains(state.searchQuery.trim(), ignoreCase = true) ||
+                                it.description.contains(state.searchQuery.trim(), ignoreCase = true)
+                            }, key = { it.title }) { news ->
+                                NewsCard(
+                                    newsThumb = news.imgURL,
+                                    title = news.title,
+                                    onClick = {
+                                        uriHandler.openUri(news.link)
+                                    }
+                                )
+                                Spacer(Modifier.height(15.dp))
+                            }
                         }
                     }
                 }
             }
-        }
 
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                color = CustomGreen
-            )
-        }
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    color = CustomGreen
+                )
+            }
 
-        if(!state.hasInternet){
-            NoInternetScreen(onTryButtonClick = {
-                if(ConnectionStatus.hasInternetConnection(context)){
-                    newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
-                    newsViewModel.onEvent(event = NewsEvent.RefreshNews)
-                }
-            })
-        }
+            if (!state.hasInternet) {
+                NoInternetScreen(onTryButtonClick = {
+                    if (ConnectionStatus.hasInternetConnection(context)) {
+                        newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
+                        newsViewModel.onEvent(event = NewsEvent.RefreshNews)
+                    }
+                })
+            }
 
-        if (state.errorMessage.isNotEmpty()) {
-            Text(
-                text = state.errorMessage,
-                color = MaterialTheme.colors.error,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .align(Alignment.Center)
-            )
+            if (state.errorMessage.isNotEmpty()) {
+                Text(
+                    text = state.errorMessage,
+                    color = MaterialTheme.colors.error,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .align(Alignment.Center)
+                )
+            }
         }
     }
 }
