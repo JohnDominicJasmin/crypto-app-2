@@ -5,13 +5,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -20,15 +16,13 @@ import com.mathroda.dashcoin.ui.theme.TextWhite
 
 @ExperimentalMaterialApi
 @Composable
-fun MainScreen() {
+fun MainScreen(
+) {
     val navController = rememberNavController()
-
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    when (navBackStackEntry?.destination?.route) {
-        Screens.CoinDetailScreen.route + "/{coinId}" -> bottomBarState.value = false
-        else -> bottomBarState.value = true
-    }
+
+    bottomBarState.value = navBackStackEntry?.destination?.route != Screens.CoinDetailScreen.route + "/{coinId}"
 
     Scaffold(
         bottomBar = {
