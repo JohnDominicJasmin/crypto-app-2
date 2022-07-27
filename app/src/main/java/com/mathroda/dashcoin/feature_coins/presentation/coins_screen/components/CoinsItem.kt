@@ -1,12 +1,7 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
-import android.content.Context
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -25,35 +20,22 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.shimmer
-import com.google.accompanist.placeholder.placeholder
-import com.mathroda.dashcoin.core.util.Constants.PRICE_ANIMATION_INTERVAL
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.ui.theme.*
 import java.text.DecimalFormat
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CoinsItem(
     isLoading: Boolean,
-    context: Context,
-    chartModel: ChartModel?,
     coinModel: CoinModel,
+    chartModel: ChartModel?,
     currencySymbol: String,
     onItemClick: (CoinModel) -> Unit
 ) {
 
-    val formattedPrice = remember { DecimalFormat("#,###,###.##").format(coinModel.price) }
-    val defaultModifier = remember {
-        Modifier.placeholder(
-            visible = isLoading,
-            color = Black930,
-            shape = RoundedCornerShape(4.dp),
-            highlight = PlaceholderHighlight.shimmer(highlightColor = Black910),
-        )
-    }
+    val formattedPrice = remember { DecimalFormat("#,###,###.##") }
+
 
 
     Column {
@@ -70,19 +52,17 @@ fun CoinsItem(
                 AsyncImage(
                     model = coinModel.icon,
                     contentDescription = "Icon",
-                    modifier = defaultModifier
+                    modifier = Modifier
                         .size(45.dp)
                         .padding(end = 6.dp)
-                        .animateContentSize()
                 )
 
 
 
                 Column(
                     horizontalAlignment = Alignment.Start,
-                    modifier = defaultModifier
+                    modifier = Modifier
                         .weight(1.6f)
-                        .animateContentSize()
 
 
                 ) {
@@ -106,7 +86,6 @@ fun CoinsItem(
                             }
                         },
                         textAlign = TextAlign.Start,
-                        modifier = Modifier.animateContentSize()
                     )
                 }
 
@@ -114,36 +93,34 @@ fun CoinsItem(
             CoinsChart(
                 chartModel = chartModel,
                 priceChange = coinModel.priceChange1w,
-                context = context,
-                modifier = defaultModifier
+                modifier = Modifier
                     .height(75.dp)
                     .weight(2f)
-                    .animateContentSize()
 
             )
 
             Column(
                 horizontalAlignment = Alignment.End,
-                modifier = defaultModifier
+                modifier = Modifier
                     .weight(2.1f)
-                    .animateContentSize()
 
             ) {
 
 
 
-                AnimatedContent(targetState = "$currencySymbol $formattedPrice",
+          /* AnimatedContent(targetState = "$currencySymbol $formattedPrice",
                     transitionSpec = {
                         slideInVertically(
                             animationSpec = tween(
                                 durationMillis = PRICE_ANIMATION_INTERVAL)) { it } +
                                 fadeIn(animationSpec = tween(durationMillis = PRICE_ANIMATION_INTERVAL)) with slideOutVertically(
                             animationSpec = tween(durationMillis = PRICE_ANIMATION_INTERVAL)) { -it } + fadeOut(tween(durationMillis = PRICE_ANIMATION_INTERVAL))
-                    }){ price:String ->
+                    }){ price:String ->*/
+
 
                     Text(
                         fontSize = 14.sp,
-                        text = price,
+                        text = "$currencySymbol ${formattedPrice.format(coinModel.price)}",
                         style = MaterialTheme.typography.body2,
                         fontWeight = FontWeight.Bold,
                         color = if (coinModel.priceChange1w < 0) CustomRed else CustomGreen,
@@ -151,7 +128,7 @@ fun CoinsItem(
                         textAlign = TextAlign.End,
                         overflow = TextOverflow.Ellipsis
                     )
-                }
+//                }
 
 
 
@@ -171,7 +148,6 @@ fun CoinsItem(
                     color = Color.White,
                     textAlign = TextAlign.End,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.animateContentSize()
 
                 )
 
@@ -190,7 +166,6 @@ fun CoinsItem(
                     color = Color.White,
                     textAlign = TextAlign.End,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.animateContentSize()
                 )
 
 
@@ -208,7 +183,6 @@ fun CoinsItem(
                     color = Color.White,
                     textAlign = TextAlign.End,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.animateContentSize()
                 )
 
 

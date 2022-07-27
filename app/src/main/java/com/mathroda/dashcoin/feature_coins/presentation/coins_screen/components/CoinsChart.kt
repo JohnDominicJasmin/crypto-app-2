@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -22,10 +23,9 @@ fun CoinsChart(
     modifier: Modifier,
     chartModel: ChartModel?,
     priceChange: Double,
-    context: Context
 ) {
 
-
+val context = LocalContext.current
     AndroidView(
         factory = { contextFactory ->
             LineChart(contextFactory).apply {

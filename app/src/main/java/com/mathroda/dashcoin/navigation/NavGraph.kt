@@ -9,8 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailScreen
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.CoinsScreen
 import com.mathroda.dashcoin.feature_coins.presentation.coins_news.NewsScreen
+import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.CoinsScreen
 import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.FavoriteListScreen
 
 @ExperimentalMaterialApi

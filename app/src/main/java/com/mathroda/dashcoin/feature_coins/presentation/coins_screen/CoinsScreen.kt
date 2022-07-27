@@ -5,21 +5,13 @@ import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -36,15 +28,11 @@ import com.mathroda.dashcoin.R
 import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.CoinCurrencyScreen
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.CoinsItem
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.MarqueeText
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
+import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.*
 import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
 import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.ui.theme.*
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @Composable
 fun CoinsScreen(
@@ -59,15 +47,11 @@ fun CoinsScreen(
 
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val visibleItemScrollOffSet = remember(true) { derivedStateOf { listState.firstVisibleItemScrollOffset } }
+    val scrollingForward by remember(true) { derivedStateOf { listState.firstVisibleItemScrollOffset > 0 } }
 
-    val isScrollingUp = listState.isScrollingUp() && visibleItemScrollOffSet.value > 0
+    val isScrollingUp = listState.isScrollingUp() && scrollingForward
 
-
-
-
-
-
+    val coinList = coinsState.coinModels
 
 
 
@@ -216,7 +200,7 @@ fun CoinsScreen(
             }
         }
 
-    }   ) {
+    }) {
 
 
         Box(
@@ -249,21 +233,11 @@ fun CoinsScreen(
                     onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference)) }) {
 
                     if (coinsState.isItemsRendered) {
-                        LazyColumn(state = listState) {
-                            itemsIndexed(items = coinsState.coinModels/*.filter {
-                                it.name.contains(
-                                    coinsState.searchCoinsQuery.trim(),
-                                    ignoreCase = true) ||
-                                it.id.contains(
-                                    coinsState.searchCoinsQuery.trim(), //todo: this filtering causes lag try using derivedStateOf
-                                    ignoreCase = true) ||
-                                it.symbol.contains(
-                                    coinsState.searchCoinsQuery.trim(),
-                                    ignoreCase = true)
-                            }*/, key = { _, item -> item.id }) { index: Int, coinModel: CoinModel ->
 
+                        LazyColumn(state = listState){//todo: this filtering causes lag try using derivedStateOf
+                            items(count = coinList.size, key = {coinList[it].id}){ index ->
+                                val coinModel = coinList[index]
                                 CoinsItem(
-                                    context = context,
                                     isLoading = coinsState.isLoading,
                                     currencySymbol = coinsState.coinCurrencyPreference.currencySymbol
                                                      ?: "N/A",
@@ -291,7 +265,7 @@ fun CoinsScreen(
             }
 
 
-            if (coinsState.coinModels.isEmpty() && !coinsState.hasInternet) {
+            if (coinList.isEmpty() && !coinsState.hasInternet) {
                 NoInternetScreen(onTryButtonClick = {
                     if (ConnectionStatus.hasInternetConnection(context)) {
                         coinsViewModel.onEvent(event = CoinsEvent.CloseNoInternetDisplay)
@@ -319,7 +293,7 @@ fun CoinsScreen(
 @Composable
 private fun LazyListState.isScrollingUp(): Boolean {
     var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
-    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
+    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) } //todo add +1 to avoid very first index
     return remember(this) {
         derivedStateOf {
             if (previousIndex != firstVisibleItemIndex) {
@@ -342,4 +316,5 @@ fun Long.formatToShortNumber(): String {
         else -> this.toString()
     }
 }
+
 

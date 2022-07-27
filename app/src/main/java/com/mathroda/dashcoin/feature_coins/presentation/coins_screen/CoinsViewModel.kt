@@ -54,8 +54,8 @@ class CoinsViewModel @Inject constructor(
             getGlobalMarket()
             getCoinCurrencies()
             getCurrency(onCurrencyCollected = { coinCurrencyPreference ->
-                getCoins(coinCurrencyPreference, onCoinsCollected = {
-                    getChart(state.value.coinModels)
+                getCoins(coinCurrencyPreference, onCoinsCollected = { coinModels ->
+                    getChart(coinModels)
                 })
             })
 
