@@ -173,11 +173,6 @@ class CoinsViewModel @Inject constructor(
                 _state.update { it.copy(hasInternet = true) }
             }
 
-            is CoinsEvent.EnteredCoinsSearchQuery -> {
-                _state.update { it.copy(searchCoinsQuery = event.searchQuery) }
-            }
-
-
 
 
             is CoinsEvent.SelectCurrency -> {

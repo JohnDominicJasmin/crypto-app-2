@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
+package com.mathroda.dashcoin.feature_coins.presentation.coin_currency_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +17,8 @@ import com.mathroda.dashcoin.feature_coins.data.dto.FiatCurrencyItem
 import com.mathroda.dashcoin.ui.theme.Black920
 import java.util.*
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
+import com.mathroda.dashcoin.feature_coins.presentation.coin_currency_screen.components.CurrencyItem
+import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.SearchBar
 
 
 @Composable
@@ -26,6 +28,14 @@ fun CoinCurrencyScreen(
 ) {
 
     var searchQuery by remember{mutableStateOf("")}
+    val filteredSearchQuery = remember(searchQuery, currencies){
+        currencies.filter {
+            it.name.contains(searchQuery.trim(), ignoreCase = true) ||
+            it.symbol.contains(searchQuery.trim(), ignoreCase = true)||
+            toCountryName(it.name).contains(searchQuery.trim(), ignoreCase = true)
+        }
+    }
+
         Dialog(onDismissRequest = { onDismissRequest(null) }) {
 
             Card(
@@ -56,11 +66,7 @@ fun CoinCurrencyScreen(
                             .clipToBounds()
                     ) {
 
-                        items(items = currencies.filter {
-                            it.name.contains(searchQuery.trim(), ignoreCase = true) ||
-                            it.symbol.contains(searchQuery.trim(), ignoreCase = true)||
-                            toCountryName(it.name).contains(searchQuery.trim(), ignoreCase = true)
-                        }) { currency ->
+                        items(items = filteredSearchQuery, key = {it.name}) { currency ->
                             CurrencyItem(
                                 imageModel = currency.imageUrl,
                                 currency = currency.name,

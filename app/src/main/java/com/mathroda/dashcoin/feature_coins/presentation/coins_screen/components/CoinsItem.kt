@@ -27,7 +27,6 @@ import java.text.DecimalFormat
 
 @Composable
 fun CoinsItem(
-    isLoading: Boolean,
     coinModel: CoinModel,
     chartModel: ChartModel?,
     currencySymbol: String,

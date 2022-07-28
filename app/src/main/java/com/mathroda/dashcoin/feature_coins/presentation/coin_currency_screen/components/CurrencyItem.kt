@@ -1,4 +1,4 @@
-package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
+package com.mathroda.dashcoin.feature_coins.presentation.coin_currency_screen.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

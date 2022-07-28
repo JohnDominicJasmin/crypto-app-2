@@ -23,8 +23,8 @@ import com.mathroda.dashcoin.ui.theme.*
 
 @Composable
 fun SearchBar(
-    hint: String,
-    modifier: Modifier = Modifier,
+    hint: String = "Search",
+    modifier: Modifier,
     searchQuery: String,
     onValueChange: (String) -> Unit
 ) {
@@ -47,7 +47,7 @@ fun SearchBar(
             tint = Black450,
             modifier = Modifier
                 .size(30.dp)
-                .padding(start = 12.dp),
+                .padding(start = 12.dp, end = 2.dp),
         )
 
         Box(
@@ -65,8 +65,9 @@ fun SearchBar(
                 textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(start = 3.dp)
                     .onFocusChanged {
-                      isHintDisplayed = !it.isFocused
+                        isHintDisplayed = !it.isFocused
                     },
                 cursorBrush = SolidColor(Color.White)
             )
@@ -75,7 +76,7 @@ fun SearchBar(
                 Text(
                     text = hint,
                     color = Black450,
-                    modifier = Modifier
+                    modifier = Modifier, fontSize = 14.sp
                 )
             }
 
