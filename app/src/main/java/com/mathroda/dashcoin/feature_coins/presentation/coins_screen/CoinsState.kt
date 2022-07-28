@@ -15,8 +15,6 @@ data class CoinsState(
     val coinModels: List<CoinModel> = emptyList(),
     val chart: MutableList<ChartModel> = mutableListOf(),
     val globalMarket: GlobalMarketModel = GlobalMarketModel(),
-    val searchCoinsQuery: String = "",
-    val searchCurrencyQuery: String = "",
     val tickerVisible:Boolean = false,
 
     val currencies: List<FiatCurrencyItem> = emptyList(),
