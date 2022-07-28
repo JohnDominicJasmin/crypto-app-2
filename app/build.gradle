@@ -153,4 +153,7 @@ dependencies {
 
     //placeholder
     implementation("com.google.accompanist:accompanist-placeholder:0.24.13-rc")
+
+
+    implementation 'com.google.android.material:material:1.6.1'
 }
