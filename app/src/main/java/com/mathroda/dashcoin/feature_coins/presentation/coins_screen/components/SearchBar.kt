@@ -28,15 +28,16 @@ fun SearchBar(
     hint: String = "Search",
     modifier: Modifier,
     searchQuery: String,
+    hasFocusRequest: Boolean = false,
     onValueChange: (String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
 
-    var isHintDisplayed by remember {
-        mutableStateOf(hint != "")
-    }
+    var isHintDisplayed by remember { mutableStateOf(hint != "") }
     LaunchedEffect(key1 = true){
-        focusRequester.requestFocus()
+        if(hasFocusRequest) {
+            focusRequester.requestFocus()
+        }
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -46,6 +47,7 @@ fun SearchBar(
             .border(width = 1.dp, color = Black850, shape = RoundedCornerShape(12.dp))
             .background(Black920)
     ) {
+
         Icon(
             painter = painterResource(id = R.drawable.ic_search),
             contentDescription = "Search",
@@ -64,17 +66,16 @@ fun SearchBar(
 
             BasicTextField(
                 value = searchQuery,
-                onValueChange = onValueChange,
+                onValueChange = {
+                    isHintDisplayed = it.isEmpty()
+                     onValueChange(it)
+                },
                 maxLines = 1,
                 singleLine = true,
                 textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 3.dp)
-                    .focusRequester(focusRequester)
-                    .onFocusChanged {
-                        isHintDisplayed = !it.isFocused
-                    },
+                    .focusRequester(focusRequester),
                 cursorBrush = SolidColor(Color.White)
             )
 
@@ -87,6 +88,7 @@ fun SearchBar(
             }
 
         }
+
     }
 }
 

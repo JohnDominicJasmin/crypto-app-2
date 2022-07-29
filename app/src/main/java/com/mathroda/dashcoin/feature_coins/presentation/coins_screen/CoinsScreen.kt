@@ -1,5 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
@@ -14,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -36,6 +39,7 @@ import com.mathroda.dashcoin.navigation.Screens
 import com.mathroda.dashcoin.ui.theme.*
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CoinsScreen(
@@ -261,9 +265,9 @@ fun CoinsScreen(
                                 .fillMaxWidth(0.88f)
                                 .padding(vertical = 10.dp),
                             searchQuery = searchQuery,
-                            onValueChange = {
-                                onSearchQuery(it)
-                            }
+                            onValueChange = { value ->
+                                onSearchQuery(value)
+                            }, hasFocusRequest = true
                         )
                     }
                 }

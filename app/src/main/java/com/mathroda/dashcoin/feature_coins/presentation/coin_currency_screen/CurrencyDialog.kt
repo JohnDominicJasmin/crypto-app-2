@@ -49,7 +49,6 @@ fun CoinCurrencyScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                     SearchBar(
-                        hint = "Search",
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
@@ -57,7 +56,8 @@ fun CoinCurrencyScreen(
                         searchQuery = searchQuery,
                         onValueChange = {
                             searchQuery = it
-                        }
+                        },
+                        hasFocusRequest = false
                     )
                     LazyColumn(
                         modifier = Modifier

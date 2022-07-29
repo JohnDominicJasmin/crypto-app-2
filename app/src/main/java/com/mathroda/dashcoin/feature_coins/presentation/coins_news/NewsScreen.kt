@@ -1,5 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_news
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import kotlinx.coroutines.flow.collectLatest
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @Composable
 fun NewsScreen(
@@ -61,7 +63,6 @@ fun NewsScreen(
             Column {
 
                 SearchBar(
-                    hint = "Search...",
                     modifier = Modifier
                         .fillMaxWidth(),
                     searchQuery = state.searchQuery,

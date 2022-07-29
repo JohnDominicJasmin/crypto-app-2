@@ -1,5 +1,6 @@
 package com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,6 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +28,7 @@ import com.mathroda.dashcoin.ui.theme.CustomGreen
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import kotlinx.coroutines.flow.collectLatest
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @Composable
 fun FavoriteListScreen(
@@ -34,7 +38,7 @@ fun FavoriteListScreen(
     navController: NavController?
 ) {
     val watchListState = favoriteListViewModel.state
-    val coinDetailState = coinDetailViewModel.state
+    val coinDetailState by coinDetailViewModel.state.collectAsState()
 
 
 
