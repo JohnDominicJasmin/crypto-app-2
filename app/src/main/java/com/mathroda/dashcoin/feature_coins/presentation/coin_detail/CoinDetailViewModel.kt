@@ -23,8 +23,8 @@ class CoinDetailViewModel @Inject constructor(
 ): ViewModel() {
 
 
-    private val _state = mutableStateOf(CoinDetailState())
-    val state by _state
+    private val _state = MutableStateFlow(CoinDetailState())
+    val state = _state.asStateFlow()
 
     init {
         loadCoinDetail()
@@ -42,10 +42,10 @@ class CoinDetailViewModel @Inject constructor(
     fun onEvent(event: CoinDetailEvent){
         when(event){
             is CoinDetailEvent.CloseNoInternetDisplay -> {
-                _state.value = state.copy(hasInternet = true)
+                _state.update { it.copy(hasInternet = true) }
             }
             is CoinDetailEvent.ToggleFavoriteCoin -> {
-                _state.value = state.copy(isFavorite = !state.isFavorite)
+                _state.update { it.copy(isFavorite = !_state.value.isFavorite) }
             }
             is CoinDetailEvent.LoadCoinDetail -> {
                 loadCoinDetail()
@@ -60,9 +60,9 @@ class CoinDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             favoriteUseCase.getAllCoins().distinctUntilChanged().cancellable().onEach { coins ->
-                coins.any { it.name == state.coinDetailModel?.name  }
+                coins.any { it.name == _state.value.coinDetailModel?.name  }
                     .let { isFavoriteCoin ->
-                        _state.value = state.copy(isFavorite = isFavoriteCoin)
+                        _state.update { it.copy(isFavorite = isFavoriteCoin) }
                         this.cancel()
                     }
             }.launchIn(this)
@@ -77,11 +77,10 @@ class CoinDetailViewModel @Inject constructor(
     private fun getCoin(coinId: String) {
             viewModelScope.launch {
                 runCatching {
-                    _state.value = state.copy(isLoading = true)
+                    _state.update{it.copy(isLoading = true)}
                     while (isActive) {
                         coinUseCase.getCoin(coinId).distinctUntilChanged().collect { coinDetail ->
-                            _state.value =
-                                state.copy(isLoading = false, coinDetailModel = coinDetail)
+                            _state.update { it.copy(isLoading = false, coinDetailModel = coinDetail) }
                         }
                         delay(UPDATE_INTERVAL)
                     }
@@ -93,14 +92,13 @@ class CoinDetailViewModel @Inject constructor(
             }
      }
     private fun handleException(exception: Throwable){
-        _state.value = state.copy(isLoading = false)
-
+        _state.update { it.copy(isLoading = false) }
         when (exception) {
             is CoinExceptions.UnexpectedErrorException -> {
-               _state.value = state.copy(errorMessage = exception.message!!)
+                _state.update { it.copy(errorMessage = exception.message!!) }
             }
             is CoinExceptions.NoInternetException -> {
-               _state.value = state.copy(hasInternet = false)
+                _state.update { it.copy(hasInternet = false) }
             }
         }
     }
@@ -108,10 +106,11 @@ class CoinDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             runCatching {
-                _state.value = state.copy(isLoading = true)
+                _state.update { it.copy(isLoading = true) }
                     while(isActive) {
-                        val chartModel = coinUseCase.getChart(coinId, period = "24h").distinctUntilChanged().first()
-                        _state.value = state.copy(isLoading = false, chartModel = chartModel)
+                        coinUseCase.getChart(coinId, period = "24h").collect{ chartModel ->
+                            _state.update { it.copy(isLoading = false, chartModel = chartModel) }
+                        }
                         delay(UPDATE_INTERVAL)
                     }
             }.onFailure { exception ->

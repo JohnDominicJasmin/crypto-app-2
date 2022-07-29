@@ -40,7 +40,7 @@ fun CoinDetailScreen(
     navController: NavController?
 ) {
 
-    val coinState = coinDetailViewModel.state
+    val coinState by coinDetailViewModel.state.collectAsState()
 
     val scaffoldState = rememberScaffoldState()
     val context = LocalContext.current

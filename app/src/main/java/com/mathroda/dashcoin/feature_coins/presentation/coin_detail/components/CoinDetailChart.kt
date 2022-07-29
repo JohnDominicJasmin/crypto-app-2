@@ -31,30 +31,30 @@ fun CoinDetailChart(
     onChartGesture:(Float) -> Unit
 ) {
 
+    val markerView = CustomMarkerView(context, R.layout.marker_view)
+    val dataSet = mutableListOf<Entry>()
+    chartModel?.let { chartsValue ->
+        chartsValue.chart.map { value ->
+            for (i in value){
+                dataSet.add(addEntry(value[0], value[1]))
+            }
+        }
+    }
+    val lineDataSet =
+        ChartScreenViewState().getLineDataSet(
+            lineData = dataSet,
+            label = "chart values",
+            priceChange = priceChange,
+            context = context,
+        ).apply {
+            mode = LineDataSet.Mode.LINEAR
+
+
+        }
 
 
     AndroidView(
         factory = { contextFactory ->
-            val markerView = CustomMarkerView(context, R.layout.marker_view)
-            val dataSet = mutableListOf<Entry>()
-            chartModel?.let { chartsValue ->
-                chartsValue.chart.map { value ->
-                    for (i in value){
-                        dataSet.add(addEntry(value[0], value[1]))
-                    }
-                }
-            }
-            val lineDataSet =
-                ChartScreenViewState().getLineDataSet(
-                    lineData = dataSet,
-                    label = "chart values",
-                    priceChange = priceChange,
-                    context = context,
-                ).apply {
-                    mode = LineDataSet.Mode.LINEAR
-
-
-                }
 
             LineChart(contextFactory).apply {
                 onChartGestureListener = object: OnChartGestureListener{
@@ -118,9 +118,6 @@ fun CoinDetailChart(
             }
         },
         update = { lineChart ->
-
-
-
 
             lineChart.apply {
                 invalidate()
