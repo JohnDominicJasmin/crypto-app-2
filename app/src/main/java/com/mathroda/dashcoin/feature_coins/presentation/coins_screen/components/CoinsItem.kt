@@ -42,7 +42,7 @@ fun CoinsItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(vertical = 8.dp, horizontal = 10.dp)
+                .padding(vertical = 3.dp, horizontal = 9.dp)
                 .clickable { onItemClick(coinModel) },
             verticalAlignment = CenterVertically
         ) {
@@ -93,8 +93,8 @@ fun CoinsItem(
                 chartModel = chartModel,
                 priceChange = coinModel.priceChange1w,
                 modifier = Modifier
-                    .height(75.dp)
-                    .weight(2f)
+                    .height(70.dp)
+                    .weight(2.3f)
 
             )
 

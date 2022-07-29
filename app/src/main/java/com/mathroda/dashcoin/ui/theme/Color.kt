@@ -2,7 +2,7 @@ package com.mathroda.dashcoin.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val DarkGray = Color(0xFF2C2B3A)
+val DarkGray = Color(0xFF181720)
 val LighterGray = Color(0xFF262532)
 val LightGray = Color(0xFF1E1C25)
 val CustomGreen = Color(0xFF30E0A1)
@@ -15,7 +15,7 @@ val Blue100 = Color(0xFF73A9C0)
 
 val GREEN600 = Color(0xFF00BDB0)//PRIMARY
 val Black930 = Color(0xFF292929)
-val Black920 = Color(0xFF292929)// should be use for surfaces
+val Black920 = Color(0xFF252525)// should be use for surfaces
 val Black910 = Color(0xFF313131)
 val Black900 = Color(0xFF303234)
 val Black850 = Color(0xFF5A5A5A)
