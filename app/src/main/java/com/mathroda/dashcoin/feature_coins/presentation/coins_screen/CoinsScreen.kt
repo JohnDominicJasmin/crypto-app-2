@@ -220,8 +220,8 @@ fun CoinsScreen(
                     modifier = Modifier
                         .offset(x = 0.dp, y = (-70).dp)
                         .size(50.dp),
-                    backgroundColor = Color.Black,
-                    contentColor = GREEN600
+                    backgroundColor = GREEN600,
+                    contentColor = Black920
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_back_to_top),
