@@ -2,28 +2,24 @@ package com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconToggleButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
+import com.mathroda.dashcoin.ui.theme.White800
+import com.mathroda.dashcoin.R
 
 @Composable
 fun TopBarCoinDetail(
-    coinSymbol: String,
-    icon: String,
+    coinModel: CoinDetailModel,
     modifier: Modifier,
     backButtonOnClick: () -> Unit,
     isFavorite: Boolean,
@@ -45,10 +41,8 @@ fun TopBarCoinDetail(
         ) {
             BackStackButton(
                 modifier = Modifier
-                    .padding(8.dp)
-                    .clickable {
-                       backButtonOnClick()
-                    }
+                    .padding(8.dp),
+                onClick = backButtonOnClick
             )
         }
         Box(
@@ -56,19 +50,12 @@ fun TopBarCoinDetail(
                 .weight(6f),
             contentAlignment = Alignment.Center){
             Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                AsyncImage(
-                    model = icon ,
-                    contentDescription = "Icon",
-                    modifier = Modifier
-                        .size(30.dp)
-                        .padding(end = 5.dp)
-                )
 
                 Text(
-                    text = coinSymbol,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.h2,
-                    color = TextWhite,
+                    text = coinModel.name,
+                    fontWeight = FontWeight.Normal,
+                    style = MaterialTheme.typography.h6,
+                    color = White800,
                 )
             }
         }
@@ -90,7 +77,7 @@ fun TopBarCoinDetail(
 @Composable
 fun FavoriteButton(
     modifier: Modifier = Modifier,
-    color: Color = TextWhite,
+    color: Color = White800,
     isFavorite: Boolean,
     onClick: (Boolean) -> Unit
 
@@ -103,15 +90,15 @@ fun FavoriteButton(
         Icon(
             tint = color,
             modifier = modifier.graphicsLayer {
-                scaleX = 1.3f
-                scaleY = 1.3f
+                scaleX = 1f
+                scaleY = 1.19f
             },
-            imageVector = if (isFavorite) {
-                Icons.Filled.Favorite
+            painter =  painterResource (if (isFavorite) {
+                R.drawable.ic_baseline_bookmark_filled
             } else {
-                Icons.Default.FavoriteBorder
-            },
-            contentDescription = null
+                R.drawable.ic_baseline_bookmark_border_24
+            }),
+            contentDescription = "Save icon"
         )
     }
 
@@ -120,15 +107,21 @@ fun FavoriteButton(
 @Composable
 fun BackStackButton(
     modifier: Modifier = Modifier,
-    color: Color = TextWhite
+    color: Color = White800,
+    onClick: () -> Unit
 ) {
-    Icon(
-        tint = color,
-        modifier = modifier.graphicsLayer {
-            scaleX = 1.3f
-            scaleY = 1.3f
-        },
-        imageVector = Icons.Filled.ArrowBack,
-        contentDescription = null
+
+    IconButton(onClick = onClick) {
+
+        Icon(
+            tint = color,
+            modifier = modifier.graphicsLayer {
+                scaleX = 1.3f
+                scaleY = 1.3f
+            },
+            imageVector = Icons.Filled.ArrowBack,
+            contentDescription = null
         )
+
+    }
 }
