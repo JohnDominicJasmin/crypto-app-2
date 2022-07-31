@@ -19,7 +19,9 @@ class ChartLineDataSet {
         LineDataSet(lineData, label).apply {
             mode = LineDataSet.Mode.CUBIC_BEZIER
              color = getColorStatus(priceChange)
-             highLightColor = getColorStatus(priceChange)
+            setDrawVerticalHighlightIndicator(true)
+            setDrawHorizontalHighlightIndicator(false)
+            highLightColor = getColorStatus(priceChange)
             fillDrawable = getBackground(priceChange,context)
             lineWidth = 2f
             setDrawFilled(true)
