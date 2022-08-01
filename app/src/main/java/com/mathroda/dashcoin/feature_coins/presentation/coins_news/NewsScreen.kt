@@ -1,7 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_news
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,12 +21,9 @@ import com.mathroda.dashcoin.core.util.ConnectionStatus
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.SearchBar
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
 import com.mathroda.dashcoin.feature_coins.presentation.coins_news.components.NewsCard
-import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.CoinsEvent
 import com.mathroda.dashcoin.feature_no_internet.presentation.NoInternetScreen
-import com.mathroda.dashcoin.navigation.Screens
-import com.mathroda.dashcoin.ui.theme.CustomGreen
+import com.mathroda.dashcoin.ui.theme.Green800
 import com.mathroda.dashcoin.ui.theme.DarkGray
-import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
@@ -102,7 +97,7 @@ fun NewsScreen(
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.Center),
-                    color = CustomGreen
+                    color = Green800
                 )
             }
 

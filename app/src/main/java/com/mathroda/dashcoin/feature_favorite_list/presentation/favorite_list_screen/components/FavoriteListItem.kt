@@ -17,7 +17,7 @@ import coil.compose.AsyncImage
 import com.mathroda.dashcoin.ui.theme.Gold
 import com.mathroda.dashcoin.ui.theme.LightGray
 import com.mathroda.dashcoin.ui.theme.LighterGray
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.White800
 
 @ExperimentalMaterialApi
 @Composable
@@ -67,12 +67,12 @@ fun WatchlistItem(
                     ) {
                         Text(
                             text = "Statics",
-                            color = TextWhite,
+                            color = White800,
                             fontWeight = FontWeight.Bold
                         )
 
                         Icon(
-                            tint = TextWhite,
+                            tint = White800,
                             modifier = Modifier
                                 .graphicsLayer {
                                     scaleX = 0.8f
@@ -134,7 +134,7 @@ fun WatchlistItem(
                             text = symbol,
                             style = MaterialTheme.typography.body1,
                             fontWeight = FontWeight.Bold,
-                            color = TextWhite,
+                            color = White800,
                             modifier = Modifier
                                 .padding(start = 8.dp)
                                 .align(Alignment.Bottom)

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mathroda.dashcoin.ui.theme.DarkGray
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.White800
 
 @ExperimentalMaterialApi
 @Composable
@@ -61,7 +61,7 @@ fun NewsCard(
                 ) {
                 Text(
                     text = title,
-                    style = TextStyle(color = TextWhite, fontSize = 16.sp)
+                    style = TextStyle(color = White800, fontSize = 16.sp)
                     )
             }
         }

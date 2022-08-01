@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
 import com.mathroda.dashcoin.ui.theme.LightGray
 import com.mathroda.dashcoin.ui.theme.LighterGray
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.White800
 
 @Composable
 fun CustomDialog(
@@ -66,7 +66,7 @@ private fun CustomDialogUI(
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.h1,
                     maxLines = 2,
-                    color = TextWhite,
+                    color = White800,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
@@ -76,11 +76,10 @@ private fun CustomDialogUI(
                         .padding(top = 10.dp, start = 25.dp, end = 25.dp)
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.body1,
-                    color = TextWhite
+                    color = White800
 
                 )
             }
-            //.......................................................................
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -95,7 +94,7 @@ private fun CustomDialogUI(
                    Text(
                         "Dismiss",
                         fontWeight = FontWeight.Bold,
-                        color = TextWhite.copy(ContentAlpha.disabled),
+                        color = White800.copy(ContentAlpha.disabled),
                         modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
                     )
                 }
@@ -107,7 +106,7 @@ private fun CustomDialogUI(
                     Text(
                         "Yes",
                         fontWeight = FontWeight.ExtraBold,
-                        color = TextWhite,
+                        color = White800,
                         modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
                     )
                 }

@@ -11,9 +11,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mathroda.dashcoin.R
-import com.mathroda.dashcoin.ui.theme.CustomGreen
-import com.mathroda.dashcoin.ui.theme.CustomRed
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.Green800
+import com.mathroda.dashcoin.ui.theme.Red900
+import com.mathroda.dashcoin.ui.theme.White800
 
 @Composable
 fun MarketStatusBar(
@@ -70,7 +70,7 @@ fun MarketStatusItem(
                 text = title,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.h4,
-                color = TextWhite,
+                color = White800,
             )
         }
 
@@ -92,7 +92,7 @@ fun MarketStatusItem(
             Text(
                 text = "$marketStatus%",
                 style = MaterialTheme.typography.body2,
-                color = if (marketStatus < 0) CustomRed else CustomGreen,
+                color = if (marketStatus < 0) Red900 else Green800,
                 modifier = Modifier
             )
         }

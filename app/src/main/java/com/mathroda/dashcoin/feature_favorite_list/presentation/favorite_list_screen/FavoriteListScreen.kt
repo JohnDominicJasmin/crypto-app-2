@@ -24,7 +24,7 @@ import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.CoinDetailVi
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.TopBar
 import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.components.MarketStatusBar
 import com.mathroda.dashcoin.feature_favorite_list.presentation.favorite_list_screen.components.WatchlistItem
-import com.mathroda.dashcoin.ui.theme.CustomGreen
+import com.mathroda.dashcoin.ui.theme.Green800
 import com.mathroda.dashcoin.ui.theme.DarkGray
 import kotlinx.coroutines.flow.collectLatest
 
@@ -116,7 +116,7 @@ fun FavoriteListScreen(
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.Center),
-                    color = CustomGreen
+                    color = Green800
                 )
             }
 

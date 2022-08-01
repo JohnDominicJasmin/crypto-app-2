@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.White800
 
 @Composable
 fun CoinInformation(
@@ -45,7 +45,7 @@ fun CoinInfoRow(
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
-                color = TextWhite,
+                color = White800,
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.body2,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -53,7 +53,7 @@ fun CoinInfoRow(
 
                 Text(
                     text = value,
-                    color = TextWhite,
+                    color = White800,
                     textAlign = TextAlign.End,
                     style = MaterialTheme.typography.body2
                 )

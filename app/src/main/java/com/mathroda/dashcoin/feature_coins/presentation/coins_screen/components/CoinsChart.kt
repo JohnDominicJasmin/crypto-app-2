@@ -1,6 +1,5 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
-import android.content.Context
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -15,7 +14,7 @@ import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.a
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartScreenViewState
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.getCompatDrawable
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.setLineDataSet
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.White800
 
 
 @Composable
@@ -53,7 +52,7 @@ val context = LocalContext.current
                 isDragEnabled = false
                 xAxis.isEnabled = false
                 axisLeft.setDrawAxisLine(false)
-                axisLeft.textColor = TextWhite.toArgb()
+                axisLeft.textColor = White800.toArgb()
                 axisLeft.isEnabled = false
                 axisRight.isEnabled = false
                 legend.isEnabled = false

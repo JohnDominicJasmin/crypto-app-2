@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -12,15 +11,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -220,7 +216,7 @@ fun CoinsScreen(
                     modifier = Modifier
                         .offset(x = 0.dp, y = (-70).dp)
                         .size(50.dp),
-                    backgroundColor = GREEN600,
+                    backgroundColor = GreenBlue600,
                     contentColor = Black920
                 ) {
                     Icon(
@@ -303,7 +299,7 @@ fun CoinsScreen(
                 CircularProgressIndicator(
                     modifier = Modifier
                         .align(Alignment.Center),
-                    color = CustomGreen
+                    color = Green800
                 )
             }
 

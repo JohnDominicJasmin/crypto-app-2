@@ -5,8 +5,8 @@ import androidx.compose.ui.graphics.toArgb
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
 import com.mathroda.dashcoin.R
-import com.mathroda.dashcoin.ui.theme.CustomGreen
-import com.mathroda.dashcoin.ui.theme.CustomRed
+import com.mathroda.dashcoin.ui.theme.Green800
+import com.mathroda.dashcoin.ui.theme.Red900
 
 class ChartScreenViewState {
 
@@ -27,7 +27,7 @@ class ChartScreenViewState {
         }
 
     private fun getColorStatus(oneDayChange: Double) =
-       if (oneDayChange < 0) CustomRed.toArgb() else CustomGreen.toArgb()
+       if (oneDayChange < 0) Red900.toArgb() else Green800.toArgb()
 
 
     private fun getBackground(

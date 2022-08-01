@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.core.util.Constants.VISIBLE_ITEM_COUNT
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
+import com.mathroda.dashcoin.feature_coins.domain.models.ChartTimeSpan
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
@@ -111,7 +112,7 @@ class CoinsViewModel @Inject constructor(
         coroutineScope {
             coinModels.forEach { coin ->
                 runCatching {
-                    coinUseCase.getChart(coinId = coin.id, period = "24h").toList(state.value.chart)
+                    coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.TimeSpanOneDay.value).toList(state.value.chart)
                 }.onSuccess { chartModels ->
                     val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
 
