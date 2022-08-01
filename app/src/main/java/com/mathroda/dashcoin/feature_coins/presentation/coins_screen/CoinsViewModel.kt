@@ -2,6 +2,7 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mathroda.dashcoin.core.util.Constants.COINS_LIMIT
 import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.core.util.Constants.VISIBLE_ITEM_COUNT
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
@@ -25,17 +26,17 @@ class CoinsViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
-         loadInformation().invokeOnCompletion {
-            _state.update { it.copy(isLoading = false) }.also{
-                subscribeToCoinChanges()
-            }
-        }
+         loadInformation(onCurrencyCollected = ::subscribeToCoinChanges).also{ job ->
+             job.invokeOnCompletion {
+                 _state.update { it.copy(isLoading = false) }
+             }
+         }
     }
 
-    private fun subscribeToCoinChanges(){
+    private fun subscribeToCoinChanges(currency:String){
         job = viewModelScope.launch(Dispatchers.IO) {
             while(isActive){
-                getCoins(state.value.coinCurrencyPreference.currency)
+                getCoins(currency)
                 delay(UPDATE_INTERVAL)
             }
         }
@@ -45,19 +46,18 @@ class CoinsViewModel @Inject constructor(
     }
 
 
-    private fun loadInformation() =
+    private fun loadInformation(onCurrencyCollected: (String) -> Unit) =
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(isLoading = true) }
             getGlobalMarket()
             getCoinCurrencies()
             getCurrency(onCurrencyCollected = { coinCurrencyPreference ->
+                onCurrencyCollected(coinCurrencyPreference.currency!!)
                 getCoins(coinCurrencyPreference.currency , onCoinsCollected = { coinModels ->
                     getChart(coinModels)
                 })
             })
-
         }
-
 
     private suspend fun getCurrency(onCurrencyCollected: suspend (CoinCurrencyPreference) -> Unit = {}) {
         coroutineScope {
@@ -111,13 +111,7 @@ class CoinsViewModel @Inject constructor(
                     val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
                     _state.update {
                         it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered)
-                    }.also{
-                        if(isItemsRendered){
-                            this.cancel()
-                        }
                     }
-
-
                 }.onFailure { exception ->
                     handleException(exception)
                 }
@@ -170,8 +164,6 @@ class CoinsViewModel @Inject constructor(
             is CoinsEvent.CloseNoInternetDisplay -> {
                 _state.update { it.copy(hasInternet = true) }
             }
-
-
 
             is CoinsEvent.SelectCurrency -> {
 
