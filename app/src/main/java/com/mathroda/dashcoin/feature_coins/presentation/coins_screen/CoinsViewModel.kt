@@ -25,21 +25,17 @@ class CoinsViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
-        val infoJob: Job = loadInformation().also { job ->
-            job.invokeOnCompletion {
-                _state.update { it.copy(isLoading = false) }
+         loadInformation().invokeOnCompletion {
+            _state.update { it.copy(isLoading = false) }.also{
+                subscribeToCoinChanges()
             }
-        }
-
-        if(infoJob.isActive){
-            subscribeToCoinChanges()
         }
     }
 
     private fun subscribeToCoinChanges(){
         job = viewModelScope.launch(Dispatchers.IO) {
             while(isActive){
-                getCoins(state.value.coinCurrencyPreference)
+                getCoins(state.value.coinCurrencyPreference.currency)
                 delay(UPDATE_INTERVAL)
             }
         }
@@ -55,7 +51,7 @@ class CoinsViewModel @Inject constructor(
             getGlobalMarket()
             getCoinCurrencies()
             getCurrency(onCurrencyCollected = { coinCurrencyPreference ->
-                getCoins(coinCurrencyPreference, onCoinsCollected = { coinModels ->
+                getCoins(coinCurrencyPreference.currency , onCoinsCollected = { coinModels ->
                     getChart(coinModels)
                 })
             })
@@ -89,16 +85,14 @@ class CoinsViewModel @Inject constructor(
     }
 
     private suspend fun getCoins(
-        coinCurrencyPreference: CoinCurrencyPreference,
+        currency: String?,
         onCoinsCollected: suspend (List<CoinModel>) -> Unit = {}) {
         coroutineScope {
             runCatching {
-                coinUseCase.getCoins(coinCurrencyPreference.currency ?: "USD")
+                coinUseCase.getCoins(currency?:"USD")
                     .distinctUntilChanged().collect { coins ->
                         _state.update {
-                            it.copy(
-                                coinModels = coins,
-                                coinCurrencyPreference = coinCurrencyPreference)
+                            it.copy(coinModels = coins)
                         }
                         onCoinsCollected(coins)
                     }
@@ -115,10 +109,15 @@ class CoinsViewModel @Inject constructor(
                     coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.TimeSpanOneDay.value).toList(state.value.chart)
                 }.onSuccess { chartModels ->
                     val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
-
                     _state.update {
                         it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered)
+                    }.also{
+                        if(isItemsRendered){
+                            this.cancel()
+                        }
                     }
+
+
                 }.onFailure { exception ->
                     handleException(exception)
                 }
@@ -162,9 +161,7 @@ class CoinsViewModel @Inject constructor(
             is CoinsEvent.RefreshCoins -> {
                 viewModelScope.launch {
                     _state.update { it.copy(isRefreshing = true) }
-                    event.coinCurrencyPreference?.let {
-                        getCoins(it)
-                    }
+                     getCoins(event.coinCurrencyPreference.currency)
                 }.invokeOnCompletion {
                     _state.update { it.copy(isRefreshing = false) }
                 }
@@ -179,9 +176,14 @@ class CoinsViewModel @Inject constructor(
             is CoinsEvent.SelectCurrency -> {
 
                 viewModelScope.launch {
+
                     _state.update { it.copy(isLoading = true) }
-                    updateCoinCurrency(event.coinCurrencyPreference)
-                    getCoins(event.coinCurrencyPreference)
+                    withContext(Dispatchers.IO) {
+                        updateCoinCurrency(event.coinCurrencyPreference)
+                        getCoins(event.coinCurrencyPreference.currency){
+                            _state.update{it.copy(coinCurrencyPreference = event.coinCurrencyPreference)}
+                        }
+                    }
 
                 }.invokeOnCompletion {
                     _state.update { it.copy(isLoading = false) }

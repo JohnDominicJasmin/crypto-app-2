@@ -245,9 +245,7 @@ fun CoinsScreen(
                             onDialogToggle(!dialogStateVisible)
 
                             coinsViewModel.onEvent(
-                                event = CoinsEvent.SelectCurrency(
-                                    coinCurrencyPreference = selectedCurrency
-                                                             ?: return@CoinCurrencyScreen))
+                                event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
 
 
                         })

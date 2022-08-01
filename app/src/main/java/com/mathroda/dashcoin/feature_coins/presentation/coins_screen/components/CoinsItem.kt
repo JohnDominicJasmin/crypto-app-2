@@ -1,6 +1,5 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -10,7 +9,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,7 +36,7 @@ fun CoinsItem(
     onItemClick: (CoinModel) -> Unit
 ) {
 
-    val formattedPrice = remember { DecimalFormat("#,###,###.##") }
+
 
 
 
@@ -54,7 +52,7 @@ fun CoinsItem(
 
 
 
-                Box(modifier = Modifier.padding(end = 5.dp)) {
+                Box(modifier = Modifier.padding(end = 8.dp)) {
                     AsyncImage(
                         model = coinModel.icon,
                         contentDescription = "Icon",
@@ -126,10 +124,10 @@ fun CoinsItem(
 
                     Text(
                         fontSize = 14.sp,
-                        text = "$currencySymbol ${formattedPrice.format(coinModel.price)}",
+                        text = "$currencySymbol ${coinModel.price.toFormattedPrice()}",
                         style = MaterialTheme.typography.body2,
                         fontWeight = FontWeight.Bold,
-                        color = if (coinModel.priceChange1w < 0) CustomRed else CustomGreen,
+                        color = if (coinModel.priceChange1w < 0) Red900 else Green800,
                         modifier = Modifier.padding(bottom = 7.dp),
                         textAlign = TextAlign.End,
                         overflow = TextOverflow.Ellipsis
@@ -199,4 +197,7 @@ fun CoinsItem(
         Divider(color = LightGray)
 
     }
+}
+fun Double.toFormattedPrice(): String{
+    return DecimalFormat("###,###.##").format(this)
 }
