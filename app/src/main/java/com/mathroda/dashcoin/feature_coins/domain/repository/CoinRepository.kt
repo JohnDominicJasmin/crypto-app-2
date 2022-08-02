@@ -21,4 +21,7 @@ interface CoinRepository {
 
     suspend fun getCurrency(): Flow<CoinCurrencyPreference>
 
+    suspend fun updateChartPeriod(period: String)
+
+    suspend fun getChartPeriod(): Flow<String?>
 }

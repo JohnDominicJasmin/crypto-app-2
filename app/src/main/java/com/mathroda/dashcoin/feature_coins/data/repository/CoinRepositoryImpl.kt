@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.mathroda.dashcoin.core.util.Constants.CHART_PERIOD
 import com.mathroda.dashcoin.core.util.Constants.CURRENCY_SYMBOL
 import com.mathroda.dashcoin.core.util.Constants.CURRENCY
 import com.mathroda.dashcoin.feature_coins.data.remote.CoinStatsApi
@@ -35,6 +36,25 @@ class CoinRepositoryImpl @Inject constructor(
 
     private var dataStore = context.dataStore
 
+
+    override suspend fun updateChartPeriod(period: String) {
+        dataStore.edit{preferences ->
+            preferences[CHART_PERIOD] = period
+        }
+    }
+
+    override suspend fun getChartPeriod(): Flow<String?> {
+        return dataStore.data.catch{ exception ->
+            if(exception is IOException){
+                emit(emptyPreferences())
+            }else{
+                Timber.e(message = exception.localizedMessage ?: "Unexpected error occurred.")
+            }
+        }.map{ preference ->
+            preference[CHART_PERIOD]
+        }
+    }
+
     override suspend fun updateCurrency(coinCurrencyPreference: CoinCurrencyPreference) {
         dataStore.edit{preferences ->
             preferences[CURRENCY] = coinCurrencyPreference.currency ?: "USD"
@@ -57,6 +77,9 @@ class CoinRepositoryImpl @Inject constructor(
     }
 
 
+
+
+
     override suspend fun getFiats(): CoinFiatModel =
         handleException {
             coinStatsApi.getFiats().toCoinFiat()
@@ -70,7 +93,6 @@ class CoinRepositoryImpl @Inject constructor(
 
     override suspend fun getCoins(currency:String): List<CoinModel> =
         handleException {
-            Timber.v("CURRENCY USED IS $currency")
             coinStatsApi.getCoins(currency).coins.map { it.toCoins() }
         }
 

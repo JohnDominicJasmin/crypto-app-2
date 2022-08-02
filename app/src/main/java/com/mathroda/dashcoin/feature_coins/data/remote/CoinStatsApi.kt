@@ -1,5 +1,6 @@
 package com.mathroda.dashcoin.feature_coins.data.remote
 
+import com.mathroda.dashcoin.core.util.Constants.COINS_LIMIT
 import com.mathroda.dashcoin.feature_coins.data.dto.*
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,7 +12,7 @@ interface CoinStatsApi {
     suspend fun getCoins(
         @Query("currency") currency: String,
         @Query("skip") skip: Int = 0,
-        @Query("limit") limit: Int = 500
+        @Query("limit") limit: Int = COINS_LIMIT
     ): CoinsDto
 
     @GET("v1/coins/{coinId}")

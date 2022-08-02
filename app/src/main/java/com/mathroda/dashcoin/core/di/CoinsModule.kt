@@ -12,12 +12,14 @@ import com.mathroda.dashcoin.feature_coins.data.repository.CoinRepositoryImpl
 import com.mathroda.dashcoin.feature_coins.domain.repository.CoinRepository
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_chart.GetChartUseCase
+import com.mathroda.dashcoin.feature_coins.domain.use_case.get_chart_period.GetChartPeriodUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coin.GetCoinUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_coins.GetCoinsUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_currency.GetCurrencyUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_fiats.GetFiatsUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_market_status.GetGlobalMarketUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.get_news.GetNewsUseCase
+import com.mathroda.dashcoin.feature_coins.domain.use_case.update_chart_period.UpdateChartPeriodUseCase
 import com.mathroda.dashcoin.feature_coins.domain.use_case.update_currency.UpdateCurrencyUseCase
 import dagger.Module
 import dagger.Provides
@@ -84,7 +86,9 @@ object CoinsModule {
             getGlobalMarket = GetGlobalMarketUseCase(repository),
             getFiats = GetFiatsUseCase(repository),
             getCurrency = GetCurrencyUseCase(repository),
-            updateCurrency = UpdateCurrencyUseCase(repository)
+            updateCurrency = UpdateCurrencyUseCase(repository),
+            getChartPeriodUseCase = GetChartPeriodUseCase(repository),
+            updateChartPeriodUseCase = UpdateChartPeriodUseCase(repository)
 
             )
     }
