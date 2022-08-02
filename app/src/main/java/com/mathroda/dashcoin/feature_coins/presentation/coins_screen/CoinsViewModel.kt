@@ -2,7 +2,6 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mathroda.dashcoin.core.util.Constants.COINS_LIMIT
 import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.core.util.Constants.VISIBLE_ITEM_COUNT
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
@@ -106,7 +105,7 @@ class CoinsViewModel @Inject constructor(
         coroutineScope {
             coinModels.forEach { coin ->
                 runCatching {
-                    coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.TimeSpanOneDay.value).toList(state.value.chart)
+                    coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.OneDay.value).toList(state.value.chart)
                 }.onSuccess { chartModels ->
                     val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
                     _state.update {
@@ -148,6 +147,8 @@ class CoinsViewModel @Inject constructor(
 
     private suspend fun updateCoinCurrency(coinCurrencyPreference: CoinCurrencyPreference) {
         coinUseCase.updateCurrency(coinCurrencyPreference)
+        _state.update{it.copy(coinCurrencyPreference = coinCurrencyPreference)}
+
     }
 
     fun onEvent(event: CoinsEvent) {
@@ -171,9 +172,8 @@ class CoinsViewModel @Inject constructor(
 
                     _state.update { it.copy(isLoading = true) }
                     withContext(Dispatchers.IO) {
-                        updateCoinCurrency(event.coinCurrencyPreference)
                         getCoins(event.coinCurrencyPreference.currency){
-                            _state.update{it.copy(coinCurrencyPreference = event.coinCurrencyPreference)}
+                            updateCoinCurrency(event.coinCurrencyPreference)
                         }
                     }
 

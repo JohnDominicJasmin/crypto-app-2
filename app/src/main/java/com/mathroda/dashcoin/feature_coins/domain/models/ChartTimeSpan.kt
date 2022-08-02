@@ -3,11 +3,12 @@ package com.mathroda.dashcoin.feature_coins.domain.models
 
 
 sealed class ChartTimeSpan(val value: String){
-    object TimeSpan1Day:ChartTimeSpan(value = "24h")
-    object TimeSpan1Week:ChartTimeSpan(value = "1w")
-    object TimeSpan1Month:ChartTimeSpan(value = "1m")
-    object TimeSpan3Months:ChartTimeSpan(value = "3m")
-    object TimeSpan6Months:ChartTimeSpan(value = "6m")
-    object TimeSpan1Year:ChartTimeSpan(value = "1y")
-    object TimeSpanAll:ChartTimeSpan(value = "all")
+    object OneHour:ChartTimeSpan(value = "1h")
+    object OneDay:ChartTimeSpan(value = "24h")
+    object OneWeek:ChartTimeSpan(value = "1w")
+    object OneMonth:ChartTimeSpan(value = "1m")
+    object ThreeMonths:ChartTimeSpan(value = "3m")
+    object SixMonths:ChartTimeSpan(value = "6m")
+    object OneYear:ChartTimeSpan(value = "1y")
+    object All:ChartTimeSpan(value = "all")
 }
