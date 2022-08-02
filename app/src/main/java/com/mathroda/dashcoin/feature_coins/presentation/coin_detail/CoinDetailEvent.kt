@@ -5,4 +5,5 @@ sealed class CoinDetailEvent{
     object CloseNoInternetDisplay: CoinDetailEvent()
     object ToggleFavoriteCoin: CoinDetailEvent()
     object LoadCoinDetail: CoinDetailEvent()
+    data class SelectChartPeriod(val period: String): CoinDetailEvent()
 }

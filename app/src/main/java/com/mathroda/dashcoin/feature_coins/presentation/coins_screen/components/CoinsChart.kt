@@ -24,7 +24,6 @@ fun CoinsChart(
     priceChange: Double,
 ) {
 
-val context = LocalContext.current
     AndroidView(
         factory = { contextFactory ->
             LineChart(contextFactory).apply {
