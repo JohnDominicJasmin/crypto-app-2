@@ -8,11 +8,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mathroda.dashcoin.ui.theme.LighterGray
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.ui.theme.White800
 
 @ExperimentalMaterialApi
 @Composable
@@ -64,7 +66,14 @@ fun BottomBar(
                         Text(text = screen.title!!)
                     },
                     icon = {
-                        Icon(imageVector = screen.icon!! , contentDescription = null)
+                        when(screen.icon){
+                            is Int -> {
+                                Icon(painter = painterResource(screen.icon) , contentDescription = null)
+                            }
+                            is ImageVector -> {
+                                Icon(imageVector = screen.icon , contentDescription = null)
+                            }
+                        }
                     },
 
                     selected = currentRoute == screen.route,
@@ -74,8 +83,8 @@ fun BottomBar(
                     },
 
                     alwaysShowLabel = false,
-                    selectedContentColor = TextWhite,
-                    unselectedContentColor = TextWhite.copy(alpha = ContentAlpha.disabled)
+                    selectedContentColor = White800,
+                    unselectedContentColor = White800.copy(alpha = ContentAlpha.disabled)
                 )
             }
         }

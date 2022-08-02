@@ -1,15 +1,14 @@
 package com.mathroda.dashcoin.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.mathroda.dashcoin.R
 
 sealed class Screens(
     val route: String,
     val title: String? = null,
-    val icon: ImageVector? = null) {
+    val icon: Any? = null) {
 
     object CoinsScreen: Screens(
         route = "coins_screen",
@@ -20,7 +19,7 @@ sealed class Screens(
     object FavoriteListScreen: Screens(
         route = "favorite_list_screen",
         title = "Favorites",
-        icon = Icons.Default.Favorite
+        icon = R.drawable.ic_baseline_bookmark_filled
     )
 
     object CoinsNews: Screens(
