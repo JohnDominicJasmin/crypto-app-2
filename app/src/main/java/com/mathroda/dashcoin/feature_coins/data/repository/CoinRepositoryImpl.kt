@@ -97,9 +97,9 @@ class CoinRepositoryImpl @Inject constructor(
         }
 
 
-    override suspend fun getCoinById(coinId: String): CoinDetailModel =
+    override suspend fun getCoinById(coinId: String, currency: String): CoinDetailModel =
         handleException {
-            coinStatsApi.getCoinById(coinId).coin.toCoinDetail()
+            coinStatsApi.getCoinById(coinId, currency).coin.toCoinDetail()
         }
 
     override suspend fun getChartsData(coinId: String, period: String): ChartModel =

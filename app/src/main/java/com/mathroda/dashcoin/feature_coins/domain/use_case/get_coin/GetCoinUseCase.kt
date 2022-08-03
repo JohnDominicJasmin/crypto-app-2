@@ -10,7 +10,7 @@ class GetCoinUseCase @Inject constructor(
     private val repository: CoinRepository
 ) {
 
-    operator fun invoke(coinId: String): Flow<CoinDetailModel> = flow {
-            emit( repository.getCoinById(coinId))
+    operator fun invoke(coinId: String, currency: String): Flow<CoinDetailModel> = flow {
+            emit( repository.getCoinById(coinId, currency))
     }
 }

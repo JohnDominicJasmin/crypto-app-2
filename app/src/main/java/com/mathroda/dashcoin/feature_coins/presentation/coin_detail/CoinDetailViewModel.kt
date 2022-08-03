@@ -34,18 +34,22 @@ class CoinDetailViewModel @Inject constructor(
             _state.update { it.copy(coinId = coinId) }
             getCoin(coinId)
             isFavoriteCoin()
-            getChartPeriod(){ chartPeriod ->
+            getChartPeriod() { chartPeriod ->
                 getChart(coinId = coinId, period = chartPeriod)
             }
         }
     }
 
-    private fun getChartPeriod(onChartPeriodCollected: suspend (String) -> Unit = {} ) {
+
+    private fun getChartPeriod(onChartPeriodCollected: suspend (String) -> Unit = {}) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
                 coinUseCase.getChartPeriodUseCase().distinctUntilChanged().collect { chartPeriod ->
                     onChartPeriodCollected(chartPeriod ?: ChartTimeSpan.OneDay.value)
-                    _state.update { it.copy(coinChartPeriod = chartPeriod ?: ChartTimeSpan.OneDay.value) }
+                    _state.update {
+                        it.copy(
+                            coinChartPeriod = chartPeriod ?: ChartTimeSpan.OneDay.value)
+                    }
                     this.cancel()
                 }
             }.onFailure { exception ->
@@ -107,8 +111,15 @@ class CoinDetailViewModel @Inject constructor(
             runCatching {
                 _state.update { it.copy(isLoading = true) }
                 while (isActive) {
-                    coinUseCase.getCoin(coinId).distinctUntilChanged().collect { coinDetail ->
-                        _state.update { it.copy(isLoading = false, coinDetailModel = coinDetail) }
+                    val currencyPreference = coinUseCase.getCurrency().first()
+                    coinUseCase.getCoin(coinId, currency = currencyPreference.currency ?: "USD")
+                        .distinctUntilChanged().collect { coinDetail ->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                coinDetailModel = coinDetail,
+                                currencySymbol = currencyPreference.currencySymbol ?: "$")
+                        }
                     }
                     delay(UPDATE_INTERVAL)
                 }

@@ -7,7 +7,7 @@ interface CoinRepository {
 
     suspend fun getCoins(currency: String): List<CoinModel>
 
-    suspend fun getCoinById(coinId: String): CoinDetailModel
+    suspend fun getCoinById(coinId: String, currency: String): CoinDetailModel
 
     suspend fun getChartsData(coinId: String, period: String): ChartModel
 

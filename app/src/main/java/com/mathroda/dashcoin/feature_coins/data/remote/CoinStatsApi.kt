@@ -17,7 +17,8 @@ interface CoinStatsApi {
 
     @GET("v1/coins/{coinId}")
     suspend fun getCoinById(
-        @Path("coinId") coinId: String
+        @Path("coinId") coinId: String,
+        @Query("currency") currency: String
     ): CoinDetailDto
 
     @GET("v1/charts")
