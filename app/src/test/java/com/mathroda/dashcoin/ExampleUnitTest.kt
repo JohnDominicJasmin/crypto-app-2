@@ -4,6 +4,7 @@ import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.formatToSho
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -35,6 +36,26 @@ class ExampleUnitTest {
 
 
 
+
+
+    @Test
+    fun millis24HoursTest(){
+
+
+        val millis = 1659036600
+        val date = Date(millis.toLong() * 1000)
+        val dateFormat = SimpleDateFormat("HH:mm")
+        assertEquals("03:30", dateFormat.format(date))
+
+    }
+
+    @Test
+    fun millis1WeekTest(){
+        val millis = 1658519280
+        val date = Date(millis.toLong() * 1000)
+        val dateFormat = SimpleDateFormat("EEE")
+        assertEquals("Sat", dateFormat.format(date))
+    }
     @Test
     fun getAllCurrencies() {
 
