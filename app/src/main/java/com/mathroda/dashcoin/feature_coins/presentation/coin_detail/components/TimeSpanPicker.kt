@@ -27,18 +27,9 @@ fun TimeSpanPicker(
     ) {
         item{
 
-            with(ChartTimeSpan.OneHour) {
-                TimeSpanChip(
-                    time = value.uppercase(),
-                    isSelected = selectedTimeSpan == value
-                ) {
-                    onTimeSpanSelected(this)
-                }
-            }
-
             with(ChartTimeSpan.OneDay) {
                 TimeSpanChip(
-                    time = value.uppercase(),
+                    time = "1D",
                     isSelected = selectedTimeSpan == value
                 ) {
                     onTimeSpanSelected(this)

@@ -8,7 +8,7 @@ import com.mathroda.dashcoin.R
 import com.mathroda.dashcoin.ui.theme.Green800
 import com.mathroda.dashcoin.ui.theme.Red900
 
-class ChartScreenViewState {
+class ChartLineDataSet {
 
     fun getLineDataSet(
         lineData: List<Entry>,

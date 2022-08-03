@@ -3,7 +3,6 @@ package com.mathroda.dashcoin.feature_coins.domain.models
 
 
 sealed class ChartTimeSpan(val value: String){
-    object OneHour:ChartTimeSpan(value = "1h")
     object OneDay:ChartTimeSpan(value = "24h")
     object OneWeek:ChartTimeSpan(value = "1w")
     object OneMonth:ChartTimeSpan(value = "1m")

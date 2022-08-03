@@ -3,7 +3,6 @@ package com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -11,7 +10,7 @@ import com.mathroda.dashcoin.R
 import com.mathroda.dashcoin.core.util.Constants.LAST_HOURS
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components.addEntry
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartScreenViewState
+import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.getCompatDrawable
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.setLineDataSet
 import com.mathroda.dashcoin.ui.theme.White800
@@ -36,7 +35,7 @@ fun CoinsChart(
                     }
                 }
                 val lineDataSet =
-                    ChartScreenViewState().getLineDataSet(
+                    ChartLineDataSet().getLineDataSet(
                         lineData = dataSet,
                         label = "chart values",
                         priceChange = priceChange,
