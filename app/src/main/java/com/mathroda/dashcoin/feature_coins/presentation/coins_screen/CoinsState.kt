@@ -1,6 +1,5 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
-import androidx.compose.ui.text.input.TextFieldValue
 import com.mathroda.dashcoin.feature_coins.data.dto.FiatCurrencyItem
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference

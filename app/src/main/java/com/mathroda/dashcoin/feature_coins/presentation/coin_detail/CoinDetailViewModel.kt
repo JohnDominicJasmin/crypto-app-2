@@ -69,11 +69,13 @@ class CoinDetailViewModel @Inject constructor(
 
             is CoinDetailEvent.SelectChartPeriod -> {
                 viewModelScope.launch {
-                    _state.update { it.copy(coinChartPeriod = event.period) }
+                    _state.update { it.copy(coinChartPeriod = event.period, isLoading = true) }
                     withContext(Dispatchers.IO) {
                         updateChartPeriod(event.period)
                         getChart(coinId = state.value.coinId, period = event.period)
                     }
+                }.invokeOnCompletion {
+                    _state.update { it.copy(isLoading = false) }
                 }
             }
         }
