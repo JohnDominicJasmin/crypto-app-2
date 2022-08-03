@@ -10,9 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
@@ -23,16 +23,20 @@ import com.mathroda.dashcoin.core.util.CustomMarkerView
 import com.mathroda.dashcoin.core.util.MyXAxisValueFormatter
 import com.mathroda.dashcoin.core.util.MyYAxisValueFormatter
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
-import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartScreenViewState
+import com.mathroda.dashcoin.feature_coins.domain.models.ChartTimeSpan
+import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.setLineDataSet
+import com.mathroda.dashcoin.ui.theme.Black850
 
 
 @Composable
 fun CoinDetailChart(
     modifier: Modifier,
-    chartModel: ChartModel?,
+    chartModel: ChartModel,
+    chartPeriod: String,
     priceChange: Double,
-    onChartGesture: (Float) -> Unit
+    onChangeYAxisValue: (Float) -> Unit,
+    onChangeXAxisValue: (Float) -> Unit
 ) {
     val xAxisValueFormatter = remember { MyXAxisValueFormatter() }
     val dataSet = remember { mutableStateListOf<Entry>() }
@@ -42,28 +46,52 @@ fun CoinDetailChart(
         clear()
 
     }}
+
+
+
     LaunchedEffect(key1 = chartModel ){
+
+        xAxisValueFormatter.format = when(chartPeriod){
+            ChartTimeSpan.OneDay.value -> {
+                "HH:mm"
+            }
+            ChartTimeSpan.OneWeek.value -> {
+                "EEE"
+            }
+            ChartTimeSpan.OneMonth.value, ChartTimeSpan.ThreeMonths.value, ChartTimeSpan.SixMonths.value -> {
+                "dd MMM"
+            }
+            ChartTimeSpan.OneYear.value -> {
+                "MMM"
+            }
+            else -> {
+                "MMM dd"
+            }
+        }
+
+
         dataSet.clear()
-        chartModel?.let { chartsValue ->
-            chartsValue.chart.map { value ->
+
+            chartModel.chart.map { value ->
                 for (i in value){
                     dataSet.add(addEntry(value[0], value[1]))
                 }
             }
-        }
-        val lineDataSet = ChartScreenViewState().getLineDataSet(
+        val lineDataSet = ChartLineDataSet().getLineDataSet(
                 lineData = dataSet,
                 label = "chart values",
                 priceChange = priceChange,
                 context = context,
             ).apply {
                 mode = LineDataSet.Mode.LINEAR
+                lineWidth = 1.35f
             }
         lineDataChart.apply{
+            fitScreen()
             invalidate()
             clear()
             setLineDataSet(lineDataSet)
-            animateX(250, Easing.EaseOutBounce)
+            animateX(1000)
         }
 
     }
@@ -77,20 +105,27 @@ fun CoinDetailChart(
                 description.isEnabled = false
                 xAxis.isEnabled = true
                 axisLeft.textColor = Color.White.toArgb()
+                axisLeft.textSize = 10f
                 axisLeft.valueFormatter = MyYAxisValueFormatter()
                 axisRight.isEnabled = false
-                axisLeft.axisLineColor = Color.Red.toArgb()
                 axisLeft.setDrawAxisLine(false)
+                axisLeft.setDrawGridLines(true)
+                axisLeft.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
+                axisLeft.axisLineColor = Black850.toArgb()
+                axisLeft.zeroLineColor = Black850.toArgb()
+                axisLeft.gridLineWidth = 0.4f
                 xAxis.valueFormatter = xAxisValueFormatter
                 xAxis.textColor = Color.White.toArgb()
                 xAxis.position = XAxis.XAxisPosition.BOTTOM
-                xAxis.axisLineColor = Color.Transparent.toArgb()
                 xAxis.setDrawGridLines(false)
                 legend.isEnabled = false
                 setTouchEnabled(true)
-                setScaleEnabled(false)
+                setScaleEnabled(true)
                 setDrawGridBackground(false)
+                isScaleYEnabled = false
+                setPinchZoom(true)
                 setDrawBorders(false)
+                viewPortHandler.setMaximumScaleX(10.5f)
                 setDrawMarkers(true)
 
 
@@ -99,7 +134,8 @@ fun CoinDetailChart(
                         me: MotionEvent?,
                         lastPerformedGesture: ChartTouchListener.ChartGesture?) {
 
-                        onChartGesture(markerView.yEntry)
+                        onChangeYAxisValue(markerView.yEntry)
+                        onChangeXAxisValue(markerView.xEntry)
                     }
 
                     override fun onChartGestureEnd(
