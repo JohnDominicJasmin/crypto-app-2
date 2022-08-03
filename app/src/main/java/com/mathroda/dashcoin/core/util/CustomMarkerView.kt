@@ -12,9 +12,13 @@ class CustomMarkerView constructor(context: Context, layoutResource: Int) :
     MarkerView(context, layoutResource) {
     var yEntry = 0f
         private set
+
+    var xEntry = 0f
+        private set
     private val tvContent: View = findViewById(R.id.circleIndicator)
     override fun refreshContent(e: Entry, highlight: Highlight) {
         yEntry = e.y
+        xEntry = e.x
         tvContent.visibility = VISIBLE
         super.refreshContent(e, highlight)
     }
