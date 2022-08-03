@@ -110,6 +110,8 @@ fun CoinDetailChart(
                 axisRight.isEnabled = false
                 axisLeft.setDrawAxisLine(false)
                 axisLeft.setDrawGridLines(true)
+                axisLeft.yOffset = -3f
+                axisLeft.xOffset = -2f
                 axisLeft.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
                 axisLeft.axisLineColor = Black850.toArgb()
                 axisLeft.zeroLineColor = Black850.toArgb()

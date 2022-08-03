@@ -103,7 +103,11 @@ fun TimeSpanChip(
 ) {
 
     Chip(
-        onClick = onTimeSpanSelected,
+        onClick = {
+            if(!isSelected){
+                onTimeSpanSelected()
+            }
+        },
         modifier = Modifier,
         shape = RoundedCornerShape(16.dp),
         colors = ChipDefaults.chipColors(backgroundColor = if (isSelected) GreenBlue600 else MaterialTheme.colors.background)) {
