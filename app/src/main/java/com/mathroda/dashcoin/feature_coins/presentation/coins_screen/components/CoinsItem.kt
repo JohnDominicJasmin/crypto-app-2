@@ -26,6 +26,7 @@ import coil.compose.AsyncImage
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.ui.theme.*
+import java.math.RoundingMode
 import java.text.DecimalFormat
 
 @Composable
@@ -199,5 +200,8 @@ fun CoinsItem(
     }
 }
 fun Double.toFormattedPrice(): String{
-    return DecimalFormat("###,###.##").format(this)
+    return DecimalFormat("###,##0.00").run{
+        this.roundingMode = RoundingMode.UP
+        this.format(this@toFormattedPrice)
+    }
 }
