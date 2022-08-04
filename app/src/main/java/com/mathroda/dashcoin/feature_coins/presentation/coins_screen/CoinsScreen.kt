@@ -27,6 +27,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.mathroda.dashcoin.R
 import com.mathroda.dashcoin.core.util.ConnectionStatus
+import com.mathroda.dashcoin.core.util.formatToShortNumber
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 import com.mathroda.dashcoin.feature_coins.presentation.coin_currency_screen.CoinCurrencyScreen
 import com.mathroda.dashcoin.feature_coins.presentation.coins_screen.components.*
@@ -345,14 +346,5 @@ private fun LazyListState.isScrollingUp(): Boolean {
     }.value
 }
 
-fun Long.formatToShortNumber(): String {
-    return when {
-        this >= 1000000000000 -> String.format("%.2f T", this / 1000000000000.0)
-        this >= 1000000000 -> String.format("%.2f B", this / 1000000000.0)
-        this >= 1000000 -> String.format("%.2f M", this / 1000000.0)
-        this >= 1000 -> String.format("%.2f K", this / 1000.0)
-        else -> this.toString()
-    }
-}
 
 

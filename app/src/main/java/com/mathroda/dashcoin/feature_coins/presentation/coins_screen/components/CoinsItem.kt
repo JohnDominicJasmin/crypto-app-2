@@ -23,6 +23,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.mathroda.dashcoin.core.util.toFormattedPrice
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
 import com.mathroda.dashcoin.ui.theme.*
@@ -197,11 +198,5 @@ fun CoinsItem(
         }
         Divider(color = LightGray)
 
-    }
-}
-fun Double.toFormattedPrice(): String{
-    return DecimalFormat("###,##0.00").run{
-        this.roundingMode = RoundingMode.UP
-        this.format(this@toFormattedPrice)
     }
 }
