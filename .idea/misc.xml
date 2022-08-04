@@ -54,8 +54,8 @@
         <entry key="app/src/main/res/drawable/ic_arrow_positive.xml" value="0.2055" />
         <entry key="app/src/main/res/drawable/ic_baseline_manage_search_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
-        <entry key="app/src/main/res/layout-v28/marker_view.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/marker_view.xml" value="0.75" />
+        <entry key="app/src/main/res/layout-v28/marker_view.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/marker_view.xml" value="0.2" />
       </map>
     </option>
   </component>

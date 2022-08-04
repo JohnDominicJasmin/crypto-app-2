@@ -1,81 +1,104 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coin_detail.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.mathroda.dashcoin.R
-import com.mathroda.dashcoin.ui.theme.CustomGreen
-import com.mathroda.dashcoin.ui.theme.CustomRed
-import com.mathroda.dashcoin.ui.theme.LighterGray
-import com.mathroda.dashcoin.ui.theme.TextWhite
+import com.mathroda.dashcoin.core.util.toFormattedPrice
+import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
+import com.mathroda.dashcoin.ui.theme.*
 
 @Composable
 fun CoinDetailSection(
     modifier: Modifier,
-    price: Double,
-    priceChange: Double
+    coinModel: CoinDetailModel,
+    chartDate: String,
+    chartPrice: String,
+    currencySymbol: String
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 40.dp),
+            .padding(top = 18.dp),
         contentAlignment = Alignment.Center
-    ){
+    ) {
+
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround,
         ) {
-            Text(
-                text = "$${price.toFloat()}",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.h1,
-                color = TextWhite
+
+            AsyncImage(
+                model = coinModel.icon,
+                contentDescription = "Icon",
+                modifier = Modifier
+                    .size(52.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Fit,
             )
 
-            Row (
-                Modifier.padding(horizontal = 5.dp)
-                    ) {
-                Box(modifier = Modifier
-                    .clip(RoundedCornerShape(3.dp))
-                    .background(LighterGray)
-                    .size(21.dp)
-                ) {
-                    Text(
-                        text = "24h",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextWhite,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                    )
-                }
-                Text(
-                    text = "$priceChange%",
-                    style = MaterialTheme.typography.body1,
-                    color = if (priceChange < 0) CustomRed else CustomGreen
-                )
+            Text(
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.h6,
+                text = "$currencySymbol${chartPrice.ifEmpty { coinModel.price.toFormattedPrice() }}",
+                color = White800,
+                modifier = Modifier.padding(top = 5.dp)
+            )
 
-                Image(
-                    painter = if (priceChange < 0) painterResource(id = R.drawable.ic_arrow_negative)
-                    else painterResource(id = R.drawable.ic_arrow_positive) ,
-                    contentDescription = "arrow",
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .size(12.dp)
+            AnimatedVisibility(visible = chartDate.isNotEmpty()) {
+
+                Text(
+                    text = chartDate,
+                    fontWeight = FontWeight.Normal,
+                    color = Black450,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = 2.3.dp,bottom = 5.dp)
+
                 )
             }
 
+
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = if(coinModel.priceChange1w < 0) Red20 else Green20,
+            modifier = Modifier.padding(top = 8.dp)){
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(vertical = 6.dp, horizontal = 8.dp)) {
+                    Image(
+                        painter = painterResource(id = if(coinModel.priceChange1w < 0) R.drawable.ic_arrow_negative else R.drawable.ic_arrow_positive),
+                        contentDescription = "Arrow Positive/Negative Indicator",
+                        modifier = Modifier
+                            .padding(start = 2.dp, end = 8.dp)
+                            .size(10.dp)
+                    )
+                    Text(
+                        text = (if(coinModel.priceChange1w < 0) "" else "+") + coinModel.priceChange1w.toString() + "%",
+                        style = MaterialTheme.typography.body1,
+                        color = if(coinModel.priceChange1w < 0) Red900 else Green800,
+                        fontSize = 12.sp
+                    )
+                }
+            }
         }
     }
 }
+
+
+
+

@@ -88,7 +88,6 @@ dependencies {
 
     // Coroutine Lifecycle Scopes
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -156,4 +155,7 @@ dependencies {
 
 
     implementation 'com.google.android.material:material:1.6.1'
+
+    implementation 'androidx.compose.runtime:runtime-livedata:1.3.0-alpha02'
+
 }

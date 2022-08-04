@@ -14,6 +14,8 @@ data class CoinDetailState(
     val currencySymbol: String = "$",
     val hasInternet: Boolean = true,
     val isFavorite: Boolean = false,
-    val coinId:String = ""
+    val coinId:String = "",
+    val chartDate: String = "",
+    val chartPrice: String = "",
 )
 

@@ -82,6 +82,14 @@ class CoinDetailViewModel @Inject constructor(
                     _state.update { it.copy(isLoading = false) }
                 }
             }
+
+            is CoinDetailEvent.ChangeYAxisValue -> {
+                _state.update { it.copy(chartPrice = event.yValue) }
+            }
+
+            is CoinDetailEvent.ChangeXAxisValue -> {
+                _state.update { it.copy(chartDate = event.xValue) }
+            }
         }
 
     }
