@@ -19,7 +19,7 @@ val GreenBlue600 = Color(0xFF00BDB0)//PRIMARY
 
 
 val Green800 = Color(0xFF30E0A1)
-val Green20 = Color(0xFF10DC78)
+val Green20 = Color(0xFFDBFBEC)
 
 val Black930 = Color(0xFF292929)
 val Black920 = Color(0xFF252525)//   surfaces
