@@ -7,6 +7,7 @@ import com.mathroda.dashcoin.core.util.Constants
 import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartTimeSpan
+import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import com.mathroda.dashcoin.feature_favorite_list.domain.use_case.FavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,9 @@ class CoinDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(CoinDetailState())
     val state = _state.asStateFlow()
 
+    private var coinChangesJob: Job? = null
+    private var coinChartJob: Job? = null
+
     init {
         loadCoinDetail()
     }
@@ -32,10 +36,11 @@ class CoinDetailViewModel @Inject constructor(
     private fun loadCoinDetail() {
         savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
             _state.update { it.copy(coinId = coinId) }
-            getCoin(coinId)
+            subscribeToCoinChanges(coinId)
             isFavoriteCoin()
             getChartPeriod() { chartPeriod ->
                 getChart(coinId = coinId, period = chartPeriod)
+                subscribeToChartChanges(coinId = coinId, period = chartPeriod)
             }
         }
     }
@@ -114,29 +119,52 @@ class CoinDetailViewModel @Inject constructor(
     }
 
 
-    private fun getCoin(coinId: String) {
-        viewModelScope.launch {
-            runCatching {
+    private fun subscribeToCoinChanges(coinId: String) {
+        coinChangesJob = viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
                 while (isActive) {
                     val currencyPreference = coinUseCase.getCurrency().first()
-                    coinUseCase.getCoin(coinId, currency = currencyPreference.currency ?: "USD")
-                        .distinctUntilChanged().collect { coinDetail ->
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                coinDetailModel = coinDetail,
-                                currencySymbol = currencyPreference.currencySymbol ?: "$")
-                        }
-                    }
+                    getCoin(coinId = coinId, currencyPreference = currencyPreference)
                     delay(UPDATE_INTERVAL)
                 }
+        }
+    }
 
-            }.onFailure { exception ->
-                handleException(exception)
+    private fun subscribeToChartChanges(coinId: String, period: String) {
+        coinChartJob = viewModelScope.launch {
+            while (isActive){
+                getChart(coinId = coinId, period = period)
+                delay(UPDATE_INTERVAL)
             }
         }
     }
+
+    private fun unSubscribeToCoinChanges() {
+        coinChangesJob?.cancel()
+    }
+    private fun unSubscribeToChartChanges() {
+        coinChartJob?.cancel()
+    }
+
+
+
+    private suspend fun getCoin(coinId: String, currencyPreference: CoinCurrencyPreference){
+
+        runCatching {
+            coinUseCase.getCoin(coinId, currency = currencyPreference.currency ?: "USD")
+                .distinctUntilChanged().collect { coinDetail ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            coinDetailModel = coinDetail,
+                            currencySymbol = currencyPreference.currencySymbol ?: "$")
+                    }
+                }
+        }.onFailure { exception ->
+            handleException(exception)
+        }
+    }
+
 
     private suspend fun handleException(exception: Throwable) {
         withContext(Dispatchers.Main) {
@@ -168,5 +196,9 @@ class CoinDetailViewModel @Inject constructor(
         }
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        unSubscribeToCoinChanges()
+        unSubscribeToChartChanges()
+    }
 }
