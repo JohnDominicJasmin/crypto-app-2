@@ -20,10 +20,7 @@ class CustomMarkerView constructor(context: Context, layoutResource: Int) :
 
     private val circleIndicator: View = findViewById(R.id.circleIndicator)
 
-    override fun setOnTouchListener(l: OnTouchListener?) {
 
-        super.setOnTouchListener(l)
-    }
 
     override fun refreshContent(e: Entry, highlight: Highlight) {
         yEntry.value = e.y.toDouble()

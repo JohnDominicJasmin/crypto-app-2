@@ -38,11 +38,13 @@ fun CoinDetailChart(
     val xAxisValueFormatter = remember { MyXAxisValueFormatter() }
     val dataSet = remember { mutableStateListOf<Entry>() }
     val context = LocalContext.current
-    val lineDataChart = remember{ LineChart(context).apply {
-        setNoDataText(" ")
-        clear()
+    val lineDataChart = remember {
+        LineChart(context).apply {
+            setNoDataText(" ")
+            clear()
 
-    }}
+        }
+    }
     val coroutineScope = rememberCoroutineScope()
     val markerView = remember { CustomMarkerView(context, R.layout.marker_view) }
     val yAxisEntry by markerView.yEntry.observeAsState()
@@ -76,7 +78,6 @@ fun CoinDetailChart(
                     }
 
                     override fun onChartSingleTapped(me: MotionEvent?) {
-
                     }
 
                     override fun onChartFling(
@@ -102,7 +103,7 @@ fun CoinDetailChart(
 
 
 
-    LaunchedEffect(key1 = chartModel ){
+    LaunchedEffect(key1 = chartModel) {
 
         xAxisValueFormatter.format = periodToTimeSpan(chartPeriod)
 
@@ -124,7 +125,7 @@ fun CoinDetailChart(
                 lineWidth = 1.35f
             }
 
-        lineDataChart.apply{
+        lineDataChart.apply {
             fitScreen()
             invalidate()
             clear()
@@ -143,41 +144,38 @@ fun CoinDetailChart(
             lineDataChart.apply {
                 description.isEnabled = false
                 xAxis.isEnabled = true
-                axisLeft.textColor = Color.White.toArgb()
-                axisLeft.textSize = 10f
-                axisLeft.valueFormatter = MyYAxisValueFormatter()
+                axisLeft.isEnabled = false
+//                axisLeft.textColor = Color.White.toArgb()
+//                axisLeft.textSize = 10f
+//                axisLeft.valueFormatter = MyYAxisValueFormatter()
+//                axisLeft.setDrawAxisLine(false)
+//                axisLeft.setDrawGridLines(true)
+//                axisLeft.yOffset = -3f
+//                axisLeft.xOffset = -2f
+//                axisLeft.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
+//                axisLeft.axisLineColor = Black850.toArgb()
+//                axisLeft.zeroLineColor = Black850.toArgb()
+//                axisLeft.gridLineWidth = 0.4f
                 axisRight.isEnabled = false
-                axisLeft.setDrawAxisLine(false)
-                axisLeft.setDrawGridLines(true)
-                axisLeft.yOffset = -3f
-                axisLeft.xOffset = -2f
-                axisLeft.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
-                axisLeft.axisLineColor = Black850.toArgb()
-                axisLeft.zeroLineColor = Black850.toArgb()
-                axisLeft.gridLineWidth = 0.4f
+
                 xAxis.valueFormatter = xAxisValueFormatter
                 xAxis.textColor = Color.White.toArgb()
                 xAxis.position = XAxis.XAxisPosition.BOTTOM
                 xAxis.setDrawGridLines(false)
                 legend.isEnabled = false
+                xAxis.setCenterAxisLabels(true)
                 setTouchEnabled(true)
-
-                setScaleEnabled(true)
+                setScaleEnabled(false)
                 setDrawGridBackground(false)
                 isScaleYEnabled = false
-                isScaleXEnabled = true
-                setPinchZoom(true)
+                isScaleXEnabled = false
+                setPinchZoom(false)
                 setDrawBorders(false)
                 viewPortHandler.setMaximumScaleX(10.5f)
                 setDrawMarkers(true)
                 isDragEnabled = true
-
-
-
-
-
-
                 marker = markerView
+
             }
         },
         update = { lineChart ->
