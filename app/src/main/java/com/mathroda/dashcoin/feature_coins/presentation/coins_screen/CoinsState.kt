@@ -12,7 +12,6 @@ data class CoinsState(
     val hasInternet: Boolean = true,
     val isItemsRendered: Boolean = false,
     val coinModels: List<CoinModel> = emptyList(),
-    val chart: MutableList<ChartModel> = mutableListOf(),
     val globalMarket: GlobalMarketModel = GlobalMarketModel(),
     val tickerVisible:Boolean = false,
 

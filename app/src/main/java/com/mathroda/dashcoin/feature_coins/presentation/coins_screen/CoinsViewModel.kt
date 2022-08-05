@@ -1,10 +1,12 @@
 package com.mathroda.dashcoin.feature_coins.presentation.coins_screen
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.core.util.Constants.VISIBLE_ITEM_COUNT
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
+import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartTimeSpan
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
 import com.mathroda.dashcoin.feature_coins.domain.models.CoinModel
@@ -22,6 +24,8 @@ class CoinsViewModel @Inject constructor(
     private val _state = MutableStateFlow(CoinsState())
     val state = _state.asStateFlow()
 
+    private val _coinChart = mutableStateListOf<ChartModel>()
+    val coinChart = _coinChart
     private var job: Job? = null
 
     init {
@@ -105,7 +109,7 @@ class CoinsViewModel @Inject constructor(
         coroutineScope {
             coinModels.forEach { coin ->
                 runCatching {
-                    coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.OneDay.value).toList(state.value.chart)
+                    coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.OneDay.value).toList(_coinChart)
                 }.onSuccess { chartModels ->
                     val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
                     _state.update {

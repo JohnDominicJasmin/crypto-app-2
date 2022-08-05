@@ -46,6 +46,7 @@ fun CoinsScreen(
 ) {
 
     val coinsState by coinsViewModel.state.collectAsState()
+    val coinChart = coinsViewModel.coinChart
     val context = LocalContext.current
 
 
@@ -280,7 +281,7 @@ fun CoinsScreen(
                                 CoinsItem(
                                     currencySymbol = coinsState.coinCurrencyPreference.currencySymbol ?: "N/A",
                                     coinModel = coinModel,
-                                    chartModel = coinsState.chart.takeIf { it.isNotEmpty() && it.size > index }?.get(index),
+                                    chartModel = coinChart.takeIf { it.isNotEmpty() && it.size > index }?.get(index),
                                     onItemClick = {
                                         navController?.navigate(Screens.CoinDetailScreen.route + "/${coinModel.id}")
                                     }
