@@ -20,8 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.mathroda.dashcoin.R
-import com.mathroda.dashcoin.core.util.ConnectionStatus
-import com.mathroda.dashcoin.ui.theme.Black300
+import com.mathroda.dashcoin.ui.theme.Black450
 import com.mathroda.dashcoin.ui.theme.DashCoinTheme
 
 @Composable
@@ -104,7 +103,7 @@ fun NoInternetScreen(
                         width = Dimension.wrapContent
                         height = Dimension.wrapContent
                     },
-                border = BorderStroke(width = 2.dp, color = Black300),
+                border = BorderStroke(width = 2.dp, color = Black450),
                 colors = ButtonDefaults.outlinedButtonColors(
                     backgroundColor = MaterialTheme.colors.background,
                     contentColor = MaterialTheme.colors.onBackground)) {

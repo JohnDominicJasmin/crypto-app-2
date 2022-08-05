@@ -31,7 +31,7 @@ val Black500 = Color(0xFFA5A5A5)
 val Black450 = Color(0xFF8C8C8C)
 val Black445 = Color(0xFF4D4D4D)
 val Black440 = Color(0xFF979797)
-val Black300 = Color(0xFF919191)
+//val Black300 = Color(0xFF919191)
 
 val White800 = Color(0xFFEEEEEE)
 
