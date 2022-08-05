@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
@@ -21,7 +20,6 @@ import com.mathroda.dashcoin.core.util.*
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartModel
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
 import com.mathroda.dashcoin.feature_coins.presentation.coin_detail.utils.setLineDataSet
-import com.mathroda.dashcoin.ui.theme.Black850
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -42,13 +40,16 @@ fun CoinDetailChart(
         LineChart(context).apply {
             setNoDataText(" ")
             clear()
-
         }
     }
     val coroutineScope = rememberCoroutineScope()
-    val markerView = remember { CustomMarkerView(context, R.layout.marker_view) }
+    val markerView = remember { CustomMarkerView(context, R.layout.marker_view_chart) }
     val yAxisEntry by markerView.yEntry.observeAsState()
     val xAxisEntry by markerView.xEntry.observeAsState()
+
+    LaunchedEffect(key1 = priceChange) {
+        markerView.changeBackgroundCircleIndicator(if (priceChange < 0) R.drawable.circle_chart_negative else R.drawable.circle_chart_positive)
+    }
 
     LaunchedEffect(key1 = yAxisEntry, key2 = xAxisEntry) {
         this.launch(Dispatchers.Main) {

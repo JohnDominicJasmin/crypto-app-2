@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.DragEvent
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.MutableLiveData
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -19,14 +20,15 @@ class CustomMarkerView constructor(context: Context, layoutResource: Int) :
     val xEntry: MutableLiveData<Double> by lazy { MutableLiveData<Double>() }
 
     private val circleIndicator: View = findViewById(R.id.circleIndicator)
+    fun changeBackgroundCircleIndicator(@DrawableRes drawable: Int) {
+        circleIndicator.setBackgroundResource(drawable)
 
-
+    }
 
     override fun refreshContent(e: Entry, highlight: Highlight) {
         yEntry.value = e.y.toDouble()
         xEntry.value = e.x.toDouble()
         circleIndicator.visibility = VISIBLE
-
         super.refreshContent(e, highlight)
     }
 
@@ -35,7 +37,7 @@ class CustomMarkerView constructor(context: Context, layoutResource: Int) :
     override fun getOffset(): MPPointF {
         if (mOffset == null) {
             // center the marker horizontally and vertically
-            mOffset = MPPointF((-(width / 2)).toFloat(), (-(height / 2)).toFloat())
+            mOffset = MPPointF((-(width / 2)).toFloat(), -height.toFloat())
         }
         return mOffset!!
     }
