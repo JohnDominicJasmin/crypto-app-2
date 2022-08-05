@@ -27,8 +27,7 @@ fun CoinDetailSection(
     coinModel: CoinDetailModel,
     chartDate: String,
     chartPrice: String,
-    currencySymbol: String
-) {
+    ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -54,7 +53,7 @@ fun CoinDetailSection(
             Text(
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.h6,
-                text = "$currencySymbol${chartPrice.ifEmpty { coinModel.price.toFormattedPrice() }}",
+                text = "$${chartPrice.ifEmpty { coinModel.price.toFormattedPrice() }}",
                 color = White800,
                 modifier = Modifier.padding(top = 5.dp)
             )
@@ -66,7 +65,7 @@ fun CoinDetailSection(
                     fontWeight = FontWeight.Normal,
                     color = Black450,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(top = 2.3.dp,bottom = 5.dp)
+                    modifier = Modifier.padding(top = 2.7.dp,bottom = 5.dp)
 
                 )
             }

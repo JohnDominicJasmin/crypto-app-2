@@ -11,7 +11,6 @@ data class CoinDetailState(
     val coinChartPeriod: String = ChartTimeSpan.OneDay.value,
     val coinDetailModel: CoinDetailModel? = null,
     val errorMessage: String = "",
-    val currencySymbol: String = "$",
     val hasInternet: Boolean = true,
     val isFavorite: Boolean = false,
     val coinId:String = "",

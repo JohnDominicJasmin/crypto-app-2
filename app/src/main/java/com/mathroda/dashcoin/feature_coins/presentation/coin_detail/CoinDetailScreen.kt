@@ -122,7 +122,6 @@ fun CoinDetailScreen(
                         CoinDetailSection(
                             modifier = Modifier.padding(horizontal = 12.dp),
                             coinModel = coin,
-                            currencySymbol = coinState.currencySymbol,
                             chartDate =  coinState.chartDate,
                             chartPrice = coinState.chartPrice,
                         )
