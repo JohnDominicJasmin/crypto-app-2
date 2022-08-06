@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "Dash Coin"
+rootProject.name = "CoinSearch"
 include ':app'

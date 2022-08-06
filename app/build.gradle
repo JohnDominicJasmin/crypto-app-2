@@ -10,13 +10,13 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.mathroda.dashcoin"
+        applicationId "com.dominic.coin_search"
         minSdk 21
         targetSdk 32
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.mathroda.dashcoin.CustomTestRunner"
+        testInstrumentationRunner "com.dominic.coin_search.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
