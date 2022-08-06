@@ -7,13 +7,15 @@ import com.mathroda.dashcoin.core.util.Constants
 import com.mathroda.dashcoin.core.util.Constants.UPDATE_INTERVAL
 import com.mathroda.dashcoin.feature_coins.domain.exceptions.CoinExceptions
 import com.mathroda.dashcoin.feature_coins.domain.models.ChartTimeSpan
-import com.mathroda.dashcoin.feature_coins.domain.models.CoinCurrencyPreference
+import com.mathroda.dashcoin.feature_coins.domain.models.CoinDetailModel
 import com.mathroda.dashcoin.feature_coins.domain.use_case.CoinUseCases
 import com.mathroda.dashcoin.feature_favorite_list.domain.use_case.FavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class CoinDetailViewModel @Inject constructor(
@@ -30,36 +32,37 @@ class CoinDetailViewModel @Inject constructor(
     private var coinChartJob: Job? = null
 
     init {
-        loadCoinDetail()
+        loadCoinDetail(onCollectedChartPeriod = { coinId ->
+            subscribeToChartChanges(coinId)
+            subscribeToCoinChanges(coinId)
+        })
     }
 
-    private fun loadCoinDetail() {
-        savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
-            _state.update { it.copy(coinId = coinId) }
-            subscribeToCoinChanges(coinId)
-            isFavoriteCoin()
-            getChartPeriod() { chartPeriod ->
-                getChart(coinId = coinId, period = chartPeriod)
-                subscribeToChartChanges()
+    private fun loadCoinDetail(onCollectedChartPeriod: (String) -> Unit = { _ -> }) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
+
+                _state.update { it.copy(coinId = coinId) }
+                getCoin(coinId)
+                getChartPeriod() { chartPeriod ->
+                    getChart(coinId = coinId, period = chartPeriod)
+                    onCollectedChartPeriod(coinId)
+                }
+
             }
         }
     }
 
 
-    private fun getChartPeriod(onChartPeriodCollected: suspend (String) -> Unit = {}) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                coinUseCase.getChartPeriodUseCase().distinctUntilChanged().collect { chartPeriod ->
-                    onChartPeriodCollected(chartPeriod ?: ChartTimeSpan.OneDay.value)
-                    _state.update {
-                        it.copy(
-                            coinChartPeriod = chartPeriod ?: ChartTimeSpan.OneDay.value)
-                    }
-                    this.cancel()
-                }
-            }.onFailure { exception ->
-                handleException(exception)
-            }
+    private suspend fun getChartPeriod(onChartPeriodCollected: suspend (String) -> Unit = {}) {
+        runCatching {
+            val chartPeriod = coinUseCase.getChartPeriodUseCase().distinctUntilChanged().first()
+            val resultPeriod = chartPeriod ?: ChartTimeSpan.OneDay.value
+            onChartPeriodCollected(resultPeriod)
+            _state.update { it.copy(coinChartPeriod = resultPeriod) }
+        }.onFailure { exception ->
+            handleException(exception)
         }
     }
 
@@ -104,35 +107,31 @@ class CoinDetailViewModel @Inject constructor(
         coinUseCase.updateChartPeriodUseCase(period)
     }
 
-    private fun isFavoriteCoin() {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            favoriteUseCase.getAllCoins().distinctUntilChanged().cancellable().onEach { coins ->
-                coins.any { it.name == _state.value.coinDetailModel?.name }
-                    .let { isFavoriteCoin ->
-                        _state.update { it.copy(isFavorite = isFavoriteCoin) }
-                        this.cancel()
-                    }
-            }.launchIn(this)
+    private suspend fun isFavoriteCoin(coinDetailModel: CoinDetailModel): Boolean {
+        val coins: List<CoinDetailModel> =
+            favoriteUseCase.getAllCoins().distinctUntilChanged().first()
+
+        return suspendCoroutine { continuation ->
+            continuation.resume(coins.any { it.name == coinDetailModel.name })
         }
-
     }
 
 
     private fun subscribeToCoinChanges(coinId: String) {
         coinChangesJob = viewModelScope.launch {
-                _state.update { it.copy(isLoading = true) }
-                while (isActive) {
-                    getCoin(coinId = coinId)
-                    delay(UPDATE_INTERVAL)
-                }
+            _state.update { it.copy(isLoading = true) }
+            while (isActive) {
+                getCoin(coinId = coinId)
+                delay(UPDATE_INTERVAL)
+            }
         }
     }
 
-    private fun subscribeToChartChanges() {
+    private fun subscribeToChartChanges(coinId: String) {
         coinChartJob = viewModelScope.launch {
-            while (isActive){
-                getChart(coinId = state.value.coinId, period = state.value.coinChartPeriod)
+            while (isActive) {
+                getChart(coinId = coinId, period = state.value.coinChartPeriod)
                 delay(UPDATE_INTERVAL)
             }
         }
@@ -141,13 +140,13 @@ class CoinDetailViewModel @Inject constructor(
     private fun unSubscribeToCoinChanges() {
         coinChangesJob?.cancel()
     }
+
     private fun unSubscribeToChartChanges() {
         coinChartJob?.cancel()
     }
 
 
-
-    private suspend fun getCoin(coinId: String){
+    private suspend fun getCoin(coinId: String) {
 
         runCatching {
             coinUseCase.getCoin(coinId, currency = "USD")
@@ -155,7 +154,9 @@ class CoinDetailViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            coinDetailModel = coinDetail,)
+                            coinDetailModel = coinDetail,
+                            isFavorite = isFavoriteCoin(coinDetail)
+                        )
                     }
                 }
         }.onFailure { exception ->
@@ -183,11 +184,10 @@ class CoinDetailViewModel @Inject constructor(
 
         coroutineScope {
             runCatching {
-                coinUseCase.getChart(coinId, period = period).distinctUntilChanged().collect { chartModel ->
-                    _state.update {
-                        it.copy(chartModel = chartModel)
+                coinUseCase.getChart(coinId, period = period).distinctUntilChanged()
+                    .collect { chartModel ->
+                        _state.update { it.copy(chartModel = chartModel) }
                     }
-                }
             }.onFailure { exception ->
                 handleException(exception)
             }
@@ -198,5 +198,6 @@ class CoinDetailViewModel @Inject constructor(
         super.onCleared()
         unSubscribeToCoinChanges()
         unSubscribeToChartChanges()
+
     }
 }
