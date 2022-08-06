@@ -196,8 +196,8 @@ fun CoinDetailScreen(
                                 )
                                 .padding(start = 16.dp, top = 16.dp, end = 16.dp),
                             rank = "${coin.rank}",
-                            volume = coin.volume.toFormattedPrice(),
-                            marketCap = coin.marketCap.toFormattedPrice(),
+                            volume = "$${coin.volume.toFormattedPrice()}",
+                            marketCap = "$${coin.marketCap.toFormattedPrice()}",
                             availableSupply = "${coin.availableSupply.toFormattedPrice()} ${coin.symbol}",
                             totalSupply = "${ coin.totalSupply.toFormattedPrice()} ${coin.symbol}"
                         )
