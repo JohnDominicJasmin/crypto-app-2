@@ -21,7 +21,8 @@ object Constants {
     val CURRENCY = stringPreferencesKey("currency_using")
     val CURRENCY_SYMBOL = stringPreferencesKey("currency_symbol_using")
     val CHART_PERIOD = stringPreferencesKey("chart_period")
-    val UPDATE_INTERVAL = 12.seconds
+    val UPDATE_INTERVAL = 35.seconds
+    const val PRICE_ANIMATION_INTERVAL = 800
     const val COINS_LIMIT = 500
 
 }
