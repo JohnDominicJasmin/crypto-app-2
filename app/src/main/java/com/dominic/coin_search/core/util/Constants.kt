@@ -13,7 +13,7 @@ object Constants {
     const val LATEST_NEWS = "latest"
     const val BULLISH_NEWS = "bullish"
     const val BEARISH_NEWS = "bearish"
-    const val LAST_HOURS = 72
+    const val LAST_HOURS = 24
 
     const val HEADER_CACHE_CONTROL = "Cache-Control"
     const val HEADER_PRAGMA = "Pragma"

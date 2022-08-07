@@ -22,29 +22,31 @@ fun CoinsChart(
     priceChange: Double,
 ) {
 
+
     AndroidView(
         factory = { contextFactory ->
-            LineChart(contextFactory).apply {
-                val dataSet = mutableListOf<Entry>()
-                chartModel?.let { chartsValue ->
-                    chartsValue.chart.takeLast(LAST_HOURS).map { value ->
-                        for (i in value) {
-                            dataSet.add(addEntry(value[0], value[1]))
-                        }
+            val dataSet = mutableListOf<Entry>()
+            chartModel?.let { chartsValue ->
+                chartsValue.chart.takeLast(LAST_HOURS).map { value ->
+                    for (i in value) {
+                        dataSet.add(addEntry(value[0], value[1]))
                     }
                 }
-                val lineDataSet =
-                    ChartLineDataSet().getLineDataSet(
-                        lineData = dataSet,
-                        label = "chart values",
-                        priceChange = priceChange,
-                        context = context,
+            }
+            val lineDataSet =
+                ChartLineDataSet().getLineDataSet(
+                    lineData = dataSet,
+                    label = "chart values",
+                    priceChange = priceChange,
+                    context = contextFactory,
 
-                        ).apply {
-                        fillDrawable =
-                            context.getCompatDrawable(R.drawable.background_transparent_chart)
-                        lineWidth = 1.0f
-                    }
+                    ).apply {
+                    fillDrawable =
+                        contextFactory.getCompatDrawable(R.drawable.background_transparent_chart)
+                    lineWidth = 1.0f
+                }
+            LineChart(contextFactory).apply {
+
                 description.isEnabled = false
                 isDragEnabled = false
                 xAxis.isEnabled = false
@@ -67,12 +69,7 @@ fun CoinsChart(
 
         },
         update = { lineChart ->
-
-            lineChart.apply {
-                invalidate()
-            }
-
-
+            lineChart.invalidate()
         },
         modifier = modifier
     )
