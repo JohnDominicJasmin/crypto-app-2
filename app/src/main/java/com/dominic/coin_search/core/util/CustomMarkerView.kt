@@ -35,7 +35,7 @@ class CustomMarkerView constructor(context: Context, layoutResource: Int) :
     override fun getOffset(): MPPointF {
         if (mOffset == null) {
             // center the marker horizontally and vertically
-            mOffset = MPPointF((-(width / 2)).toFloat(), -height.toFloat())
+            mOffset = MPPointF((-(width / 2)).toFloat(), (-(width / 2)).toFloat())
         }
         return mOffset!!
     }
