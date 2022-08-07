@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.dominic.coin_search.ui.theme.White800
 
@@ -48,14 +49,15 @@ fun CoinInfoRow(
                 color = White800,
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.body2,
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 12.dp),
             )
 
                 Text(
                     text = value,
                     color = White800,
                     textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.body2,
+                    overflow = TextOverflow.Ellipsis,
                 )
 
         }
