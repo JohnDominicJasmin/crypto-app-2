@@ -11,6 +11,7 @@ import com.dominic.coin_search.feature_coins.data.remote.CoinStatsApi
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toChart
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoinDetail
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoinFiat
+import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoinInformation
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoins
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toGlobalMarket
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toNewsDetail
@@ -113,6 +114,10 @@ class CoinRepositoryImpl @Inject constructor(
             coinStatsApi.getNews(filter).news.map { it.toNewsDetail() }
         }
 
+
+    override suspend fun getCoinInformation(coinId: String): CoinInformationModel {
+          return  coinPaprikaAPi.getCoinInformation(coinId).toCoinInformation()
+    }
 }
 
 

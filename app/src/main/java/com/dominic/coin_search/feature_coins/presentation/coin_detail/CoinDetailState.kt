@@ -3,6 +3,7 @@ package com.dominic.coin_search.feature_coins.presentation.coin_detail
 import com.dominic.coin_search.feature_coins.domain.models.ChartModel
 import com.dominic.coin_search.feature_coins.domain.models.ChartTimeSpan
 import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
+import com.dominic.coin_search.feature_coins.domain.models.CoinInformationModel
 
 data class CoinDetailState(
 
@@ -16,5 +17,6 @@ data class CoinDetailState(
     val coinId:String = "",
     val chartDate: String = "",
     val chartPrice: String = "",
+    val coinInformation: CoinInformationModel? = null
 )
 

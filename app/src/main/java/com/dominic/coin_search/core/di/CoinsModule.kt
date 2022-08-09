@@ -14,6 +14,7 @@ import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
 import com.dominic.coin_search.feature_coins.domain.use_case.get_chart.GetChartUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_chart_period.GetChartPeriodUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_coin.GetCoinUseCase
+import com.dominic.coin_search.feature_coins.domain.use_case.get_coin_information.GetCoinInformationUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_coins.GetCoinsUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_currency.GetCurrencyUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_fiats.GetFiatsUseCase
@@ -87,8 +88,9 @@ object CoinsModule {
             getFiats = GetFiatsUseCase(repository),
             getCurrency = GetCurrencyUseCase(repository),
             updateCurrency = UpdateCurrencyUseCase(repository),
-            getChartPeriodUseCase = GetChartPeriodUseCase(repository),
-            updateChartPeriodUseCase = UpdateChartPeriodUseCase(repository)
+            getChartPeriod = GetChartPeriodUseCase(repository),
+            updateChartPeriod = UpdateChartPeriodUseCase(repository),
+            getCoinInformation = GetCoinInformationUseCase(repository)
 
             )
     }

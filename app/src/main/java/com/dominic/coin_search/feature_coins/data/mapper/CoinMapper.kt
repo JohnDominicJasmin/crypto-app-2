@@ -84,4 +84,17 @@ object CoinMapper {
         )
     }
 
+    fun CoinInformationDto.toCoinInformation(): CoinInformationModel{
+        return CoinInformationModel(
+            coinId = id,
+            name = name,
+            isActive = isActive,
+            symbol = symbol,
+            description = description,
+            rank = rank,
+            team = team,
+            tags = tags.map { it.name },
+        )
+    }
+
 }
