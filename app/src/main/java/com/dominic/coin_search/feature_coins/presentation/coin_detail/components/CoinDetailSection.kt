@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dominic.coin_search.R
 import com.dominic.coin_search.core.util.Constants.PRICE_ANIMATION_INTERVAL
-import com.dominic.coin_search.core.util.toFormattedPrice
+import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
 import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
 import com.dominic.coin_search.ui.theme.*
 
@@ -105,7 +105,8 @@ fun CoinDetailSection(
                             .size(10.dp)
                     )
 
-                    AnimatedContent(targetState = (if (coinModel.priceChange1w < 0) "" else "+") + coinModel.priceChange1w.toString() + "%",
+                    AnimatedContent(
+                        targetState = (if (coinModel.priceChange1w < 0) "" else "+") + coinModel.priceChange1w.toString() + "%",
                         transitionSpec = {
                             slideInVertically(
                                 animationSpec = tween(durationMillis = PRICE_ANIMATION_INTERVAL)) { it } +

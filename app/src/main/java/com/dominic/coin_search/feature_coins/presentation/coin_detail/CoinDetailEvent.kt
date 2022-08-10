@@ -6,7 +6,8 @@ sealed class CoinDetailEvent{
     object ToggleFavoriteCoin: CoinDetailEvent()
     object LoadCoinDetail: CoinDetailEvent()
     data class SelectChartPeriod(val period: String): CoinDetailEvent()
-    data class ChangeYAxisValue(val yValue: String): CoinDetailEvent()
-    data class ChangeXAxisValue(val xValue: String): CoinDetailEvent()
-
+    data class AddChartPrice(val price: String): CoinDetailEvent()
+    data class AddChartDate(val date: String): CoinDetailEvent()
+    object ClearChartPrice: CoinDetailEvent()
+    object ClearChartDate: CoinDetailEvent()
 }

@@ -8,6 +8,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import com.dominic.coin_search.R
+import com.dominic.coin_search.core.util.*
+import com.dominic.coin_search.core.util.Formatters.millisToDate
+import com.dominic.coin_search.core.util.Formatters.periodToTimeSpan
+import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
+import com.dominic.coin_search.feature_coins.domain.models.ChartModel
+import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailEvent
+import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailViewModel
+import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
+import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.setLineDataSet
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarEntry
@@ -15,24 +25,20 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
-import com.dominic.coin_search.core.util.*
-import com.dominic.coin_search.feature_coins.domain.models.ChartModel
-import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
-import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.setLineDataSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.dominic.coin_search.R
+
 @Composable
 fun CoinDetailChart(
     modifier: Modifier,
     chartModel: ChartModel,
     chartPeriod: String,
     priceChange: Double,
-    onChangePriceValue: (String) -> Unit,
-    onChangeDateValue: (String) -> Unit
+    coinDetailViewModel: CoinDetailViewModel
 ) {
     val xAxisValueFormatter = remember { MyXAxisValueFormatter() }
     val dataSet = remember { mutableStateListOf<Entry>() }
+    var lineDataSet by remember { mutableStateOf(LineDataSet(emptyList(), "")) }
     val context = LocalContext.current
     val lineDataChart = remember {
         LineChart(context).apply {
@@ -40,7 +46,6 @@ fun CoinDetailChart(
             clear()
         }
     }
-    val coroutineScope = rememberCoroutineScope()
     val markerView = remember { CustomMarkerView(context, R.layout.marker_view_chart) }
     val yAxisEntry by markerView.yEntry.observeAsState()
     val xAxisEntry by markerView.xEntry.observeAsState()
@@ -51,25 +56,28 @@ fun CoinDetailChart(
 
     LaunchedEffect(key1 = yAxisEntry, key2 = xAxisEntry) {
         this.launch(Dispatchers.Main) {
-            yAxisEntry?.let { onChangePriceValue(it.toFormattedPrice()) }
-            xAxisEntry?.let { onChangeDateValue(it.toLong().millisToDate("dd MMMM yyyy  HH:mm")) }
+            yAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartPrice(it.toFormattedPrice())) }
+            xAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartDate( it.toLong().millisToDate("dd MMMM yyyy  HH:mm"))) }
             lineDataChart.apply {
                 onChartGestureListener = object : OnChartGestureListener {
                     override fun onChartGestureStart(
                         me: MotionEvent?,
                         lastPerformedGesture: ChartTouchListener.ChartGesture?) {
+                        lineDataChart.setDrawMarkers(true)
+                        lineDataSet.isHighlightEnabled = true
                     }
 
                     override fun onChartGestureEnd(
                         me: MotionEvent?,
                         lastPerformedGesture: ChartTouchListener.ChartGesture?) {
-                        coroutineScope.launch(Dispatchers.Main) {
-                            onChangePriceValue("")
-                            onChangeDateValue("")
-                        }
+                            coinDetailViewModel.onEvent(event = CoinDetailEvent.ClearChartDate)
+                            coinDetailViewModel.onEvent(event = CoinDetailEvent.ClearChartPrice)
+                        lineDataChart.setDrawMarkers(false)
+                        lineDataSet.isHighlightEnabled = false
                     }
 
                     override fun onChartLongPressed(me: MotionEvent?) {
+
                     }
 
                     override fun onChartDoubleTapped(me: MotionEvent?) {
@@ -77,14 +85,15 @@ fun CoinDetailChart(
                     }
 
                     override fun onChartSingleTapped(me: MotionEvent?) {
+
                     }
 
                     override fun onChartFling(
-                        me1: MotionEvent?,
-                        me2: MotionEvent?,
-                        velocityX: Float,
-                        velocityY: Float) {
-
+                        me1: MotionEvent?, me2: MotionEvent?, velocityX: Float, velocityY: Float) {
+                        coinDetailViewModel.onEvent(event = CoinDetailEvent.ClearChartDate)
+                        coinDetailViewModel.onEvent(event = CoinDetailEvent.ClearChartPrice)
+                        lineDataChart.setDrawMarkers(false)
+                        lineDataSet.isHighlightEnabled = false
                     }
 
                     override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {
@@ -105,16 +114,14 @@ fun CoinDetailChart(
     LaunchedEffect(key1 = chartModel) {
 
         xAxisValueFormatter.format = periodToTimeSpan(chartPeriod)
-
-
         dataSet.clear()
         chartModel.chart.map { value ->
             for (i in value) {
-                dataSet.add(addEntry(value[0], value[1]))
+                dataSet.add(BarEntry(value[0], value[1]))
             }
         }
 
-        val lineDataSet = ChartLineDataSet().getLineDataSet(
+         lineDataSet = ChartLineDataSet().getLineDataSet(
                 lineData = dataSet,
                 label = "chart values",
                 priceChange = priceChange,
@@ -122,6 +129,7 @@ fun CoinDetailChart(
             ).apply {
                 mode = LineDataSet.Mode.LINEAR
                 lineWidth = 1.35f
+
             }
 
         lineDataChart.apply {
@@ -129,8 +137,7 @@ fun CoinDetailChart(
             invalidate()
             clear()
             setLineDataSet(lineDataSet)
-            animateX(1000)
-
+            animateX(10)
         }
 
     }
@@ -186,7 +193,7 @@ fun CoinDetailChart(
 }
 
 
-fun addEntry(x: Float, y: Float) =
-    BarEntry(x, y)
+
+
 
 
