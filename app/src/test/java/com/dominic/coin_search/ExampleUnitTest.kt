@@ -1,6 +1,6 @@
 package com.dominic.coin_search
 
-import com.dominic.coin_search.feature_coins.presentation.coins_screen.formatToShortNumber
+import com.dominic.coin_search.core.util.Formatters.formatToShortNumber
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.text.DecimalFormat

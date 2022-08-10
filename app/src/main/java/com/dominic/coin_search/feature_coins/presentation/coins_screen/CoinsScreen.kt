@@ -29,8 +29,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.dominic.coin_search.R
 import com.dominic.coin_search.core.util.ConnectionStatus
-import com.dominic.coin_search.core.util.Constants.LAST_HOURS
-import com.dominic.coin_search.core.util.formatToShortNumber
+import com.dominic.coin_search.core.util.Formatters.formatToShortNumber
 import com.dominic.coin_search.feature_coins.domain.models.CoinCurrencyPreference
 import com.dominic.coin_search.feature_coins.presentation.coin_currency_screen.CoinCurrencyScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.*
