@@ -5,7 +5,7 @@ import com.dominic.coin_search.feature_coins.data.dto.Team
 data class CoinInformationModel(
     val coinId:String = "",
     val name:String = "",
-    val description:String? = null,
+    val description:String = "",
     val symbol:String = "",
     val rank:Int = 0,
     val team:List<Team> = emptyList(),

@@ -4,20 +4,20 @@ package com.dominic.coin_search.feature_coins.presentation.coin_detail.component
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dominic.coin_search.core.util.Constants.GOOGLE_SEARCH_QUERY
+import com.dominic.coin_search.ui.theme.GreenBlue600
 
 
 @ExperimentalMaterialApi
@@ -26,25 +26,34 @@ fun CoinTag(tag: String) {
 
     val context = LocalContext.current
 
-    Surface(modifier = Modifier
-        .border(
-            width = 2.dp,
-            color = Color.Green,
-            shape = RoundedCornerShape(15.dp))
-        .padding(all = 13.dp),
-        onClick = {
-            openBrowser(context = context, searchItem = tag)
-        }) {
+    OutlinedButton(
+                onClick = { openBrowser(context = context, searchItem = tag) },
+        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
+        shape = RoundedCornerShape(20.dp),
+        border = BorderStroke(width = 1.7.dp, GreenBlue600),
+
+    ) {
 
         Text(
+            modifier = Modifier.padding(vertical = 3.5.dp, horizontal = 3.dp),
             text = tag,
             color = Color.White,
             style = MaterialTheme.typography.body2,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Medium
         )
     }
 
+
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview
+@Composable
+fun CoinTagPreview() {
+    CoinTag(tag = "Bitcoin")
+}
+
+
 
 
 fun openBrowser(context: Context, searchItem: String) {

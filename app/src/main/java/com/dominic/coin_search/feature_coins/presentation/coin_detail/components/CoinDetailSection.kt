@@ -90,7 +90,7 @@ fun CoinDetailSection(
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 color = if (coinModel.priceChange1w < 0) Red20 else Green20,
-                modifier = Modifier.padding(top = 8.dp)) {
+                modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)) {
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
