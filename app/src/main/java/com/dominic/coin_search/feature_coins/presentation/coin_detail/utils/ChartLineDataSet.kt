@@ -22,6 +22,7 @@ class ChartLineDataSet {
             setDrawVerticalHighlightIndicator(true)
             setDrawHorizontalHighlightIndicator(false)
             highLightColor = getColorStatus(priceChange)
+            highlightLineWidth = 1.2f
             fillDrawable = getBackground(priceChange,context)
             lineWidth = 2f
             setDrawFilled(true)

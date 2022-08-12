@@ -9,8 +9,8 @@
 
   <View
       android:id="@+id/circleIndicator"
-      android:layout_width="9dp"
-      android:layout_height="9dp"
+      android:layout_width="11dp"
+      android:layout_height="11dp"
       android:background="@drawable/circle_chart_positive"
       />
 

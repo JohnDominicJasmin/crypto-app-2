@@ -140,7 +140,7 @@ fun CoinDetailScreen(
                                     priceChange = coinDetail.priceChange1w,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .requiredHeight(230.dp),
+                                        .requiredHeight(270.dp),
                                     coinDetailViewModel = coinDetailViewModel
                                 )
 
