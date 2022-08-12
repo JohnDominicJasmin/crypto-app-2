@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import kotlin.time.ExperimentalTime
 
 @HiltViewModel
 class CoinsViewModel @Inject constructor(
@@ -36,11 +37,12 @@ class CoinsViewModel @Inject constructor(
          }
     }
 
-    private fun subscribeToCoinChanges(currency:String){
+    @OptIn(ExperimentalTime::class)
+    private fun subscribeToCoinChanges(currency: String?) {
         job = viewModelScope.launch(Dispatchers.IO) {
-            while(isActive){
-                getCoins(currency)
+            while (isActive) {
                 delay(UPDATE_INTERVAL)
+                getCoins(currency)
             }
         }
     }
@@ -92,7 +94,7 @@ class CoinsViewModel @Inject constructor(
         onCoinsCollected: suspend (List<CoinModel>) -> Unit = {}) {
         coroutineScope {
             runCatching {
-                coinUseCase.getCoins(currency?:"USD")
+                coinUseCase.getCoins(currency ?: "USD")
                     .distinctUntilChanged().collect { coins ->
                         _state.update {
                             it.copy(coinModels = coins)
@@ -151,7 +153,7 @@ class CoinsViewModel @Inject constructor(
 
     private suspend fun updateCoinCurrency(coinCurrencyPreference: CoinCurrencyPreference) {
         coinUseCase.updateCurrency(coinCurrencyPreference)
-        _state.update{it.copy(coinCurrencyPreference = coinCurrencyPreference)}
+        _state.update { it.copy(coinCurrencyPreference = coinCurrencyPreference) }
 
     }
 
@@ -159,10 +161,12 @@ class CoinsViewModel @Inject constructor(
         when (event) {
             is CoinsEvent.RefreshCoins -> {
                 viewModelScope.launch {
+                    unSubscribeToCoinChanges()
                     _state.update { it.copy(isRefreshing = true) }
-                     getCoins(event.coinCurrencyPreference.currency)
+                    getCoins(event.coinCurrencyPreference.currency)
                 }.invokeOnCompletion {
                     _state.update { it.copy(isRefreshing = false) }
+                    subscribeToCoinChanges(event.coinCurrencyPreference.currency)
                 }
             }
 
@@ -173,16 +177,17 @@ class CoinsViewModel @Inject constructor(
             is CoinsEvent.SelectCurrency -> {
 
                 viewModelScope.launch {
-
+                    unSubscribeToCoinChanges()
                     _state.update { it.copy(isLoading = true) }
                     withContext(Dispatchers.IO) {
-                        getCoins(event.coinCurrencyPreference.currency){
+                        getCoins(event.coinCurrencyPreference.currency) {
                             updateCoinCurrency(event.coinCurrencyPreference)
                         }
                     }
 
                 }.invokeOnCompletion {
                     _state.update { it.copy(isLoading = false) }
+                    subscribeToCoinChanges(event.coinCurrencyPreference.currency)
                 }
             }
         }
