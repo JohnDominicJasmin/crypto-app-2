@@ -12,7 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,6 +23,7 @@ import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetail
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.TopBar
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.MarketStatusBar
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.WatchlistItem
+import com.dominic.coin_search.ui.theme.Black450
 import com.dominic.coin_search.ui.theme.Green800
 import com.dominic.coin_search.ui.theme.DarkGray
 import kotlinx.coroutines.flow.collectLatest
@@ -123,7 +123,7 @@ fun FavoriteListScreen(
             if (watchListState.coins.isEmpty()) {
                 Text(
                     text = "No saved coins to display",
-                    color = Color.White,
+                    color = Black450,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Medium,
                     fontSize = 16.sp,

@@ -1,6 +1,7 @@
 package com.dominic.coin_search.core.util
 
 import android.annotation.SuppressLint
+import com.dominic.coin_search.core.util.Formatters.millisToDate
 import com.github.mikephil.charting.formatter.ValueFormatter
 
 

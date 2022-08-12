@@ -2,6 +2,7 @@ package com.dominic.coin_search.core.util
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 object Constants {
     const val COIN_STATS_BASE_URL = "https://api.coinstats.app/public/"
@@ -17,12 +18,16 @@ object Constants {
 
     const val HEADER_CACHE_CONTROL = "Cache-Control"
     const val HEADER_PRAGMA = "Pragma"
-    const val VISIBLE_ITEM_COUNT: Int = 11
+    const val VISIBLE_ITEM_COUNT: Int = 12
     val CURRENCY = stringPreferencesKey("currency_using")
     val CURRENCY_SYMBOL = stringPreferencesKey("currency_symbol_using")
     val CHART_PERIOD = stringPreferencesKey("chart_period")
+
+    @OptIn(ExperimentalTime::class)
     val UPDATE_INTERVAL = 35.seconds
+
     const val PRICE_ANIMATION_INTERVAL = 800
     const val COINS_LIMIT = 500
+    const val GOOGLE_SEARCH_QUERY = "https://www.google.com/search?q="
 
 }

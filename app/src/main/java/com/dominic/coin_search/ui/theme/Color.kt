@@ -3,21 +3,21 @@ package com.dominic.coin_search.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val DarkGray = Color(0xFF161520)//background
-val LighterGray = Color(0xFF262532)
+val LighterGray = Color(0xFF262532)//secondary
 val LightGray = Color(0xFF1E1C25)
 
 val Gold = Color(0xFFE6C149)
 val Twitter = Color(0xFF00ACEE)
 val Blue100 = Color(0xFF73A9C0)
 
-
+val Red950= Color(0xFFFF5810)
 val Red900= Color(0xFFDC1010)
 val Red20 = Color(0xFFFBDBDB)
 
 
 val GreenBlue600 = Color(0xFF00BDB0)//PRIMARY
 
-
+val Green999 = Color(0xFF10FF45)
 val Green800 = Color(0xFF30E0A1)
 val Green20 = Color(0xFFDBFBEC)
 
