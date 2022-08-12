@@ -1,11 +1,12 @@
 package com.dominic.coin_search.feature_coins.presentation.coins_screen.components
 
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.*
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.Composer.Companion.Empty
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
@@ -20,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.TextUnit
 
@@ -110,13 +110,10 @@ fun MarqueeText(
                 textWidth = mainText.width + spacing, // テキストの長さ + widthの2/3の長さ
                 containerWidth = constraints.maxWidth // 画面幅
             )
-            // offsetは `0 ~ -(mainText.width + spacing)`の間を変化する.
-            // したがってtrailingTextOffsetの値は `0 ~ (mainText.width + spacing)` の間を変化する.
-            // これはmarquee効果で流れてくるテキストの左端の位置を表す.
+
             val trailingTextOffset = mainText.width + spacing + offset
             val trailingTextSpace = constraints.maxWidth - trailingTextOffset
             if (trailingTextSpace > 0) {
-                // marquee効果で流れてくるテキストの左端の位置が描画範囲内にある場合
                 trailingPlaceableWithOffset = subcompose(MarqueeLayers.TrailingText) {
                     createText(textModifier)
                 }.first().measure(constraints) to trailingTextOffset
@@ -128,8 +125,8 @@ fun MarqueeText(
             height = mainText.height
         ) {
             mainText.place(offset, 0)
-            trailingPlaceableWithOffset?.let { (placable, trailingTextOffset) ->
-                placable.place(trailingTextOffset, 0)
+            trailingPlaceableWithOffset?.let { (placeable, trailingTextOffset) ->
+                placeable.place(trailingTextOffset, 0)
             }
         }
     }
