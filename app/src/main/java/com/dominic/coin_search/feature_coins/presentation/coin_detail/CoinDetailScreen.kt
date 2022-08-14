@@ -24,7 +24,7 @@ import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.components.*
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListEvent
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListViewModel
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
 import com.dominic.coin_search.navigation.Screens
 import com.dominic.coin_search.navigation.navigateScreen
@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CoinDetailScreen(
     coinDetailViewModel: CoinDetailViewModel = hiltViewModel(),
-    favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
+    favoritesViewModel: FavoritesViewModel = hiltViewModel(),
     navController: NavController?
 ) {
 
@@ -49,7 +49,7 @@ fun CoinDetailScreen(
 
     LaunchedEffect(true) {
 
-        favoriteListViewModel.eventFlow.collectLatest { savedListEvent ->
+        favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
             when (savedListEvent) {
                 is FavoriteListUiEvent.ShowSnackbar -> {
 
@@ -64,7 +64,7 @@ fun CoinDetailScreen(
                                 return@collectLatest
                             }
 
-                            favoriteListViewModel.onEvent(event = FavoriteListEvent.RestoreDeletedCoin)
+                            favoritesViewModel.onEvent(event = FavoriteListEvent.RestoreDeletedCoin)
                             coinDetailViewModel.onEvent(event = CoinDetailEvent.ToggleFavoriteCoin)
                         }
                         else -> {}
@@ -104,11 +104,11 @@ fun CoinDetailScreen(
                             isFavorite = coinState.isFavorite,
                             favoriteButtonOnClick = {
                                 if (!coinState.isFavorite) {
-                                    favoriteListViewModel.onEvent(
+                                    favoritesViewModel.onEvent(
                                         FavoriteListEvent.AddCoin(
                                             coinDetail))
                                 } else {
-                                    favoriteListViewModel.onEvent(
+                                    favoritesViewModel.onEvent(
                                         FavoriteListEvent.DeleteCoin(
                                             coinDetail))
                                 }

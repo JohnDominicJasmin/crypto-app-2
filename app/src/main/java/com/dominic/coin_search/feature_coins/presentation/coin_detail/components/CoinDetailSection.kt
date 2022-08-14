@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -69,7 +70,7 @@ fun CoinDetailSection(
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.h6,
                     text = "$${chartPrice.ifEmpty { price }}",
-                    color = White800,
+                    color = Color.White,
                     modifier = Modifier.padding(top = 5.dp)
                 )
             }
