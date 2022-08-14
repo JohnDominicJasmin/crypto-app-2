@@ -13,7 +13,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
-import com.dominic.coin_search.ui.theme.White800
 import com.dominic.coin_search.R
 
 @Composable
@@ -54,7 +53,7 @@ fun TopBarCoinDetail(
                     text = coinModel.name,
                     fontWeight = FontWeight.Normal,
                     style = MaterialTheme.typography.h6,
-                    color = White800,
+                    color = Color.White,
                 )
             }
         }
@@ -76,7 +75,7 @@ fun TopBarCoinDetail(
 @Composable
 fun FavoriteButton(
     modifier: Modifier = Modifier,
-    color: Color = White800,
+    color: Color = Color.White,
     isFavorite: Boolean,
     onClick: (Boolean) -> Unit
 
@@ -106,7 +105,7 @@ fun FavoriteButton(
 @Composable
 fun BackStackButton(
     modifier: Modifier = Modifier,
-    color: Color = White800,
+    color: Color = Color.White,
     onClick: () -> Unit
 ) {
 

@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dominic.coin_search.ui.theme.DarkGray
-import com.dominic.coin_search.ui.theme.White800
 
 @ExperimentalMaterialApi
 @Composable
@@ -61,7 +60,7 @@ fun NewsCard(
                 ) {
                 Text(
                     text = title,
-                    style = TextStyle(color = White800, fontSize = 16.sp)
+                    style = TextStyle(color = Color.White, fontSize = 16.sp)
                     )
             }
         }

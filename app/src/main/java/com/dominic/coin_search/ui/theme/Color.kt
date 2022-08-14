@@ -33,7 +33,6 @@ val Black445 = Color(0xFF4D4D4D)
 val Black440 = Color(0xFF979797)
 //val Black300 = Color(0xFF919191)
 
-val White800 = Color(0xFFEEEEEE)
 
 
 

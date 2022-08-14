@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.dominic.coin_search.ui.theme.Black920
 import com.dominic.coin_search.ui.theme.DarkGray
 import com.dominic.coin_search.ui.theme.GreenBlue600
-import com.dominic.coin_search.ui.theme.White800
 
 @Composable
 fun CoinInformation(
@@ -52,7 +52,7 @@ fun CoinInfoRow(
         Text(
             text = title,
             fontWeight = FontWeight.SemiBold,
-            color = White800,
+            color = Color.White,
             style = MaterialTheme.typography.body2,
         )
 

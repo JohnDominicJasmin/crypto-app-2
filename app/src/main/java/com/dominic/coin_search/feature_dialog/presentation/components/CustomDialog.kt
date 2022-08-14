@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -14,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
+import com.dominic.coin_search.ui.theme.Black920
 import com.dominic.coin_search.ui.theme.LightGray
-import com.dominic.coin_search.ui.theme.LighterGray
-import com.dominic.coin_search.ui.theme.White800
+
 
 @Composable
 fun CustomDialog(
@@ -66,7 +67,7 @@ private fun CustomDialogUI(
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.h1,
                     maxLines = 2,
-                    color = White800,
+                    color = Color.White,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
@@ -76,7 +77,7 @@ private fun CustomDialogUI(
                         .padding(top = 10.dp, start = 25.dp, end = 25.dp)
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.body1,
-                    color = White800
+                    color = Color.White
 
                 )
             }
@@ -84,7 +85,7 @@ private fun CustomDialogUI(
                 Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp)
-                    .background(LighterGray),
+                    .background(Black920),
                 horizontalArrangement = Arrangement.SpaceAround) {
 
                TextButton(onClick = {
@@ -94,7 +95,7 @@ private fun CustomDialogUI(
                    Text(
                         "Dismiss",
                         fontWeight = FontWeight.Bold,
-                        color = White800.copy(ContentAlpha.disabled),
+                        color = Color.White.copy(ContentAlpha.disabled),
                         modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
                     )
                 }
@@ -106,7 +107,7 @@ private fun CustomDialogUI(
                     Text(
                         "Yes",
                         fontWeight = FontWeight.ExtraBold,
-                        color = White800,
+                        color = Color.White,
                         modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
                     )
                 }

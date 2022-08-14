@@ -2,6 +2,7 @@ package com.dominic.coin_search.feature_coins.presentation.coins_screen.componen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dominic.coin_search.R
@@ -10,7 +11,6 @@ import com.dominic.coin_search.feature_coins.domain.models.ChartModel
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.getCompatDrawable
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.setLineDataSet
-import com.dominic.coin_search.ui.theme.White800
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
@@ -49,7 +49,7 @@ fun CoinsChart(
                 isDragEnabled = false
                 xAxis.isEnabled = false
                 axisLeft.setDrawAxisLine(false)
-                axisLeft.textColor = White800.toArgb()
+                axisLeft.textColor = Color.White.toArgb()
                 axisLeft.isEnabled = false
                 axisRight.isEnabled = false
                 legend.isEnabled = false
