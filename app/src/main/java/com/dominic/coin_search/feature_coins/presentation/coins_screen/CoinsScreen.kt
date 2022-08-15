@@ -3,14 +3,13 @@ package com.dominic.coin_search.feature_coins.presentation.coins_screen
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +41,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CoinsScreen(
-    modifier: Modifier = Modifier,
+    innerPaddingValues: PaddingValues,
     coinsViewModel: CoinsViewModel = hiltViewModel(),
     navController: NavController?
 ) {
@@ -52,9 +51,9 @@ fun CoinsScreen(
     val context = LocalContext.current
 
 
-    val (dialogStateVisible, onDialogToggle) = remember { mutableStateOf(false) }
-    val (searchBarVisible, onSearchIconToggle) = remember { mutableStateOf(false) }
-    val (searchQuery, onSearchQuery) = remember { mutableStateOf("") }
+    val (dialogStateVisible, onDialogToggle) = rememberSaveable { mutableStateOf(false) }
+    val (searchBarVisible, onSearchIconToggle) = rememberSaveable { mutableStateOf(false) }
+    val (searchQuery, onSearchQuery) = rememberSaveable { mutableStateOf("") }
 
 
     val filteredCoinModels = remember(searchQuery, coinsState.coinModels) {
@@ -243,7 +242,8 @@ fun CoinsScreen(
 
 
         Box(
-            modifier = modifier
+            modifier = Modifier
+                .padding(innerPaddingValues)
                 .background(DarkGray)
                 .fillMaxSize()) {
 
@@ -290,7 +290,13 @@ fun CoinsScreen(
                     onRefresh = { coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference)) }) {
 
                     if (coinsState.isItemsRendered) {
-                        LazyColumn(state = listState) {
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier
+                                .background(DarkGray)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
                             itemsIndexed(
                                 items = filteredCoinModels,
                                 key = { _, coinModel -> coinModel.id }) { index, coinModel ->
