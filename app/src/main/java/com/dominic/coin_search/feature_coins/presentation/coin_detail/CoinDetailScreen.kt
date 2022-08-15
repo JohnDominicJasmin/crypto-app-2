@@ -1,5 +1,6 @@
 package com.dominic.coin_search.feature_coins.presentation.coin_detail
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -26,8 +27,6 @@ import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
-import com.dominic.coin_search.navigation.Screens
-import com.dominic.coin_search.navigation.navigateScreen
 import com.dominic.coin_search.ui.theme.Black450
 import com.dominic.coin_search.ui.theme.Black920
 import com.dominic.coin_search.ui.theme.DarkGray
@@ -43,7 +42,6 @@ fun CoinDetailScreen(
 
     val coinState by coinDetailViewModel.state.collectAsState()
 
-    val scaffoldState = rememberScaffoldState()
     val context = LocalContext.current
 
 
@@ -51,24 +49,8 @@ fun CoinDetailScreen(
 
         favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
             when (savedListEvent) {
-                is FavoriteListUiEvent.ShowSnackbar -> {
-
-                    val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                        message = savedListEvent.message,
-                        actionLabel = savedListEvent.buttonAction
-                    )
-                    when (snackbarResult) {
-                        SnackbarResult.ActionPerformed -> {
-                            if (savedListEvent.buttonAction == "See list") {
-                                navController?.navigateScreen(Screens.FavoriteListScreen.route)
-                                return@collectLatest
-                            }
-
-                            favoritesViewModel.onEvent(event = FavoriteListEvent.RestoreDeletedCoin)
-                            coinDetailViewModel.onEvent(event = CoinDetailEvent.ToggleFavoriteCoin)
-                        }
-                        else -> {}
-                    }
+                is FavoriteListUiEvent.ShowToastMessage -> {
+                    Toast.makeText(context, savedListEvent.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -78,10 +60,10 @@ fun CoinDetailScreen(
 
     Scaffold(
         modifier = Modifier,
-        scaffoldState = scaffoldState
-    ) {
+    ) { paddingValues ->
 
         val isDraggingChart = coinState.chartDate.isNotEmpty() && coinState.chartPrice.isNotEmpty()
+
         Box(
             modifier = Modifier
                 .background(DarkGray)
@@ -93,7 +75,8 @@ fun CoinDetailScreen(
                     userScrollEnabled = !isDraggingChart,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it)
+                        .padding(paddingValues),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
 
