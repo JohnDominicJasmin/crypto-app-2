@@ -1,152 +1,131 @@
 package com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.*
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.dominic.coin_search.ui.theme.Gold
-import com.dominic.coin_search.ui.theme.LightGray
-import com.dominic.coin_search.ui.theme.LighterGray
-import com.dominic.coin_search.ui.theme.White800
+import com.dominic.coin_search.R
+import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
+import com.dominic.coin_search.ui.theme.Black450
+import com.dominic.coin_search.ui.theme.Black920
+import com.dominic.coin_search.ui.theme.GreenBlue600
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.*
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun WatchlistItem(
-    icon: String,
-    coinName: String,
-    symbol: String,
-    rank: String,
-    onClick: () -> Unit
-) {
-    Card(
-        shape = RoundedCornerShape(10.dp),
-        modifier = Modifier
-            .padding(10.dp, 5.dp, 10.dp, 10.dp),
-        elevation = 8.dp,
-        backgroundColor = LighterGray,
-        onClick = onClick
-    ) {
-        Column {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+fun SavedCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> Unit, onDeleteClick: () -> Unit) {
 
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier
-                        .weight(7f)
+    val (isSavedCoin, onIconSaveClick) = rememberSaveable {
+        mutableStateOf(true)
+    }
+    val scope = rememberCoroutineScope()
+    AnimatedVisibility(
+        visible = isSavedCoin,
+        enter = fadeIn(
+            initialAlpha = 0.4f
+        ),
+/*        exit = slideOutHorizontally(animationSpec = spring(stiffness = Spring.StiffnessMedium, dampingRatio = 2f)) { -800 } + fadeOut()*/) {
+
+
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            backgroundColor = Black920,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 13.dp, vertical = 5.dp)
+                .wrapContentHeight(), onClick = onItemClick) {
+
+            Column(modifier = Modifier.padding(all = 12.dp, )) {
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    AsyncImage(
-                        model = icon,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(40.dp),
-                    )
-                }
 
-
-                Column(
-                    modifier = Modifier
-                        .weight(3f)
-                ) {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+                        modifier = Modifier.weight(0.9f),
+                        verticalAlignment = Alignment.CenterVertically) {
+
+                        AsyncImage(
+                            model = coin.icon,
+                            contentDescription = "${coin.name} Image",
+                            modifier = Modifier
+                                .size(40.dp))
+
+
                         Text(
-                            text = "Statics",
-                            color = White800,
-                            fontWeight = FontWeight.Bold
-                        )
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    SpanStyle(
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp)) {
+                                    append("${coin.name}\n")
+                                }
+
+                                withStyle(
+                                    SpanStyle(
+                                        color = Black450,
+                                        fontWeight = FontWeight(200),
+                                        fontSize = 16.sp)) {
+                                    append(coin.symbol.uppercase(Locale.getDefault()))
+                                }
+                            },
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier.padding(start = 12.dp))
+
+                    }
+
 
                         Icon(
-                            tint = White800,
-                            modifier = Modifier
-                                .graphicsLayer {
-                                    scaleX = 0.8f
-                                    scaleY = 0.8f
+                            painter = painterResource(id = if (isSavedCoin) R.drawable.ic_baseline_bookmark_filled else R.drawable.ic_baseline_bookmark_border_24),
+                            contentDescription = "Save Icons",
+                            tint = if (isSavedCoin) GreenBlue600 else Color.White,
+                            modifier = Modifier.clickable {
+                                scope.launch {
+                                    onIconSaveClick(!isSavedCoin)
+                                    delay(300)
+                                    onDeleteClick()
                                 }
-                                .padding(start = 5.dp),
-                            imageVector = Icons.Filled.ArrowForward,
-                            contentDescription = null
+                            }
                         )
-                    }
-
                 }
-            }
 
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.Start,
+                MarketStatusBar(
                     modifier = Modifier
-                        .weight(8f)
-                ) {
-                    Text(
-                        text = coinName,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.h2,
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                    )
-                }
+                        .padding(top = 7.dp)
+                        .fillMaxWidth(),
+                    marketStatus1d = coin.priceChange1d,
+                    marketStatus1w = coin.priceChange1w,
+                    marketStatus1h = coin.priceChange1h,
+                )
 
-                Column(
-                    modifier = Modifier
-                        .weight(3f)
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Box(modifier = Modifier
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(LightGray)
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                            contentAlignment = Alignment.Center
-
-                        ) {
-                            Text(
-                                text = rank,
-                                style = MaterialTheme.typography.body2,
-                                fontWeight = FontWeight.Bold,
-                                color = Gold,
-                                modifier = Modifier
-                            )
-                        }
-                        Text(
-                            text = symbol,
-                            style = MaterialTheme.typography.body1,
-                            fontWeight = FontWeight.Bold,
-                            color = White800,
-                            modifier = Modifier
-                                .padding(start = 8.dp)
-                                .align(Alignment.Bottom)
-                        )
-                    }
-
-                }
 
             }
-
         }
-
-
     }
 }
+
+

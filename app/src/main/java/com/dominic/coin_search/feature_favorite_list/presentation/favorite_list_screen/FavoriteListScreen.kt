@@ -1,155 +1,157 @@
 package com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen
 
 import android.annotation.SuppressLint
+import android.widget.Toast
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailEvent
 import com.dominic.coin_search.navigation.Screens
-import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailViewModel
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.TopBar
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.MarketStatusBar
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.WatchlistItem
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.FavoriteAddButton
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.FavoriteToggleButton
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.SavedCoinItem
+import com.dominic.coin_search.navigation.navigateScreen
 import com.dominic.coin_search.ui.theme.Black450
-import com.dominic.coin_search.ui.theme.Green800
 import com.dominic.coin_search.ui.theme.DarkGray
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
 @Composable
 fun FavoriteListScreen(
-    modifier: Modifier = Modifier,
-    favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
-    coinDetailViewModel: CoinDetailViewModel = hiltViewModel(),
+    innerPaddingValues: PaddingValues,
+    favoritesViewModel: FavoritesViewModel = hiltViewModel(),
     navController: NavController?
 ) {
-    val watchListState = favoriteListViewModel.state
-    val coinDetailState by coinDetailViewModel.state.collectAsState()
-
-
-
+    val favoriteState by favoritesViewModel.state.collectAsState()
+    val context = LocalContext.current
+    val (isCoinSelected, onCoinSelected) = rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(true) {
-        favoriteListViewModel.eventFlow.collectLatest { savedListEvent ->
 
+        favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
             when (savedListEvent) {
-                is FavoriteListUiEvent.ShowSnackbar -> {
-                    //todo add snackbar
+                is FavoriteListUiEvent.ShowToastMessage -> {
+                    Toast.makeText(context, savedListEvent.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
 
-    Scaffold(topBar = {
+
+
+    Scaffold(
+        topBar = {
         TopBar(
             currencyValue = null,
             modifier = Modifier
                 .height(55.dp)
                 .padding(bottom = 5.dp, top = 14.dp, start = 15.dp, end = 5.dp)
                 .fillMaxWidth(),
-            onCurrencyClick = {
-            }, onSearchClick = {
+            onSearchClick = {
 
             })
     }) {
 
 
         Box(
-            modifier = modifier
-                .background(DarkGray)
-                .fillMaxSize()
+            modifier = Modifier
+                .padding(innerPaddingValues)
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
         ) {
 
-            Column {
-                coinDetailState.coinDetailModel?.let { status ->
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        item {
-                            MarketStatusBar(
-                                marketStatus1h = status.priceChange1h,
-                                marketStatus1d = status.priceChange1d,
-                                marketStatus1w = status.priceChange1w,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 18.dp, bottom = 12.dp)
-                            )
-                        }
-                    }
+
+
+
+
+            LazyColumn(
+                modifier = Modifier
+                    .background(DarkGray)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+
+                item {
+                    FavoriteToggleButton(
+                        modifier = Modifier.padding(top = 10.dp, bottom = 7.dp),
+                        isCoinSelected = isCoinSelected,
+                        onCoinsButtonClick = {onCoinSelected(it)})
                 }
-
-
-                LazyColumn {
-                    items(watchListState.coins) { coin ->
-                        WatchlistItem(
-                            icon = coin.icon,
-                            coinName = coin.name,
-                            symbol = coin.symbol,
-                            rank = coin.rank.toString(),
-                            onClick = {
-                                navController?.navigate(Screens.CoinDetailScreen.route + "/${coin.id}") {
-                                    popUpTo(Screens.FavoriteListScreen.route) {
-                                        this.inclusive = true
-                                    }
-                                }
-
+                if(isCoinSelected) {
+                    items(favoriteState.coins, key = { it.id }) { coin ->
+                        SavedCoinItem(
+                            modifier = Modifier.animateItemPlacement(
+                                tween(durationMillis = 500)
+                            ),
+                            coin = coin,
+                            onItemClick = {
+                                navController?.navigate(Screens.CoinDetailScreen.route + "/${coin.id}")
+                            },
+                            onDeleteClick = {
+                                favoritesViewModel.onEvent(FavoriteListEvent.DeleteCoin(coin))
                             }
                         )
                     }
+                }else{
+                    item{
+
+                    }
                 }
 
-            }
-            if (coinDetailState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    color = Green800
-                )
-            }
 
-            if (watchListState.coins.isEmpty()) {
-                Text(
-                    text = "No saved coins to display",
-                    color = Black450,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .align(Alignment.Center)
 
-                )
             }
 
 
 
 
-            if (coinDetailState.errorMessage.isNotEmpty()) {
-                Text(
-                    text = coinDetailState.errorMessage,
-                    color = MaterialTheme.colors.error,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .align(Alignment.Center)
-                )
+            if (favoriteState.coins.isEmpty()) {
+                Column(modifier = Modifier.align(Alignment.Center), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "No saved coins to display",
+                        color = Black450,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+
+                    )
+                    FavoriteAddButton(
+                        modifier = Modifier.fillMaxWidth(0.75f),
+                        onClick = {
+                            navController?.navigateScreen(Screens.CoinsScreen.route)
+                        })
+                }
             }
+
+
         }
-
     }
 }
+

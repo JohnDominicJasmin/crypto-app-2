@@ -24,7 +24,7 @@ fun CoinTeamMembers(modifier: Modifier, coinInformationModel: CoinInformationMod
     if (coinInformationModel.team.isNotEmpty()) {
         Column(modifier = modifier) {
             Text(
-                text = "Team members",
+                text = "Team Member/s",
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp)

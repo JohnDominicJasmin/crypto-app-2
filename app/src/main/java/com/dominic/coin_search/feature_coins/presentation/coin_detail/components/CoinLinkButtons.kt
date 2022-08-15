@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dominic.coin_search.ui.theme.LighterGray
+import com.dominic.coin_search.ui.theme.Black920
 import com.dominic.coin_search.ui.theme.Twitter
 
 @Composable
@@ -50,7 +50,7 @@ fun CoinLinkButtons(context: Context, twitterUrl: String?, websiteUrl: String?) 
             modifier = Modifier
                 .clip(RoundedCornerShape(35.dp))
                 .height(45.dp)
-                .background(LighterGray)
+                .background(Black920)
                 .weight(1f)
                 .clickable {
                     runCatching {
