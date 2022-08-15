@@ -13,98 +13,98 @@ import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
 import com.dominic.coin_search.feature_coins.domain.models.NewsDetailModel
 import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     private val coinUseCases: CoinUseCases
-): ViewModel() {
+) : ViewModel() {
 
 
-    private val _state = mutableStateOf(NewsState())
-    val state by _state
-
-
+    private val _state = MutableStateFlow(NewsState())
+    val state = _state.asStateFlow()
 
 
     init {
         loadNews()
     }
-    private fun loadNews(){
 
-        viewModelScope.launch {
+    private fun loadNews() {
+
+
             getNews(filter = HANDPICKED_NEWS, newsResult = { newsDetails ->
-                _state.value = state.copy(isLoading = false, handPickedNews = newsDetails)
+                _state.update { it.copy(isLoading = false, handPickedNews = newsDetails) }
             })
 
             getNews(filter = TRENDING_NEWS, newsResult = { newsDetails ->
-                _state.value = state.copy(isLoading = false, trendingNews = newsDetails)
+                _state.update { it.copy(isLoading = false, trendingNews = newsDetails) }
             })
 
             getNews(filter = LATEST_NEWS, newsResult = { newsDetails ->
-                _state.value = state.copy(isLoading = false, latestNews = newsDetails)
+                _state.update { it.copy(isLoading = false, latestNews = newsDetails) }
             })
 
             getNews(filter = BULLISH_NEWS, newsResult = { newsDetails ->
-                _state.value = state.copy(isLoading = false, bullishNews = newsDetails)
+                _state.update { it.copy(isLoading = false, bullishNews = newsDetails) }
             })
 
             getNews(filter = BEARISH_NEWS, newsResult = { newsDetails ->
-                _state.value = state.copy(isLoading = false, bearishNews = newsDetails)
+                _state.update { it.copy(isLoading = false, bearishNews = newsDetails) }
             })
         }
-    }
 
 
-    private suspend fun getNews(filter: String, newsResult: (List<NewsDetailModel>) -> Unit) {
-        coroutineScope {
+
+    private  fun getNews(filter: String, newsResult: (List<NewsDetailModel>) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
 
             runCatching {
-                _state.value = state.copy(isLoading = true)
+                _state.update { it.copy(isLoading = true) }
+                coinUseCases.getNews(filter)
 
-                    _state.value = state.copy(isLoading = false)
-                    newsResult(coinUseCases.getNews(filter))
-
-            }.onFailure { exception ->
-                _state.value = state.copy(isLoading = false)
-
-                when (exception) {
-                    is CoinExceptions.UnexpectedErrorException -> {
-                        _state.value = state.copy(errorMessage = exception.message!!)
+            }.onSuccess(newsResult)
+                .onFailure { exception ->
+                    _state.update { it.copy(isLoading = false) }
+                    when (exception) {
+                        is CoinExceptions.UnexpectedErrorException -> {
+                            _state.update { it.copy(errorMessage = exception.message!!) }
+                        }
+                        is CoinExceptions.NoInternetException -> {
+                            _state.update { it.copy(hasInternet = false) }
+                        }
                     }
-                    is CoinExceptions.NoInternetException -> {
-                        _state.value = state.copy(hasInternet = false)
-                    }
+
+                    this.cancel()
                 }
-
-                this.cancel()
-            }
         }
     }
 
 
-    fun onEvent(event: NewsEvent){
-        when(event){
+    fun onEvent(event: NewsEvent) {
+        when (event) {
             is NewsEvent.RefreshNews -> {
                 refreshNews()
             }
             is NewsEvent.CloseNoInternetDisplay -> {
-                _state.value = state.copy(hasInternet = true, isRefreshing = false)
+                _state.update { it.copy(hasInternet = true, isRefreshing = false) }
             }
             is NewsEvent.EnteredSearchQuery -> {
-                _state.value = state.copy(searchQuery = event.searchQuery)
+                _state.update { it.copy(searchQuery = event.searchQuery) }
             }
         }
     }
 
     private fun refreshNews() {
         viewModelScope.launch {
-            _state.value = state.copy(isRefreshing = true)
+            _state.update { it.copy(isRefreshing = true) }
             loadNews()
-            _state.value = state.copy(isRefreshing = false)
+            _state.update { it.copy(isRefreshing = false) }
 
         }
     }
