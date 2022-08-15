@@ -113,9 +113,9 @@ class CoinsViewModel @Inject constructor(
                 runCatching {
                     coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.OneDay.value).toList(_coinChart)
                 }.onSuccess { chartModels ->
-                    val isItemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
+                    val itemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
                     _state.update {
-                        it.copy(isLoading = !isItemsRendered, isItemsRendered = isItemsRendered)
+                        it.copy(isLoading = !itemsRendered, isItemsRendered = itemsRendered)
                     }
                 }.onFailure { exception ->
                     handleException(exception)

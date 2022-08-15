@@ -25,7 +25,7 @@ import com.dominic.coin_search.R
 fun TopBar(
     currencyValue: String? ,
     modifier: Modifier = Modifier,
-    onCurrencyClick: () -> Unit,
+    onCurrencyClick: () -> Unit = {},
     onSearchClick: () -> Unit,
 
 ) {

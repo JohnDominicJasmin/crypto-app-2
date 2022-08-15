@@ -59,14 +59,14 @@ fun MarketStatusItem(
 ) {
     Column(
         modifier = modifier
-            .padding(5.dp)
+            .padding(2.dp)
     ) {
         Row(
             verticalAlignment = CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
+                .padding(bottom = 0.dp)
         ) {
             Text(
                 text = title,

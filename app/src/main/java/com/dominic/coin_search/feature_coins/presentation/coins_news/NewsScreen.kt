@@ -29,11 +29,11 @@ import com.dominic.coin_search.ui.theme.DarkGray
 @ExperimentalMaterialApi
 @Composable
 fun NewsScreen(
-    modifier: Modifier = Modifier,
+    innerPaddingValues: PaddingValues,
     newsViewModel: NewsViewModel = hiltViewModel(),
     navController: NavController?
 ) {
-    val state = newsViewModel.state
+    val state by newsViewModel.state.collectAsState()
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
@@ -51,7 +51,8 @@ fun NewsScreen(
     }) {
 
         Box(
-            modifier = modifier
+            modifier = Modifier
+                .padding(innerPaddingValues)
                 .background(DarkGray)
                 .fillMaxSize()
         ) {
@@ -75,7 +76,7 @@ fun NewsScreen(
 
                         LazyColumn {
 
-                            items(state.trendingNews.filter {
+                            items(state.handPickedNews.filter {
                                 it.title.contains(state.searchQuery.trim(), ignoreCase = true) ||
                                 it.description.contains(state.searchQuery.trim(), ignoreCase = true)
                             }, key = { it.title }) { news ->

@@ -1,8 +1,8 @@
 package com.dominic.coin_search.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -15,7 +15,7 @@ import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_
 
 @ExperimentalMaterialApi
 @Composable
-fun BottomNavGraph(modifier: Modifier = Modifier, navController: NavHostController) {
+fun BottomNavGraph(paddingValues: PaddingValues, navController: NavHostController) {
 
     NavHost(
         navController = navController,
@@ -23,15 +23,15 @@ fun BottomNavGraph(modifier: Modifier = Modifier, navController: NavHostControll
     ) {
 
         composable(route = Screens.CoinsScreen.route){
-            CoinsScreen(modifier = modifier, navController = navController)
+            CoinsScreen(innerPaddingValues = paddingValues, navController = navController)
         }
 
         composable(route = Screens.FavoriteListScreen.route){
-            FavoriteListScreen(modifier = modifier, navController = navController)
+            FavoriteListScreen(innerPaddingValues = paddingValues, navController = navController)
         }
 
         composable(route = Screens.CoinsNews.route){
-            NewsScreen(modifier = modifier, navController = navController)
+            NewsScreen(innerPaddingValues = paddingValues, navController = navController)
         }
 
         composable(route = Screens.CoinDetailScreen.route + "/{coinId}"){
@@ -43,8 +43,7 @@ fun BottomNavGraph(modifier: Modifier = Modifier, navController: NavHostControll
 }
 
 
- fun NavController.navigateScreen(
-    destination: String) {
+ fun NavController.navigateScreen(destination: String) {
 
     navigate(destination) {
 

@@ -37,7 +37,7 @@ fun MainScreen(
                 state = bottomBarState
             )
         }, content = {  innerPadding ->
-            BottomNavGraph(modifier = Modifier.padding(innerPadding),navController = navController)
+            BottomNavGraph(paddingValues = innerPadding,navController = navController)
         })
 }
 

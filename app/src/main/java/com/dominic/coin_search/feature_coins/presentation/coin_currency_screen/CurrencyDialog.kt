@@ -51,8 +51,7 @@ fun CoinCurrencyScreen(
                     SearchBar(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(top = 20.dp, start = 12.dp, end = 12.dp),
+                            .wrapContentHeight(),
                         searchQuery = searchQuery,
                         onValueChange = {
                             searchQuery = it
@@ -63,7 +62,8 @@ fun CoinCurrencyScreen(
                         modifier = Modifier
                             .padding(top = 20.dp, start = 3.dp, end = 3.dp)
                             .weight(0.9f)
-                            .clipToBounds()
+                            .clipToBounds(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
 
                         items(items = filteredSearchQuery, key = {it.name}) { currency ->
