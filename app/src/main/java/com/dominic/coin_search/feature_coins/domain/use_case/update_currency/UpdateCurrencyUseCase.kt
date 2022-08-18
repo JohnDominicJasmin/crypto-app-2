@@ -1,6 +1,6 @@
 package com.dominic.coin_search.feature_coins.domain.use_case.update_currency
 
-import com.dominic.coin_search.feature_coins.domain.models.CoinCurrencyPreference
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
 import com.dominic.coin_search.feature_coins.domain.repository.CoinRepository
 import javax.inject.Inject
 

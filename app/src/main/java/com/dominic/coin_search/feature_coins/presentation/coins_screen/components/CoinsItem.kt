@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
-import com.dominic.coin_search.feature_coins.domain.models.ChartModel
-import com.dominic.coin_search.feature_coins.domain.models.CoinModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinModel
 import com.dominic.coin_search.ui.theme.*
 
 @OptIn(ExperimentalAnimationApi::class)

@@ -17,7 +17,9 @@ import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toGlobalMark
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toNewsDetail
 import com.dominic.coin_search.feature_coins.data.remote.CoinPaprikaApi
 import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
-import com.dominic.coin_search.feature_coins.domain.models.*
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.*
+import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import com.dominic.coin_search.feature_coins.domain.repository.CoinRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -86,7 +88,7 @@ class CoinRepositoryImpl @Inject constructor(
             coinStatsApi.getFiats().toCoinFiat()
         }
 
-    override suspend fun getGlobalMarket(): GlobalMarketModel =
+    override suspend fun getGlobalMarket(): CoinGlobalMarketModel =
         handleException {
             coinPaprikaAPi.getGlobalMarket().toGlobalMarket()
         }
@@ -109,7 +111,7 @@ class CoinRepositoryImpl @Inject constructor(
         }
 
 
-    override suspend fun getNews(filter: String): List<NewsDetailModel> =
+    override suspend fun getNews(filter: String): List<NewsModel> =
         handleException {
             coinStatsApi.getNews(filter).news.map { it.toNewsDetail() }
         }

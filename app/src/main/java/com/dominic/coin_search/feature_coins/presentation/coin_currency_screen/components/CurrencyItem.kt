@@ -19,7 +19,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.dominic.coin_search.feature_coins.domain.models.CoinCurrencyPreference
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
 
 @Composable
 fun CurrencyItem(

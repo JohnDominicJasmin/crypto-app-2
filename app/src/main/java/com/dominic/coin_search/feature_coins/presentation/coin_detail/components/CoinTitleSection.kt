@@ -1,9 +1,7 @@
 package com.dominic.coin_search.feature_coins.presentation.coin_detail.components
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dominic.coin_search.feature_coins.domain.models.CoinInformationModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinInformationModel
 import com.dominic.coin_search.ui.theme.DarkGray
 
 @Composable

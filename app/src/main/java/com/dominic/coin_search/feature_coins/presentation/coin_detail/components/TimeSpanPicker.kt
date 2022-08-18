@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.dominic.coin_search.feature_coins.domain.models.ChartTimeSpan
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
 import com.dominic.coin_search.ui.theme.GreenBlue600
 
 

@@ -1,9 +1,9 @@
 package com.dominic.coin_search.feature_coins.presentation.coins_screen
 
 import com.dominic.coin_search.feature_coins.data.dto.FiatCurrencyItem
-import com.dominic.coin_search.feature_coins.domain.models.CoinCurrencyPreference
-import com.dominic.coin_search.feature_coins.domain.models.CoinModel
-import com.dominic.coin_search.feature_coins.domain.models.GlobalMarketModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinGlobalMarketModel
 
 data class CoinsState(
     val isLoading: Boolean = false,
@@ -11,7 +11,7 @@ data class CoinsState(
     val hasInternet: Boolean = true,
     val isItemsRendered: Boolean = false,
     val coinModels: List<CoinModel> = emptyList(),
-    val globalMarket: GlobalMarketModel = GlobalMarketModel(),
+    val globalMarket: CoinGlobalMarketModel = CoinGlobalMarketModel(),
     val tickerVisible:Boolean = false,
 
     val currencies: List<FiatCurrencyItem> = emptyList(),

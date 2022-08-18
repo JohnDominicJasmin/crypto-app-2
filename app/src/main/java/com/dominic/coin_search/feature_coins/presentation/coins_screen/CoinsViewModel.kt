@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.dominic.coin_search.core.util.Constants.UPDATE_INTERVAL
 import com.dominic.coin_search.core.util.Constants.VISIBLE_ITEM_COUNT
 import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
-import com.dominic.coin_search.feature_coins.domain.models.ChartModel
-import com.dominic.coin_search.feature_coins.domain.models.ChartTimeSpan
-import com.dominic.coin_search.feature_coins.domain.models.CoinCurrencyPreference
-import com.dominic.coin_search.feature_coins.domain.models.CoinModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinModel
 import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*

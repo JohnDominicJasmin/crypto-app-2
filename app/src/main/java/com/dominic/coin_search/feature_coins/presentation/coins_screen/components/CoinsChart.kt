@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dominic.coin_search.R
 import com.dominic.coin_search.core.util.Constants.LAST_HOURS
-import com.dominic.coin_search.feature_coins.domain.models.ChartModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.getCompatDrawable
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.setLineDataSet

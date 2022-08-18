@@ -29,7 +29,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.dominic.coin_search.R
 import com.dominic.coin_search.core.util.ConnectionStatus
 import com.dominic.coin_search.core.util.Formatters.formatToShortNumber
-import com.dominic.coin_search.feature_coins.domain.models.CoinCurrencyPreference
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
 import com.dominic.coin_search.feature_coins.presentation.coin_currency_screen.CoinCurrencyScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.*
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
@@ -105,7 +105,6 @@ fun CoinsScreen(
                     })
 
                 AnimatedVisibility(
-                    modifier = Modifier.requiredHeightIn(min = 25.dp),
                     visible = !searchBarVisible,
                     enter = scaleIn() + expandVertically(expandFrom = Alignment.CenterVertically),
                     exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)) {
@@ -244,8 +243,8 @@ fun CoinsScreen(
         Box(
             modifier = Modifier
                 .padding(innerPaddingValues)
-                .background(DarkGray)
-                .fillMaxSize()) {
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter) {
 
             Column {
 
@@ -269,7 +268,7 @@ fun CoinsScreen(
                         SearchBar(
                             modifier = Modifier
                                 .fillMaxWidth(0.9f)
-                                .padding(vertical = 10.dp),
+                                .padding(vertical = 4.dp),
                             searchQuery = searchQuery,
                             onValueChange = { value ->
                                 onSearchQuery(value)
@@ -293,8 +292,7 @@ fun CoinsScreen(
                         LazyColumn(
                             state = listState,
                             modifier = Modifier
-                                .background(DarkGray)
-                                .fillMaxSize(),
+                                .background(DarkGray),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             itemsIndexed(

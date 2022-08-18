@@ -1,6 +1,6 @@
-package com.dominic.coin_search.feature_coins.domain.models
+package com.dominic.coin_search.feature_coins.domain.models.coin
 
-data class GlobalMarketModel(
+data class CoinGlobalMarketModel(
     val marketCapUsd: Long = 0L,
     val volume24hUsd: Long = 0L,
     val cryptocurrenciesNumber: Int = 0,

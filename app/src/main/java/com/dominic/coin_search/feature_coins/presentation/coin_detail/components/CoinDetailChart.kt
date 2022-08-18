@@ -13,7 +13,7 @@ import com.dominic.coin_search.core.util.*
 import com.dominic.coin_search.core.util.Formatters.millisToDate
 import com.dominic.coin_search.core.util.Formatters.periodToTimeSpan
 import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
-import com.dominic.coin_search.feature_coins.domain.models.ChartModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailEvent
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailViewModel
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.utils.ChartLineDataSet
@@ -57,7 +57,7 @@ fun CoinDetailChart(
     LaunchedEffect(key1 = yAxisEntry, key2 = xAxisEntry) {
         this.launch(Dispatchers.Main) {
             yAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartPrice(it.toFormattedPrice())) }
-            xAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartDate( it.toLong().millisToDate("dd MMMM yyyy  HH:mm"))) }
+            xAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartDate( (it.toLong() * 1000).millisToDate("dd MMMM yyyy  HH:mm"))) }
             lineDataChart.apply {
                 onChartGestureListener = object : OnChartGestureListener {
                     override fun onChartGestureStart(

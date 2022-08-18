@@ -1,12 +1,14 @@
 package com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,8 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.dominic.coin_search.R
-import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.ui.theme.Black450
 import com.dominic.coin_search.ui.theme.Black920
 import com.dominic.coin_search.ui.theme.GreenBlue600
@@ -40,13 +41,12 @@ fun SavedCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> 
     val (isSavedCoin, onIconSaveClick) = rememberSaveable {
         mutableStateOf(true)
     }
+
     val scope = rememberCoroutineScope()
     AnimatedVisibility(
         visible = isSavedCoin,
         enter = fadeIn(
-            initialAlpha = 0.4f
-        ),
-/*        exit = slideOutHorizontally(animationSpec = spring(stiffness = Spring.StiffnessMedium, dampingRatio = 2f)) { -800 } + fadeOut()*/) {
+            initialAlpha = 0.4f)) {
 
 
         Card(

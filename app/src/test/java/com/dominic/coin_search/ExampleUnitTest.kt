@@ -1,6 +1,8 @@
 package com.dominic.coin_search
 
 import com.dominic.coin_search.core.util.Formatters.formatToShortNumber
+import com.dominic.coin_search.core.util.Formatters.toTimeAgo
+import com.dominic.coin_search.core.util.Formatters.millisToDate
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.text.DecimalFormat
@@ -74,4 +76,16 @@ class ExampleUnitTest {
         }
 
     }
+
+    @Test
+    fun timeDifferenceTest(){
+
+
+        println("FROM ${(1660640400000).millisToDate("HH:mm")}")
+        println("FROM ${(System.currentTimeMillis()).millisToDate("HH:mm")}")
+        print("RESULT IS ${(1660640400000).toTimeAgo()}")
+    }
+
+
+
 }

@@ -2,12 +2,14 @@ package com.dominic.coin_search.feature_coins.data.mapper
 
 import com.dominic.coin_search.feature_coins.data.dto.*
 import com.dominic.coin_search.feature_coins.data.dto.GlobalMarketDto
-import com.dominic.coin_search.feature_coins.domain.models.*
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.*
+import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 
 object CoinMapper {
 
 
-    fun ChartDto.toChart(): ChartModel{
+    fun ChartDto.toChart(): ChartModel {
         return ChartModel(
             chart
         )
@@ -52,23 +54,21 @@ object CoinMapper {
     }
 
 
-    fun News.toNewsDetail(): NewsDetailModel {
-        return NewsDetailModel(
-            description = description,
+    fun News.toNewsDetail(): NewsModel {
+        return NewsModel(
             id = id,
             imgURL = imgURL,
             link = link,
-            relatedCoins = relatedCoins,
-            shareURL = shareURL,
             source = source,
-            sourceLink = sourceLink,
-            title = title
+            title = title,
+            feedDate = feedDate,
+            description = description,
         )
     }
 
 
-    fun GlobalMarketDto.toGlobalMarket():GlobalMarketModel{
-        return GlobalMarketModel(
+    fun GlobalMarketDto.toGlobalMarket(): CoinGlobalMarketModel {
+        return CoinGlobalMarketModel(
             marketCapUsd = marketCapUsd,
             volume24hUsd = volume24hUsd,
             cryptocurrenciesNumber = cryptocurrenciesNumber,
@@ -78,13 +78,13 @@ object CoinMapper {
         )
     }
 
-    fun FiatCurrencyDto.toCoinFiat(): CoinFiatModel{
+    fun FiatCurrencyDto.toCoinFiat(): CoinFiatModel {
         return CoinFiatModel(
             currencies = this
         )
     }
 
-    fun CoinInformationDto.toCoinInformation(): CoinInformationModel{
+    fun CoinInformationDto.toCoinInformation(): CoinInformationModel {
         return CoinInformationModel(
             coinId = id,
             name = name,

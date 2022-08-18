@@ -1,4 +1,4 @@
-package com.dominic.coin_search.feature_coins.domain.models
+package com.dominic.coin_search.feature_coins.domain.models.coin
 
 
 data class CoinModel(

@@ -1,9 +1,9 @@
 package com.dominic.coin_search.feature_coins.presentation.coin_detail
 
-import com.dominic.coin_search.feature_coins.domain.models.ChartModel
-import com.dominic.coin_search.feature_coins.domain.models.ChartTimeSpan
-import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
-import com.dominic.coin_search.feature_coins.domain.models.CoinInformationModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinInformationModel
 
 data class CoinDetailState(
 

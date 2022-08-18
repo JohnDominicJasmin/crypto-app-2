@@ -1,7 +1,6 @@
 package com.dominic.coin_search.feature_coins.presentation.coin_detail.components
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -22,7 +21,7 @@ import coil.compose.AsyncImage
 import com.dominic.coin_search.R
 import com.dominic.coin_search.core.util.Constants.PRICE_ANIMATION_INTERVAL
 import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
-import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.ui.theme.*
 
 @OptIn(ExperimentalAnimationApi::class)
