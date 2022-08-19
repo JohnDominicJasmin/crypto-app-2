@@ -39,7 +39,7 @@ interface CoinStatsApi {
          * 4. bullish
          * 5. bearish
          */
-        @Query("limit") limit: Int = 50,
+        @Query("limit") limit: Int = 100,
         @Query("skip") skip: Int = 0
     ): NewsDto
 
