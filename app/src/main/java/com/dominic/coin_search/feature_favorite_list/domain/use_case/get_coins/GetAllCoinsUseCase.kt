@@ -1,4 +1,4 @@
-package com.dominic.coin_search.feature_favorite_list.domain.use_case.get_all
+package com.dominic.coin_search.feature_favorite_list.domain.use_case.get_coins
 
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.feature_favorite_list.domain.repository.FavoriteListRepository

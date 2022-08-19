@@ -21,11 +21,12 @@ class FavoritesViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<FavoriteListUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var getNotesJob: Job? = null
+    private var getCoinsJob: Job? = null
+    private var getNewsJob: Job? = null
 
     init {
-        getAllCoins()
-
+        getSavedCoins()
+        getSavedNews()
     }
 
 
@@ -37,7 +38,7 @@ class FavoritesViewModel @Inject constructor(
                     runCatching{
                         favoriteUseCase.addCoin(event.coin)
                     }.onSuccess {
-                        _eventFlow.emit(value = FavoriteListUiEvent.ShowToastMessage(message = "Coin saved", buttonAction = "See list"))
+                        _eventFlow.emit(value = FavoriteListUiEvent.ShowToastMessage(message = "Coin Added"))
                     }.onFailure {
                         Timber.d("Failed to save coin")
                     }
@@ -49,33 +50,54 @@ class FavoritesViewModel @Inject constructor(
                     runCatching {
                         favoriteUseCase.deleteCoin(event.coin)
                     }.onSuccess {
-                        _eventFlow.emit(value = FavoriteListUiEvent.ShowToastMessage(message = "Coin removed", buttonAction = "Undo"))
-                        _state.update{it.copy(recentlyDeletedCoin = event.coin)}
+                        _eventFlow.emit(value = FavoriteListUiEvent.ShowToastMessage(message = "Coin Removed"))
                     }.onFailure {
                         Timber.d("Failed to delete coin")
                     }
                 }
             }
 
-            is FavoriteListEvent.RestoreDeletedCoin -> {
+            is FavoriteListEvent.AddNews -> {
                 viewModelScope.launch {
                     runCatching {
-                        favoriteUseCase.addCoin(state.value.recentlyDeletedCoin ?: return@launch)
+                        favoriteUseCase.addNews(event.news)
                     }.onSuccess {
-                        _state.update { it.copy(recentlyDeletedCoin = null) }
+                        _eventFlow.emit(value = FavoriteListUiEvent.ShowToastMessage(message = "News Added"))
                     }.onFailure {
-                        Timber.d("Failed to restore coin")
+                        Timber.d("Failed to save news")
                     }
-
                 }
             }
+
+            is FavoriteListEvent.DeleteNews -> {
+                viewModelScope.launch {
+                    runCatching {
+                        favoriteUseCase.deleteNews(event.news)
+                    }.onSuccess {
+                        _eventFlow.emit(value = FavoriteListUiEvent.ShowToastMessage(message = "News Removed"))
+                    }.onFailure {
+                        Timber.d("Failed to delete news")
+                    }
+                }
+            }
+
+
+
         }
     }
 
-    private fun getAllCoins() {
-        getNotesJob?.cancel()
-        getNotesJob = favoriteUseCase.getAllCoins().onEach { coins ->
+    private fun getSavedCoins() {
+        getCoinsJob?.cancel()
+        getCoinsJob = favoriteUseCase.getCoins().onEach { coins ->
             _state.update { it.copy(coins = coins) }
+        }.launchIn(viewModelScope)
+    }
+
+
+    private fun getSavedNews() {
+        getNewsJob?.cancel()
+        getNewsJob = favoriteUseCase.getNews().onEach { news ->
+            _state.update { it.copy(news = news) }
         }.launchIn(viewModelScope)
     }
 
