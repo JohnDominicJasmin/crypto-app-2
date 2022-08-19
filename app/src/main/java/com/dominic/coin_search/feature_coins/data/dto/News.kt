@@ -10,7 +10,7 @@ data class News(
     val imgURL: String,
     val link: String,
     val reactionsCount: ReactionsCount,
-    val relatedCoins: List<Any>,
+    val relatedCoins: List<String>,
     val shareURL: String,
     val source: String,
     val sourceLink: String,
