@@ -149,6 +149,8 @@
         <entry key="app/src/main/res/layout-v28/marker_view_positive.xml" value="0.36354166666666665" />
         <entry key="app/src/main/res/layout/marker_view.xml" value="0.33" />
         <entry key="app/src/main/res/layout/marker_view_chart.xml" value="0.75" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
       </map>
     </option>
   </component>
