@@ -1,11 +1,10 @@
 package com.dominic.coin_search.feature_coins.presentation.coins_news
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dominic.coin_search.core.util.Constants.BEARISH_NEWS
 import com.dominic.coin_search.core.util.Constants.BULLISH_NEWS
+import com.dominic.coin_search.core.util.Constants.HAND_PICKED
 import com.dominic.coin_search.core.util.Constants.LATEST_NEWS
 import com.dominic.coin_search.core.util.Constants.TRENDING_NEWS
 import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
@@ -27,17 +26,24 @@ class NewsViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
 
+    private val cacheListId = mutableListOf<String>()
     init {
         loadNews()
     }
 
     private fun loadNews() {
 
+
+
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(isLoading = true) }
 
             getNews(filter = TRENDING_NEWS) { newsDetails ->
                 _state.update { it.copy(trendingNews = newsDetails) }
+            }
+
+            getNews(filter = HAND_PICKED) { newsDetails ->
+                _state.update { it.copy(handpickedNews = newsDetails) }
             }
 
             getNews(filter = LATEST_NEWS, newsResult = { newsDetails ->
@@ -63,11 +69,15 @@ class NewsViewModel @Inject constructor(
         coroutineScope {
             val favoriteNews = favoriteUseCase.getNews().distinctUntilChanged().first()
             runCatching {
-                coinUseCases.getNews(filter)
+                coinUseCases.getNews(filter).distinctUntilChanged().first()
             }.onSuccess { newsDetails ->
                 mutableListOf<Pair<NewsModel, Boolean>>().run {
                     newsDetails.forEach { newsDetail ->
-                        add(Pair(newsDetail, favoriteNews.any { it.id == newsDetail.id }))
+                        if(newsDetail.id !in cacheListId){
+                            add(Pair(newsDetail, favoriteNews.any { it.id == newsDetail.id }))
+                        }
+                        cacheListId.add(newsDetail.id)
+
                     }.also {
                         newsResult(this)
                     }
@@ -107,6 +117,7 @@ class NewsViewModel @Inject constructor(
 
     private fun refreshNews() {
         viewModelScope.launch {
+            cacheListId.clear()
             _state.update { it.copy(isRefreshing = true) }
             loadNews()
             _state.update { it.copy(isRefreshing = false) }
