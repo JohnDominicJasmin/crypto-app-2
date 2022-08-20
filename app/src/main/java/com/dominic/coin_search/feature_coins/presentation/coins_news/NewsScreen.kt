@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,7 +29,6 @@ import com.dominic.coin_search.feature_coins.presentation.coins_news.components.
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsItemSmall
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsTitleSection
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.PagerIndicator
-import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.SearchBar
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.TopBar
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
 import com.dominic.coin_search.ui.theme.DarkGray
@@ -53,19 +51,17 @@ fun NewsScreen(
     val state by newsViewModel.state.collectAsState()
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
-    val (searchBarVisible, onSearchIconToggle) = rememberSaveable { mutableStateOf(false) }
     val pagerState = rememberPagerState()
 
     Scaffold(topBar = {
         TopBar(
+            allowSearchField = false,
             currencyValue = null,
             modifier = Modifier
                 .height(55.dp)
                 .padding(bottom = 5.dp, top = 14.dp, start = 15.dp, end = 5.dp)
                 .fillMaxWidth(),
-            onSearchClick = {
-                onSearchIconToggle(!searchBarVisible)
-            })
+           )
     }) {
 
         Box(
@@ -76,20 +72,6 @@ fun NewsScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                AnimatedVisibility(visible = searchBarVisible) {
-
-                    SearchBar(
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .padding(vertical = 10.dp),
-                        searchQuery = state.searchQuery,
-                        onValueChange = {
-                            newsViewModel.onEvent(event = NewsEvent.EnteredSearchQuery(it))
-                        }
-                    )
-
-                }
 
 
                 SwipeRefresh(

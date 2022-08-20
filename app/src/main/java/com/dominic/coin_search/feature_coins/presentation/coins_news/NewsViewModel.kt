@@ -109,9 +109,7 @@ class NewsViewModel @Inject constructor(
             is NewsEvent.CloseNoInternetDisplay -> {
                 _state.update { it.copy(hasInternet = true, isRefreshing = false) }
             }
-            is NewsEvent.EnteredSearchQuery -> {
-                _state.update { it.copy(searchQuery = event.searchQuery) }
-            }
+
         }
     }
 

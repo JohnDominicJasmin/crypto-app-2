@@ -23,25 +23,24 @@ import com.dominic.coin_search.R
 
 @Composable
 fun TopBar(
-    currencyValue: String? ,
     modifier: Modifier = Modifier,
+    allowSearchField: Boolean = true,
+    currencyValue: String?,
     onCurrencyClick: () -> Unit = {},
-    onSearchClick: () -> Unit,
+    onSearchClick: () -> Unit = {},
 
-) {
+    ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier
+        modifier = modifier) {
 
-
-    ) {
-
-        Row(modifier = Modifier
-            .fillMaxHeight()
-            .padding(vertical = 1.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(vertical = 1.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.Start)){
+            horizontalArrangement = Arrangement.spacedBy(4.dp, alignment = Alignment.Start)) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_app_icon),
                 contentDescription = "App Icon",
@@ -51,14 +50,13 @@ fun TopBar(
             Text(fontFamily = FontFamily.SansSerif,
                 color = Color.White,
                 fontSize = 16.sp,
-                text = buildAnnotatedString{
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Light)){
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Light)) {
                         append("Coin")
                     }
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)){
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
                         append("Search")
                     }
-
                 }
             )
         }
@@ -71,7 +69,7 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(3.dp, alignment = Alignment.End)) {
 
-         /*   IconButton(onClick = onToggleThemeClick) {
+            /*   IconButton(onClick = onToggleThemeClick) {
 
                 Icon(
                     painter = painterResource(id = R.drawable.ic_sun),
@@ -93,19 +91,19 @@ fun TopBar(
                 }
             }
 
+            if (allowSearchField) {
+                IconButton(onClick = onSearchClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_search),
+                        contentDescription = "Search icon",
+                        tint = Color.Unspecified,
+                        modifier = Modifier
+                            .size(20.dp)
 
-            IconButton(onClick = onSearchClick) {
+                    )
+                }
 
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_search),
-                    contentDescription = "Search icon",
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .size(20.dp)
-
-                )
             }
-
         }
     }
 

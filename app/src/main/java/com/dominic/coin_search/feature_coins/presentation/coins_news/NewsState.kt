@@ -12,6 +12,5 @@ data class NewsState(
     val bearishNews: List<Pair<NewsModel, Boolean>> = emptyList(),
     val errorMessage: String = "",
     val hasInternet: Boolean = true,
-    val searchQuery: String = ""
 )
 
