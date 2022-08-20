@@ -56,7 +56,7 @@ fun CoinsScreen(
     val (searchQuery, onSearchQuery) = rememberSaveable { mutableStateOf("") }
 
 
-    val filteredCoinModels = remember(searchQuery, coinsState.coinModels) {
+    val filteredCoins = remember(searchQuery, coinsState.coinModels) {
         coinsState.coinModels.filter {
             it.name.contains(searchQuery.trim(), ignoreCase = true) ||
             it.id.contains(searchQuery.trim(), ignoreCase = true) ||
@@ -296,7 +296,7 @@ fun CoinsScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             itemsIndexed(
-                                items = filteredCoinModels,
+                                items = filteredCoins,
                                 key = { _, coinModel -> coinModel.id }) { index, coinModel ->
                                 CoinsItem(
                                     currencySymbol = coinsState.coinCurrencyPreference.currencySymbol ?: "N/A",
