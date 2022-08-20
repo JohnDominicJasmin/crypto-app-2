@@ -37,7 +37,7 @@ fun NewsItemLarge(
     isSavedNews: Boolean,
     newsModel: NewsModel,
     onItemClick: () -> Unit,
-    onSaveClick: () -> Unit) {
+    onSaveClick: (isAlreadySaved: Boolean) -> Unit) {
 
     val (isSavedNewsItem, onIconSaveClick) = rememberSaveable {
         mutableStateOf(isSavedNews)
@@ -59,7 +59,8 @@ fun NewsItemLarge(
                     contentDescription = "News Image",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
-                    alpha = 0.33f, error = painterResource(id = R.drawable.dark_placeholder))
+                    alpha = 0.33f,
+                    error = painterResource(id = R.drawable.dark_placeholder))
 
                 Column(
                     modifier = Modifier.align(Alignment.BottomStart)) {
@@ -84,7 +85,7 @@ fun NewsItemLarge(
                         newsModel = newsModel,
                         onSaveIconClick = {
                             onIconSaveClick(!isSavedNewsItem)
-                            onSaveClick()
+                            onSaveClick(isSavedNewsItem)
                     })
                 }
             }

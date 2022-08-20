@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -16,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.dominic.coin_search.R
 import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import com.dominic.coin_search.ui.theme.Black920
 
@@ -26,7 +28,7 @@ fun NewsItemSmall(
     newsModel: NewsModel,
     isSavedNews: Boolean,
     onItemClick: () -> Unit,
-    onSaveClick: () -> Unit) {
+    onSaveClick: (isAlreadySaved: Boolean) -> Unit) {
 
     val (isSavedNewsItem, onIconSaveClick) = rememberSaveable {
         mutableStateOf(isSavedNews)
@@ -48,7 +50,10 @@ fun NewsItemSmall(
                     contentDescription = "News Headline Image",
                     modifier = Modifier
                         .fillMaxSize()
-                        .weight(0.3f), contentScale = ContentScale.Crop)
+                        .weight(0.3f),
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.dark_placeholder))
+
 
 
                 Column(
@@ -63,7 +68,7 @@ fun NewsItemSmall(
                         textAlign = TextAlign.Start,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
-                        style = MaterialTheme.typography.subtitle1,
+                        style = MaterialTheme.typography.subtitle2,
                         maxLines = 2,
                         fontWeight = FontWeight.Medium,
                         lineHeight = 18.sp
@@ -76,7 +81,7 @@ fun NewsItemSmall(
                         newsModel = newsModel,
                         onSaveIconClick = {
                             onIconSaveClick(!isSavedNewsItem)
-                            onSaveClick()
+                            onSaveClick(isSavedNewsItem)
                         })
 
                 }
