@@ -1,7 +1,6 @@
 package com.dominic.coin_search.feature_coins.presentation.coin_detail
 
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.SavedStateHandle
@@ -10,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.dominic.coin_search.core.util.Constants
 import com.dominic.coin_search.core.util.Constants.UPDATE_INTERVAL
 import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
-import com.dominic.coin_search.feature_coins.domain.models.ChartTimeSpan
-import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
 import com.dominic.coin_search.feature_favorite_list.domain.use_case.FavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +20,6 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlin.time.ExperimentalTime
 
 @HiltViewModel
 class CoinDetailViewModel @Inject constructor(
@@ -149,17 +147,16 @@ class CoinDetailViewModel @Inject constructor(
     }
 
 
-    private suspend fun isFavoriteCoin(coinDetailModel: CoinDetailModel): Boolean {
+    private suspend fun isFavoriteCoin(coinName: String): Boolean {
         val coins: List<CoinDetailModel> =
-            favoriteUseCase.getAllCoins().distinctUntilChanged().first()
+            favoriteUseCase.getCoins().distinctUntilChanged().first()
 
         return suspendCoroutine { continuation ->
-            continuation.resume(coins.any { it.name == coinDetailModel.name })
+            continuation.resume(coins.any { it.name == coinName })
         }
     }
 
 
-    @OptIn(ExperimentalTime::class)
     private fun subscribeToCoinChanges(coinId: String) {
         coinChangesJob = viewModelScope.launch {
             while (isActive) {
@@ -169,7 +166,6 @@ class CoinDetailViewModel @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalTime::class)
     private fun subscribeToChartChanges(coinId: String) {
         coinChartJob = viewModelScope.launch {
             while (isActive) {
@@ -196,7 +192,7 @@ class CoinDetailViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             coinDetailModel = coinDetail,
-                            isFavorite = isFavoriteCoin(coinDetail)
+                            isFavorite = isFavoriteCoin(coinDetail.name)
                         )
                     }
                     onCoinCollected(coinDetail)

@@ -23,6 +23,7 @@ import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import com.dominic.coin_search.feature_coins.domain.repository.CoinRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import timber.log.Timber

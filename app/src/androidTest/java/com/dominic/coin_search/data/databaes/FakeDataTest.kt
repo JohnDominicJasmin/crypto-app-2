@@ -1,6 +1,6 @@
 package com.dominic.coin_search.data.databaes
 
-import com.dominic.coin_search.feature_coins.domain.models.CoinDetailModel
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 
 object FakeDataTest {
 

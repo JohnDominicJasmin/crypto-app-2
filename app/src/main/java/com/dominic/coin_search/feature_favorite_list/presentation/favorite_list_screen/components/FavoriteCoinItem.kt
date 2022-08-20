@@ -36,7 +36,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SavedCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> Unit, onDeleteClick: () -> Unit) {
+fun FavoriteCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> Unit, onSaveClick: () -> Unit) {
 
     val (isSavedCoin, onIconSaveClick) = rememberSaveable {
         mutableStateOf(true)
@@ -45,8 +45,7 @@ fun SavedCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> 
     val scope = rememberCoroutineScope()
     AnimatedVisibility(
         visible = isSavedCoin,
-        enter = fadeIn(
-            initialAlpha = 0.4f)) {
+        enter = fadeIn(initialAlpha = 0.4f)) {
 
 
         Card(
@@ -106,7 +105,7 @@ fun SavedCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> 
                                 scope.launch {
                                     onIconSaveClick(!isSavedCoin)
                                     delay(300)
-                                    onDeleteClick()
+                                    onSaveClick()
                                 }
                             }
                         )
