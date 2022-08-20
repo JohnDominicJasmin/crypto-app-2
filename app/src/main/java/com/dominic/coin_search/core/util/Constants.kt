@@ -10,6 +10,7 @@ object Constants {
     const val PARAM_COIN_ID = "coinId" //default value for get coin by id parameter
     const val DATABASE_NAME = "coins_db"
     const val TRENDING_NEWS = "trending"
+    const val HAND_PICKED = "handpicked"
     const val LATEST_NEWS = "latest"
     const val BULLISH_NEWS = "bullish"
     const val BEARISH_NEWS = "bearish"

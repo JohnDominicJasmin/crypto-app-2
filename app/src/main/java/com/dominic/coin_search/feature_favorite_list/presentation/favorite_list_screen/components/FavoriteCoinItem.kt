@@ -36,7 +36,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FavoriteCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> Unit, onSaveClick: () -> Unit) {
+fun FavoriteCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () -> Unit, onDeleteClick: () -> Unit) {
 
     val (isSavedCoin, onIconSaveClick) = rememberSaveable {
         mutableStateOf(true)
@@ -105,7 +105,7 @@ fun FavoriteCoinItem(modifier: Modifier, coin: CoinDetailModel, onItemClick: () 
                                 scope.launch {
                                     onIconSaveClick(!isSavedCoin)
                                     delay(300)
-                                    onSaveClick()
+                                    onDeleteClick()
                                 }
                             }
                         )
