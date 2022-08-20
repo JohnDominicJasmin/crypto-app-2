@@ -44,6 +44,13 @@ fun CoinDetailScreen(
 
     val context = LocalContext.current
 
+    val onOpenUrl = { url: String?, name: String ->
+        runCatching {
+            openBrowser(context, url!!)
+        }.onFailure {
+            Toast.makeText(context, "$name is not available", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     LaunchedEffect(true) {
 
@@ -163,7 +170,7 @@ fun CoinDetailScreen(
                     }
 
                     item {
-                        if(coinState.coinInformation != null) {
+                        if (coinState.coinInformation != null) {
                             with(coinState.coinInformation!!) {
 
                                 CoinTitleSection(
@@ -194,7 +201,7 @@ fun CoinDetailScreen(
                             return@item
                         }
 
-                         if(!coinState.isLoading) {
+                        if (!coinState.isLoading) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -215,9 +222,12 @@ fun CoinDetailScreen(
 
                     item {
                         CoinLinkButtons(
-                            context = context,
-                            twitterUrl = coinDetail.twitterUrl!!,
-                            websiteUrl = coinDetail.websiteUrl!!)
+                            onOpenTwitterUrl = {
+                                onOpenUrl(coinDetail.twitterUrl, "Twitter")
+                            },
+                            onOpenWebsiteUrl = {
+                                onOpenUrl(coinDetail.websiteUrl, "Website")
+                            })
                     }
                 }
 

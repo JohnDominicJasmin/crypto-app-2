@@ -18,8 +18,7 @@ import com.dominic.coin_search.ui.theme.Black920
 import com.dominic.coin_search.ui.theme.Twitter
 
 @Composable
-fun CoinLinkButtons(context: Context, twitterUrl: String?, websiteUrl: String?) {
-    val uriHandler = LocalUriHandler.current
+fun CoinLinkButtons(onOpenTwitterUrl: () -> Unit, onOpenWebsiteUrl: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(15.dp, alignment = Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
@@ -32,16 +31,7 @@ fun CoinLinkButtons(context: Context, twitterUrl: String?, websiteUrl: String?) 
                 .background(Twitter)
                 .weight(1f)
                 .clickable {
-                    runCatching {
-                        uriHandler.openUri(twitterUrl!!)
-                    }.onFailure {
-                        Toast
-                            .makeText(
-                                context,
-                                "Twitter Account is not available",
-                                Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                   onOpenTwitterUrl()
                 }
         )
 
@@ -53,27 +43,9 @@ fun CoinLinkButtons(context: Context, twitterUrl: String?, websiteUrl: String?) 
                 .background(Black920)
                 .weight(1f)
                 .clickable {
-                    runCatching {
-                        uriHandler.openUri(websiteUrl!!)
-                    }.onFailure {
-                        Toast
-                            .makeText(context, "Website is not available", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                   onOpenWebsiteUrl()
                 }
         )
     }
 }
 
-@Preview
-@Composable
-fun CoinLinkButtonsPreview() {
-    val context = LocalContext.current
-    Box(modifier = Modifier.fillMaxWidth()){
-        CoinLinkButtons(
-            context = context,
-            twitterUrl = "https://twitter.com/dominic_kim",
-            websiteUrl = "https://www.dominic-kim.com"
-        )
-    }
-}

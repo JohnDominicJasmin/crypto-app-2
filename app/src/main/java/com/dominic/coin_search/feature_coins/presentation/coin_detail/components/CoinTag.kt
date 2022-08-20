@@ -23,16 +23,16 @@ import com.dominic.coin_search.ui.theme.GreenBlue600
 @ExperimentalMaterialApi
 @Composable
 fun CoinTag(tag: String) {
-
     val context = LocalContext.current
 
+
     OutlinedButton(
-                onClick = { openBrowser(context = context, searchItem = tag) },
+        onClick = { openBrowser(context = context, searchItem = GOOGLE_SEARCH_QUERY + tag) },
         colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Color.Transparent),
         shape = RoundedCornerShape(20.dp),
         border = BorderStroke(width = 1.7.dp, GreenBlue600),
 
-    ) {
+        ) {
 
         Text(
             modifier = Modifier.padding(vertical = 3.5.dp, horizontal = 3.dp),
@@ -54,11 +54,13 @@ fun CoinTagPreview() {
 }
 
 
-
-
 fun openBrowser(context: Context, searchItem: String) {
     Intent(
         Intent.ACTION_VIEW,
-        Uri.parse(GOOGLE_SEARCH_QUERY + searchItem)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        Uri.parse( searchItem))
+        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        .addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
         .also(context::startActivity)
 }

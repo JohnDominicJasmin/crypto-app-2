@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dominic.coin_search.core.util.Constants
 import com.dominic.coin_search.feature_coins.data.dto.Team
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinInformationModel
 import com.dominic.coin_search.ui.theme.Black800
@@ -36,7 +37,7 @@ fun CoinTeamMembers(modifier: Modifier, coinInformationModel: CoinInformationMod
                         .clickable {
                             openBrowser(
                                 context = context,
-                                searchItem = "${member.name} ${member.position} of ${coinInformationModel.name}")
+                                searchItem = Constants.GOOGLE_SEARCH_QUERY + "${member.name} ${member.position} of ${coinInformationModel.name}")
                         }
                         .fillMaxWidth()
                         .padding(top = 10.dp, bottom = 10.dp, end = 10.dp))

@@ -1,35 +1,32 @@
 package com.dominic.coin_search.feature_coins.presentation.coins_news
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.dominic.coin_search.core.util.ConnectionStatus
+import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
+import com.dominic.coin_search.feature_coins.presentation.coin_detail.components.openBrowser
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsItemLarge
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsItemSmall
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsTitleSection
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.PagerIndicator
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.TopBar
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListEvent
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
+import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
 import com.dominic.coin_search.ui.theme.DarkGray
 import com.dominic.coin_search.ui.theme.Green800
@@ -38,6 +35,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -46,12 +44,35 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun NewsScreen(
     innerPaddingValues: PaddingValues,
     newsViewModel: NewsViewModel = hiltViewModel(),
+    favoritesViewModel: FavoritesViewModel = hiltViewModel(),
     navController: NavController?
 ) {
     val state by newsViewModel.state.collectAsState()
-    val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
     val pagerState = rememberPagerState()
+
+    val openUrl = { url: String ->
+        openBrowser(context, url)
+    }
+
+    val onToggleSaveButton: (Boolean, NewsModel) -> Unit = { isAlreadySaved, news ->
+        favoritesViewModel.onEvent(
+            event = if (isAlreadySaved) FavoriteListEvent.DeleteNews(news) else FavoriteListEvent.AddNews(
+                news))
+    }
+
+
+
+    LaunchedEffect(true) {
+
+        favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
+            when (savedListEvent) {
+                is FavoriteListUiEvent.ShowToastMessage -> {
+                    Toast.makeText(context, savedListEvent.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Scaffold(topBar = {
         TopBar(
@@ -74,30 +95,37 @@ fun NewsScreen(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
 
+
                 SwipeRefresh(
                     state = rememberSwipeRefreshState(isRefreshing = state.isRefreshing),
                     onRefresh = { newsViewModel.onEvent(event = NewsEvent.RefreshNews) }) {
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(top = 10.dp)) {
+                    if (!state.isLoading) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(top = 10.dp)) {
 
-                        item {
+                            item {
 
-                            if (state.trendingNews.isNotEmpty()) {
-                                NewsTitleSection(title = "Today's News", modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
-                            }
+                                if (state.trendingNews.isNotEmpty()) {
+                                    NewsTitleSection(
+                                        title = "Trending News",
+                                        modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
+                                }
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    val trendingNews = state.trendingNews.take(10)
                                     HorizontalPager(
-                                        count = state.trendingNews.take(7).size,
+                                        count = trendingNews.size,
                                         state = pagerState) { pageIndex ->
 
-                                        val (news, isSaved) = state.trendingNews.take(7)[pageIndex]
+                                        val (news, isSaved) = trendingNews[pageIndex]
                                         NewsItemLarge(
                                             isSavedNews = isSaved,
                                             newsModel = news,
-                                            onItemClick = { /*TODO: open browser*/ },
-                                            onSaveClick = {/*TODO: save item from db*/ }
+                                            onItemClick = { openUrl(news.link!!) },
+                                            onSaveClick = { isAlreadySaved ->
+                                                onToggleSaveButton(isAlreadySaved, news)
+                                            }
                                         )
                                     }
                                     PagerIndicator(
@@ -107,64 +135,75 @@ fun NewsScreen(
 
                                 }
 
-                        }
+                            }
 
 
+                            item {
+                                val forYouNews = remember { merge(state.bearishNews, state.bullishNews, state.handpickedNews)}
 
+                                if (forYouNews.isNotEmpty()) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.fillMaxWidth()) {
+                                        NewsTitleSection(
+                                            title = "For you",
+                                            modifier = Modifier.padding(
+                                                bottom = 10.dp,
+                                                top = 15.dp))
 
-                        item {
-                            if (state.latestNews.isNotEmpty()) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxWidth()) {
-                                    NewsTitleSection(title = "Latest News",)
-                                    Spacer(modifier = Modifier.weight(0.6f))
-                                    IconButton(onClick = {/*TODO*/}){
-                                        Icon(
-                                            imageVector = Icons.Filled.ArrowForward,
-                                            tint = Color.White,
-                                            modifier = Modifier.size(24.dp),
-                                            contentDescription = "See all news"
+                                    }
+                                }
+                                LazyRow(modifier = Modifier.padding(bottom = 12.dp)) {
 
+                                    items(
+                                        items = forYouNews.toList(),
+                                        key = { it.first.id }) { newsModel ->
+                                        val (news, isSaved) = newsModel
+                                        NewsItemSmall(
+                                            modifier = Modifier.widthIn(290.dp),
+                                            newsModel = news,
+                                            onItemClick = { openUrl(news.link!!) },
+                                            onSaveClick = { isAlreadySaved ->
+                                                onToggleSaveButton(isAlreadySaved, news)
+                                            },
+                                            isSavedNews = isSaved
                                         )
+
+
                                     }
                                 }
                             }
-                                LazyRow(modifier = Modifier.padding(bottom = 12.dp)) {
 
-                                    items(items = state.latestNews.take(12), key = {it.first.id}) { newsModel ->
-                                        NewsItemSmall(
-                                            modifier = Modifier.widthIn(290.dp),
-                                            newsModel = newsModel.first,
-                                            onItemClick = { /*TODO: open browser*/ },
-                                            onSaveClick = {/*TODO: delete item from db*/ },
-                                            isSavedNews = newsModel.second
-                                        )
-                                  }
+
+
+                            if (state.latestNews.isNotEmpty()) {
+                                item {
+                                    NewsTitleSection(
+                                        title = "Latest News",
+                                        modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
                                 }
-                        }
 
-
-                        if(merge(state.bearishNews, state.bullishNews).isNotEmpty()) {
-                            item {
-                                NewsTitleSection(title = "For you", modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
+                            }
+                            items(
+                                items = state.latestNews,
+                                key = { it.first.id }) { newsModel ->
+                                val (news, isSaved) = newsModel
+                                NewsItemSmall(
+                                    modifier = Modifier.padding(vertical = 2.dp),
+                                    newsModel = news,
+                                    onItemClick = { openUrl(news.link!!) },
+                                    onSaveClick = { isAlreadySaved ->
+                                        onToggleSaveButton(isAlreadySaved, news)
+                                    },
+                                    isSavedNews = isSaved
+                                )
                             }
 
                         }
-                        items(items = merge(state.bearishNews, state.bullishNews), key = {it.first.id}) { newsModel ->
-                            NewsItemSmall(
-                                modifier = Modifier.padding(vertical = 2.dp),
-                                newsModel = newsModel.first,
-                                onItemClick = { /*TODO: open browser*/ },
-                                onSaveClick = {/*TODO: delete item from db*/ },
-                                isSavedNews = newsModel.second
-                            )
-                        }
-
-                        }
-
                     }
                 }
+            }
+
 
             if (state.isLoading) {
                 CircularProgressIndicator(
@@ -198,6 +237,8 @@ fun NewsScreen(
     }
 }
 
-fun <T> merge(first: List<T>, second: List<T>): List<T> {
-    return first.plus(second)
+
+fun <T> merge(first: List<T>, second: List<T>, third: List<T>): Set<T> {
+
+    return first.plus(second).plus(third).toSet()
 }
