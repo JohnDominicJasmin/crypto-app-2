@@ -9,7 +9,8 @@ class MyXAxisValueFormatter(var format: String = "HH:mm") : ValueFormatter() {
 
     @SuppressLint("SimpleDateFormat")
     override fun getFormattedValue(value: Float): String {
-            return value.toLong().millisToDate(timeFormat = format)
+
+            return (value.toLong() * 1000).millisToDate(timeFormat = format)
     }
 
 }

@@ -1,7 +1,10 @@
 package com.dominic.coin_search.core.util
 
 import android.annotation.SuppressLint
-import com.dominic.coin_search.feature_coins.domain.models.ChartTimeSpan
+import com.dominic.coin_search.core.util.Constants.DAY_MILLIS
+import com.dominic.coin_search.core.util.Constants.HOUR_MILLIS
+import com.dominic.coin_search.core.util.Constants.MINUTE_MILLIS
+import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -29,10 +32,11 @@ object Formatters {
 
     @SuppressLint("SimpleDateFormat")
     fun Long.millisToDate(timeFormat: String): String {
-        if (this <= 0.0) {
-            return ""
+        return if (this <= 0.0) {
+            ""
+        } else {
+            SimpleDateFormat(timeFormat).format(Date(this))
         }
-        return SimpleDateFormat(timeFormat).format(Date(this * 1000))
     }
 
     fun Double.toFormattedPrice(): String {
@@ -50,6 +54,34 @@ object Formatters {
             this >= 1000000 -> String.format("%.2f M", this / 1000000.0)
             this >= 1000 -> String.format("%.2f K", this / 1000.0)
             else -> this.toString()
+        }
+    }
+
+    private fun currentDate(): Date {
+        val calendar = Calendar.getInstance()
+        return calendar.time
+    }
+
+    fun Long.toTimeAgo(): String {
+        var time = Date(this).time
+        if (time < 1000000000000L) {
+            time *= 1000
+        }
+
+        val now = currentDate().time
+        if (time > now || time <= 0) {
+            return "in the future"
+        }
+
+        val diff = now - time
+        return when {
+            diff < MINUTE_MILLIS -> "just now"
+            diff < 2 * MINUTE_MILLIS -> "1m"
+            diff < 60 * MINUTE_MILLIS -> "${diff / MINUTE_MILLIS}m"
+            diff < 2 * HOUR_MILLIS -> "1h"
+            diff < 24 * HOUR_MILLIS -> "${diff / HOUR_MILLIS}h"
+            diff < 48 * HOUR_MILLIS -> "1d"
+            else -> "${diff / DAY_MILLIS}d"
         }
     }
 }
