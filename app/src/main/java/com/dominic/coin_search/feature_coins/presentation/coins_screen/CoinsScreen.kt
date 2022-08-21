@@ -243,7 +243,8 @@ fun CoinsScreen(
         Box(
             modifier = Modifier
                 .padding(innerPaddingValues)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .animateContentSize(animationSpec = tween(durationMillis = 70)),
             contentAlignment = Alignment.TopCenter) {
 
             Column {
@@ -268,7 +269,8 @@ fun CoinsScreen(
                         SearchBar(
                             modifier = Modifier
                                 .fillMaxWidth(0.9f)
-                                .padding(vertical = 4.dp),
+                                .padding(top = 2.dp, bottom = 10.dp)
+                                ,
                             searchQuery = searchQuery,
                             onValueChange = { value ->
                                 onSearchQuery(value)
