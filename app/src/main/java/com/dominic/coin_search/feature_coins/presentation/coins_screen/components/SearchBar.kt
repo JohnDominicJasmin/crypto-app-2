@@ -62,7 +62,7 @@ fun SearchBar(
             tint = Black450,
             modifier = Modifier
                 .size(20.dp)
-                .padding(start = 6.dp, ),
+                .padding(start = 6.dp),
         )
         Box(
             modifier = Modifier

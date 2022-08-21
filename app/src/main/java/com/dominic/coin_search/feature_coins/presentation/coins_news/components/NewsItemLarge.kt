@@ -59,7 +59,7 @@ fun NewsItemLarge(
                     contentDescription = "News Image",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
-                    alpha = 0.33f,
+                    alpha = 0.4f,
                     error = painterResource(id = R.drawable.dark_placeholder))
 
                 Column(
