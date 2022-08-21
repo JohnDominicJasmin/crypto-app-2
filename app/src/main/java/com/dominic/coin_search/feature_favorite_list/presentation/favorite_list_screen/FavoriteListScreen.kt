@@ -102,14 +102,17 @@ fun FavoriteListScreen(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AnimatedVisibility(visible = searchBarVisible) {
-
                     SearchBar(
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
-                            .padding(vertical = 10.dp),
+                            .padding(vertical = 4.dp),
+                        hasTrailingIcon = true,
+                        hasFocusRequest = true,
                         searchQuery = searchQuery,
                         onValueChange = { value ->
                             onSearchQuery(value)
+                        }, onTrailingIconClick = {
+                            onSearchIconToggle(!searchBarVisible)
                         }
                     )
 

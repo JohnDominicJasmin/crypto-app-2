@@ -50,6 +50,8 @@ fun CoinCurrencyScreen(
 
                     SearchBar(
                         modifier = Modifier
+                            .padding(top = 12.dp)
+                            .padding(horizontal = 8.dp)
                             .fillMaxWidth()
                             .wrapContentHeight(),
                         searchQuery = searchQuery,
