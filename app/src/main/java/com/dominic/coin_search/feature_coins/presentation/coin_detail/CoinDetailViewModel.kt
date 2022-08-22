@@ -1,6 +1,7 @@
 package com.dominic.coin_search.feature_coins.presentation.coin_detail
 
 
+import androidx.compose.runtime.internal.composableLambdaInstance
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.SavedStateHandle
@@ -42,20 +43,18 @@ class CoinDetailViewModel @Inject constructor(
         })
     }
 
+
+
     private fun loadCoinDetail(onCollectedChartPeriod: (String) -> Unit = { _ -> }) {
         viewModelScope.launch(Dispatchers.IO) {
 
             savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
                 _state.update { it.copy(coinId = coinId, isLoading = true) }
-                getCoin(coinId, onCoinCollected = {
-                    with(it) {
-                        getCoinInformation(coinId = "${symbol.toLowerCase(Locale.current)}-$id")
-                    }
-                })
-                getChartPeriod() { chartPeriod ->
-                    getChart(coinId = coinId, period = chartPeriod)
-                    onCollectedChartPeriod(coinId)
-                }
+                getCoin(coinId)
+                getCoinInformation()
+                getChartPeriod()
+                getChart(coinId = coinId, period = state.value.coinChartPeriod)
+                onCollectedChartPeriod(coinId)
 
             }
         }.invokeOnCompletion {
@@ -64,12 +63,11 @@ class CoinDetailViewModel @Inject constructor(
     }
 
 
-
-
-
-    private suspend fun getCoinInformation(coinId: String){
+    private suspend fun getCoinInformation() {
         runCatching {
-            coinUseCase.getCoinInformation(coinId)
+            with(state.value.coinDetailModel!!) {
+                coinUseCase.getCoinInformation("${symbol.toLowerCase(Locale.current)}-$id")
+            }
         }.onSuccess { coinInformation ->
             _state.update { it.copy(coinInformation = coinInformation) }
         }.onFailure { exception ->
@@ -78,13 +76,11 @@ class CoinDetailViewModel @Inject constructor(
     }
 
 
-
-    private suspend fun getChartPeriod(onChartPeriodCollected: suspend (String) -> Unit = {}) {
+    private suspend fun getChartPeriod() {
         runCatching {
             coinUseCase.getChartPeriod().distinctUntilChanged().first()
         }.onSuccess { chartPeriod ->
             val resultPeriod = chartPeriod ?: ChartTimeSpan.OneDay.value
-            onChartPeriodCollected(resultPeriod)
             _state.update { it.copy(coinChartPeriod = resultPeriod) }
         }.onFailure { exception ->
             handleException(exception)
@@ -139,9 +135,6 @@ class CoinDetailViewModel @Inject constructor(
     }
 
 
-
-
-
     private suspend fun updateChartPeriod(period: String) {
         coinUseCase.updateChartPeriod(period)
     }
@@ -184,7 +177,7 @@ class CoinDetailViewModel @Inject constructor(
     }
 
 
-    private suspend fun getCoin(coinId: String, onCoinCollected: suspend (CoinDetailModel) -> Unit = {}) {
+    private suspend fun getCoin(coinId: String) {
 
         runCatching {
             coinUseCase.getCoin(coinId, currency = "USD")
@@ -195,7 +188,6 @@ class CoinDetailViewModel @Inject constructor(
                             isFavorite = isFavoriteCoin(coinDetail.name)
                         )
                     }
-                    onCoinCollected(coinDetail)
                 }
         }.onFailure { exception ->
             handleException(exception)

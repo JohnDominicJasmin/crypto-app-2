@@ -14,6 +14,7 @@ import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.ExperimentalTime
 
@@ -30,14 +31,9 @@ class CoinsViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
-         loadInformation(onCurrencyCollected = ::subscribeToCoinChanges).also{ job ->
-             job.invokeOnCompletion {
-                 _state.update { it.copy(isLoading = false) }
-             }
-         }
+         loadInformation(onCurrencyCollected = ::subscribeToCoinChanges)
     }
 
-    @OptIn(ExperimentalTime::class)
     private fun subscribeToCoinChanges(currency: String?) {
         job = viewModelScope.launch(Dispatchers.IO) {
             while (isActive) {
@@ -58,9 +54,8 @@ class CoinsViewModel @Inject constructor(
             getCoinCurrencies()
             getCurrency(onCurrencyCollected = { coinCurrencyPreference ->
                 onCurrencyCollected(coinCurrencyPreference.currency!!)
-                getCoins(coinCurrencyPreference.currency , onCoinsCollected = { coinModels ->
-                    getChart(coinModels)
-                })
+                getCoins(coinCurrencyPreference.currency)
+                getChart(state.value.coinModels)
             })
         }
 
@@ -72,7 +67,7 @@ class CoinsViewModel @Inject constructor(
                 _state.update { it.copy(coinCurrencyPreference = coinCurrencyPreference) }
                 onCurrencyCollected(coinCurrencyPreference)
             }.onFailure { exception ->
-                handleException(exception)
+                Timber.e(exception.message)
             }
         }
     }
@@ -89,9 +84,7 @@ class CoinsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCoins(
-        currency: String?,
-        onCoinsCollected: suspend (List<CoinModel>) -> Unit = {}) {
+    private suspend fun getCoins(currency: String?) {
         coroutineScope {
             runCatching {
                 coinUseCase.getCoins(currency ?: "USD")
@@ -99,7 +92,6 @@ class CoinsViewModel @Inject constructor(
                         _state.update {
                             it.copy(coinModels = coins)
                         }
-                        onCoinsCollected(coins)
                     }
             }.onFailure { exception ->
                 handleException(exception)
@@ -180,9 +172,9 @@ class CoinsViewModel @Inject constructor(
                     unSubscribeToCoinChanges()
                     _state.update { it.copy(isLoading = true) }
                     withContext(Dispatchers.IO) {
-                        getCoins(event.coinCurrencyPreference.currency) {
-                            updateCoinCurrency(event.coinCurrencyPreference)
-                        }
+                        getCoins(event.coinCurrencyPreference.currency)
+                        updateCoinCurrency(event.coinCurrencyPreference)
+
                     }
 
                 }.invokeOnCompletion {
