@@ -9,8 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dominic.coin_search.ui.theme.Black920
@@ -54,17 +59,23 @@ fun CoinInfoRow(
             fontWeight = FontWeight.SemiBold,
             color = Color.White,
             style = MaterialTheme.typography.body2,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            modifier = Modifier.weight(0.45f),
+            textAlign = TextAlign.Start
         )
-
-
 
         Text(
             text = value,
             color = GreenBlue600,
             style = MaterialTheme.typography.body2,
             overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            modifier = Modifier.weight(0.7f),
+            textAlign = TextAlign.End
         )
+
 
     }
 }
@@ -83,9 +94,7 @@ fun CoinInformationPreview() {
                 .background(
                     color = Black920,
                     shape = RoundedCornerShape(18.dp))
-                .padding(horizontal = 15.dp, vertical = 10.dp)
-
-            ,
+                .padding(horizontal = 15.dp, vertical = 10.dp),
             rank = "1",
             volume = "$9999999",
             marketCap = "$9999999",

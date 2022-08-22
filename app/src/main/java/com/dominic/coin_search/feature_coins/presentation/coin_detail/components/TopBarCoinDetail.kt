@@ -11,6 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.R
@@ -54,6 +56,8 @@ fun TopBarCoinDetail(
                     fontWeight = FontWeight.Normal,
                     style = MaterialTheme.typography.h6,
                     color = Color.White,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center
                 )
             }
         }
