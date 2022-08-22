@@ -169,7 +169,6 @@ fun CoinDetailChart(
                 xAxis.position = XAxis.XAxisPosition.BOTTOM
                 xAxis.setDrawGridLines(false)
                 legend.isEnabled = false
-                xAxis.setCenterAxisLabels(true)
                 setTouchEnabled(true)
                 setScaleEnabled(false)
                 setDrawGridBackground(false)
