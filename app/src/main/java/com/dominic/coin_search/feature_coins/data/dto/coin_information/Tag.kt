@@ -1,4 +1,4 @@
-package com.dominic.coin_search.feature_coins.data.dto
+package com.dominic.coin_search.feature_coins.data.dto.coin_information
 
 
 import com.google.gson.annotations.SerializedName

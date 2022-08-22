@@ -1,7 +1,7 @@
 package com.dominic.coin_search.feature_coins.data.remote
 
-import com.dominic.coin_search.feature_coins.data.dto.CoinInformationDto
-import com.dominic.coin_search.feature_coins.data.dto.GlobalMarketDto
+import com.dominic.coin_search.feature_coins.data.dto.coin_information.CoinInformationDto
+import com.dominic.coin_search.feature_coins.data.dto.global_market.GlobalMarketDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 

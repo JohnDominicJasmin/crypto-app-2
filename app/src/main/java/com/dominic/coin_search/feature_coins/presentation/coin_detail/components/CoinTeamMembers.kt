@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dominic.coin_search.core.util.Constants
-import com.dominic.coin_search.feature_coins.data.dto.Team
+import com.dominic.coin_search.feature_coins.data.dto.coin_information.Team
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinInformationModel
 import com.dominic.coin_search.ui.theme.Black800
 

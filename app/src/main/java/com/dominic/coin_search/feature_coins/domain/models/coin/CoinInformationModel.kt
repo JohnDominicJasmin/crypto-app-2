@@ -1,6 +1,6 @@
 package com.dominic.coin_search.feature_coins.domain.models.coin
 
-import com.dominic.coin_search.feature_coins.data.dto.Team
+import com.dominic.coin_search.feature_coins.data.dto.coin_information.Team
 
 data class CoinInformationModel(
     val coinId:String = "",

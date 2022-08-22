@@ -1,4 +1,4 @@
-package com.dominic.coin_search.feature_coins.data.dto
+package com.dominic.coin_search.feature_coins.data.dto.news
 
 data class ReactionsCount(
     val `2`: Int,
