@@ -6,6 +6,7 @@ import com.dominic.coin_search.feature_coins.domain.use_case.get_coin.GetCoinUse
 import com.dominic.coin_search.feature_coins.domain.use_case.get_coin_information.GetCoinInformationUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_coins.GetCoinsUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_currency.GetCurrencyUseCase
+import com.dominic.coin_search.feature_coins.domain.use_case.get_currency_exchange_rate.GetCurrencyExchangeUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_fiats.GetFiatsUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_market_status.GetGlobalMarketUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_news.GetNewsUseCase
@@ -24,7 +25,8 @@ data class CoinUseCases (
     val updateCurrency: UpdateCurrencyUseCase,
     val getChartPeriod: GetChartPeriodUseCase,
     val updateChartPeriod: UpdateChartPeriodUseCase,
-    val getCoinInformation: GetCoinInformationUseCase
+    val getCoinInformation: GetCoinInformationUseCase,
+    val getCurrencyExchangeRate: GetCurrencyExchangeUseCase
 
 
 )

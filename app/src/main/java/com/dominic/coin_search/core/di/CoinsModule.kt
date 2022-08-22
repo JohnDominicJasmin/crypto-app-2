@@ -8,6 +8,7 @@ import com.dominic.coin_search.core.util.Constants.HEADER_CACHE_CONTROL
 import com.dominic.coin_search.core.util.Constants.HEADER_PRAGMA
 import com.dominic.coin_search.feature_coins.data.remote.CoinPaprikaApi
 import com.dominic.coin_search.feature_coins.data.remote.CoinStatsApi
+import com.dominic.coin_search.feature_coins.data.remote.ExchangeRateApi
 import com.dominic.coin_search.feature_coins.data.repository.CoinRepositoryImpl
 import com.dominic.coin_search.feature_coins.domain.repository.CoinRepository
 import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
@@ -17,6 +18,7 @@ import com.dominic.coin_search.feature_coins.domain.use_case.get_coin.GetCoinUse
 import com.dominic.coin_search.feature_coins.domain.use_case.get_coin_information.GetCoinInformationUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_coins.GetCoinsUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_currency.GetCurrencyUseCase
+import com.dominic.coin_search.feature_coins.domain.use_case.get_currency_exchange_rate.GetCurrencyExchangeUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_fiats.GetFiatsUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_market_status.GetGlobalMarketUseCase
 import com.dominic.coin_search.feature_coins.domain.use_case.get_news.GetNewsUseCase
@@ -46,7 +48,7 @@ object CoinsModule {
     @Singleton
     fun providesCoinStatsApi(okHttpClient: OkHttpClient): CoinStatsApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.COIN_STATS_BASE_URL)
+            .baseUrl(Constants.COIN_STATS_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -58,7 +60,7 @@ object CoinsModule {
     @Singleton
     fun providesCoinPaprikaApi(okHttpClient: OkHttpClient): CoinPaprikaApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.COIN_PAPRIKA_BASE_URL)
+            .baseUrl(Constants.COIN_PAPRIKA_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -68,11 +70,23 @@ object CoinsModule {
 
     @Provides
     @Singleton
+    fun providesExchangeRateApi(okHttpClient: OkHttpClient): ExchangeRateApi {
+        return Retrofit.Builder()
+            .baseUrl(Constants.EXCHANGE_RATE_API_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+            .create(ExchangeRateApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun providesCoinRepository(
         @ApplicationContext context: Context,
         coinStatsApi: CoinStatsApi,
-        coinPaprikaAPi: CoinPaprikaApi): CoinRepository {
-        return CoinRepositoryImpl(coinStatsApi, coinPaprikaAPi,context)
+        coinPaprikaAPi: CoinPaprikaApi,
+        exchangeRateApi: ExchangeRateApi): CoinRepository {
+        return CoinRepositoryImpl(coinStatsApi, coinPaprikaAPi,exchangeRateApi,context)
     }
 
 
@@ -90,7 +104,8 @@ object CoinsModule {
             updateCurrency = UpdateCurrencyUseCase(repository),
             getChartPeriod = GetChartPeriodUseCase(repository),
             updateChartPeriod = UpdateChartPeriodUseCase(repository),
-            getCoinInformation = GetCoinInformationUseCase(repository)
+            getCoinInformation = GetCoinInformationUseCase(repository),
+            getCurrencyExchangeRate = GetCurrencyExchangeUseCase(repository)
 
             )
     }

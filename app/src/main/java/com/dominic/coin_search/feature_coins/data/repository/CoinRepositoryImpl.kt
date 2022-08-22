@@ -13,12 +13,15 @@ import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoinDetail
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoinFiat
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoinInformation
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoins
+import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCurrencyExchange
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toGlobalMarket
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toNewsDetail
 import com.dominic.coin_search.feature_coins.data.remote.CoinPaprikaApi
+import com.dominic.coin_search.feature_coins.data.remote.ExchangeRateApi
 import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
 import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
 import com.dominic.coin_search.feature_coins.domain.models.coin.*
+import com.dominic.coin_search.feature_coins.domain.models.currency.CurrencyExchangeModel
 import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import com.dominic.coin_search.feature_coins.domain.repository.CoinRepository
 import kotlinx.coroutines.flow.Flow
@@ -35,6 +38,7 @@ val Context.dataStore by preferencesDataStore(name = "preferences")
 class CoinRepositoryImpl @Inject constructor(
     private val coinStatsApi: CoinStatsApi,
     private val coinPaprikaAPi: CoinPaprikaApi,
+    private val exchangeRateApi: ExchangeRateApi,
     val context:Context,
 ) : CoinRepository {
 
@@ -120,6 +124,10 @@ class CoinRepositoryImpl @Inject constructor(
 
     override suspend fun getCoinInformation(coinId: String): CoinInformationModel {
           return  coinPaprikaAPi.getCoinInformation(coinId).toCoinInformation()
+    }
+
+    override suspend fun getCurrencyExchangeRate(currency: String): CurrencyExchangeModel {
+        return exchangeRateApi.getExchangeRate(to = currency).toCurrencyExchange()
     }
 }
 

@@ -2,6 +2,7 @@ package com.dominic.coin_search.feature_coins.domain.repository
 
 import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
 import com.dominic.coin_search.feature_coins.domain.models.coin.*
+import com.dominic.coin_search.feature_coins.domain.models.currency.CurrencyExchangeModel
 import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import kotlinx.coroutines.flow.Flow
 
@@ -28,4 +29,6 @@ interface CoinRepository {
     suspend fun getChartPeriod(): Flow<String?>
 
     suspend fun getCoinInformation(coinId: String): CoinInformationModel
+
+    suspend fun getCurrencyExchangeRate(currency: String): CurrencyExchangeModel
 }

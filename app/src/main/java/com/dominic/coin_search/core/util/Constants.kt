@@ -5,8 +5,9 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 object Constants {
-    const val COIN_STATS_BASE_URL = "https://api.coinstats.app/public/"
-    const val COIN_PAPRIKA_BASE_URL = "https://api.coinpaprika.com/"
+    const val COIN_STATS_API_URL = "https://api.coinstats.app/public/"
+    const val COIN_PAPRIKA_API_URL = "https://api.coinpaprika.com/"
+    const val EXCHANGE_RATE_API_URL = "https://api.exchangerate.host/"
     const val PARAM_COIN_ID = "coinId" //default value for get coin by id parameter
     const val DATABASE_NAME = "coins_db"
     const val TRENDING_NEWS = "trending"
