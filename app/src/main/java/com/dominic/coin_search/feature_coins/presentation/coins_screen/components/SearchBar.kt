@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +23,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dominic.coin_search.R
@@ -39,10 +39,11 @@ fun SearchBar(
     onTrailingIconClick: () -> Unit = {}
 ) {
     val focusRequester = remember { FocusRequester() }
+    var isHintDisplayed by rememberSaveable { mutableStateOf(searchQuery.isEmpty()) }
 
-    var isHintDisplayed by remember { mutableStateOf(hint != "") }
-    LaunchedEffect(key1 = true){
-        if(hasFocusRequest) {
+
+    LaunchedEffect(key1 = isHintDisplayed) {
+        if (isHintDisplayed && hasFocusRequest) {
             focusRequester.requestFocus()
         }
     }
@@ -69,36 +70,36 @@ fun SearchBar(
                 .padding(vertical = 9.dp, horizontal = 2.dp)
                 .fillMaxWidth(0.85f)) {
 
-                BasicTextField(
-                    value = searchQuery,
-                    onValueChange = {
-                        isHintDisplayed = it.isEmpty()
-                        onValueChange(it)
-                    },
-                    maxLines = 1,
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Search,
-                        autoCorrect = false,
-                    ),
-                    textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
-                    cursorBrush = SolidColor(Color.White)
-                )
+            BasicTextField(
+                value = searchQuery,
+                onValueChange = {
+                    isHintDisplayed = it.isEmpty()
+                    onValueChange(it)
+                },
+                maxLines = 1,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search,
+                    autoCorrect = false,
+                ),
+                textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                cursorBrush = SolidColor(Color.White)
+            )
 
-                if (isHintDisplayed) {
-                    Text(
-                        text = hint,
-                        color = Black450,
-                        modifier = Modifier, fontSize = 14.sp
-                    )
-                }
+            if (isHintDisplayed) {
+                Text(
+                    text = hint,
+                    color = Black450,
+                    modifier = Modifier, fontSize = 14.sp
+                )
+            }
 
         }
 
-        if(hasTrailingIcon) {
+        if (hasTrailingIcon) {
             IconButton(onClick = onTrailingIconClick, modifier = Modifier.size(16.dp)) {
                 Icon(
                     imageVector = Icons.Default.Close,

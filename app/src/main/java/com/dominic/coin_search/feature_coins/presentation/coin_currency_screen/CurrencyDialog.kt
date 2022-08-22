@@ -13,7 +13,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import com.dominic.coin_search.feature_coins.data.dto.FiatCurrencyItem
+import com.dominic.coin_search.feature_coins.data.dto.fiats.FiatCurrencyItem
 import com.dominic.coin_search.ui.theme.Black920
 import java.util.*
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
@@ -27,7 +27,7 @@ fun CoinCurrencyScreen(
     onDismissRequest: (CoinCurrencyPreference? ) -> Unit
 ) {
 
-    var searchQuery by remember{mutableStateOf("")}
+    var (searchQuery, onChangeValueSearch) =  remember{mutableStateOf("")}
     val filteredSearchQuery = remember(searchQuery, currencies){
         currencies.filter {
             it.name.contains(searchQuery.trim(), ignoreCase = true) ||
@@ -55,11 +55,16 @@ fun CoinCurrencyScreen(
                             .fillMaxWidth()
                             .wrapContentHeight(),
                         searchQuery = searchQuery,
-                        onValueChange = {
-                            searchQuery = it
+                        onValueChange = { value ->
+                            onChangeValueSearch(value)
                         },
-                        hasFocusRequest = false
+                        hasFocusRequest = false,
+                        hasTrailingIcon = true,
+                        onTrailingIconClick = {
+                            onChangeValueSearch("")
+                        }
                     )
+
                     LazyColumn(
                         modifier = Modifier
                             .padding(top = 20.dp, start = 3.dp, end = 3.dp)
