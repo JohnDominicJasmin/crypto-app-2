@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "114928495156",
+    "project_id": "coinsearch-862ec",
+    "storage_bucket": "coinsearch-862ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:114928495156:android:bb1954dc755a7fc0b43861",
+        "android_client_info": {
+          "package_name": "com.dominic.coin_search"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "114928495156-3k84b45dhg4mp9cl9curtphrrse1gnhn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzsu2EeYZWtUHjDk3vTssPQq1MfTLzsGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "114928495156-3k84b45dhg4mp9cl9curtphrrse1gnhn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
