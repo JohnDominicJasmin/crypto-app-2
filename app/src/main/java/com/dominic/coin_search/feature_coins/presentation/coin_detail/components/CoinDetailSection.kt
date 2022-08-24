@@ -30,7 +30,8 @@ fun CoinDetailSection(
     modifier: Modifier,
     coinModel: CoinDetailModel,
     chartDate: String,
-    chartPrice: String,
+    chartPrice: Double,
+    currencySymbol: String
 ) {
     Box(
         modifier = modifier
@@ -68,9 +69,9 @@ fun CoinDetailSection(
                 Text(
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.h6,
-                    text = "$${chartPrice.ifEmpty { price }}",
+                    text = "$currencySymbol ${chartPrice.takeIf { it != 0.0 }?.toFormattedPrice() ?: price}",
                     color = Color.White,
-                    modifier = Modifier.padding(top = 5.dp)
+                    modifier = Modifier.padding(top = 5.dp),
                 )
             }
 
@@ -80,7 +81,7 @@ fun CoinDetailSection(
                     text = chartDate,
                     fontWeight = FontWeight.Normal,
                     color = Black450,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier.padding(top = 2.7.dp, bottom = 5.dp)
 
                 )

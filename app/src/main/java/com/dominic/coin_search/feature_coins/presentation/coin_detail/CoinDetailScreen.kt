@@ -69,7 +69,7 @@ fun CoinDetailScreen(
         modifier = Modifier,
     ) { paddingValues ->
 
-        val isDraggingChart = coinState.chartDate.isNotEmpty() && coinState.chartPrice.isNotEmpty()
+        val isDraggingChart = coinState.chartDate.isNotEmpty() && coinState.chartPrice != 0.0
 
         Box(
             modifier = Modifier
@@ -111,7 +111,8 @@ fun CoinDetailScreen(
                             modifier = Modifier.padding(horizontal = 12.dp),
                             coinModel = coinDetail,
                             chartDate = coinState.chartDate,
-                            chartPrice = coinState.chartPrice,
+                            chartPrice = coinState.chartPrice * coinState.currencyExchange,
+                            currencySymbol = coinState.coinCurrencyPreference.currencySymbol ?: "$",
                         )
 
                         AnimatedVisibility(

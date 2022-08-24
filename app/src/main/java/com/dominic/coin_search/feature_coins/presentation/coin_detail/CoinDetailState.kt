@@ -2,6 +2,7 @@ package com.dominic.coin_search.feature_coins.presentation.coin_detail
 
 import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
 import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinInformationModel
 
@@ -16,7 +17,9 @@ data class CoinDetailState(
     val isFavorite: Boolean = false,
     val coinId:String = "",
     val chartDate: String = "",
-    val chartPrice: String = "",
-    val coinInformation: CoinInformationModel? = null
+    val chartPrice: Double = 0.0,
+    val coinInformation: CoinInformationModel? = null,
+    val currencyExchange: Double = 0.0,
+    val coinCurrencyPreference: CoinCurrencyPreference = CoinCurrencyPreference()
 )
 

@@ -1,7 +1,6 @@
 package com.dominic.coin_search.feature_coins.presentation.coin_detail
 
 
-import androidx.compose.runtime.internal.composableLambdaInstance
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.SavedStateHandle
@@ -43,14 +42,35 @@ class CoinDetailViewModel @Inject constructor(
         })
     }
 
+    private suspend fun getCurrency() {
+        runCatching {
+            coinUseCase.getCurrency().first()
+        }.onSuccess { coinCurrencyPreference ->
+            _state.update { it.copy(coinCurrencyPreference = coinCurrencyPreference) }
+        }.onFailure { exception ->
+            Timber.e(exception.message)
+        }
+    }
 
+    private suspend fun getExchangeRate() {
+        runCatching {
+            val currency = state.value.coinCurrencyPreference.currency?.uppercase()
+            coinUseCase.getCurrencyExchangeRate(currency ?: "USD")
+        }.onSuccess { currencyExchange ->
+            _state.update { it.copy(currencyExchange = currencyExchange.result) }
+        }.onFailure { exception ->
+            handleException(exception)
+        }
+    }
 
     private fun loadCoinDetail(onCollectedChartPeriod: (String) -> Unit = { _ -> }) {
         viewModelScope.launch(Dispatchers.IO) {
 
             savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
                 _state.update { it.copy(coinId = coinId, isLoading = true) }
+                getCurrency()
                 getCoin(coinId)
+                getExchangeRate()
                 getCoinInformation()
                 getChartPeriod()
                 getChart(coinId = coinId, period = state.value.coinChartPeriod)
@@ -125,7 +145,7 @@ class CoinDetailViewModel @Inject constructor(
             }
 
             is CoinDetailEvent.ClearChartPrice -> {
-                _state.update { it.copy(chartPrice = "") }
+                _state.update { it.copy(chartPrice = 0.0) }
 
             }
 
@@ -153,8 +173,8 @@ class CoinDetailViewModel @Inject constructor(
     private fun subscribeToCoinChanges(coinId: String) {
         coinChangesJob = viewModelScope.launch {
             while (isActive) {
-                getCoin(coinId = coinId)
                 delay(UPDATE_INTERVAL)
+                getCoin(coinId = coinId)
             }
         }
     }
@@ -162,8 +182,8 @@ class CoinDetailViewModel @Inject constructor(
     private fun subscribeToChartChanges(coinId: String) {
         coinChartJob = viewModelScope.launch {
             while (isActive) {
-                getChart(coinId = coinId, period = state.value.coinChartPeriod)
                 delay(UPDATE_INTERVAL)
+                getChart(coinId = coinId, period = state.value.coinChartPeriod)
             }
         }
     }
@@ -180,7 +200,9 @@ class CoinDetailViewModel @Inject constructor(
     private suspend fun getCoin(coinId: String) {
 
         runCatching {
-            coinUseCase.getCoin(coinId, currency = "USD")
+            coinUseCase.getCoin(
+                coinId,
+                currency = state.value.coinCurrencyPreference.currency ?: "USD")
                 .distinctUntilChanged().collect { coinDetail ->
                     _state.update {
                         it.copy(

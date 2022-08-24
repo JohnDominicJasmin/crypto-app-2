@@ -56,7 +56,7 @@ fun CoinDetailChart(
 
     LaunchedEffect(key1 = yAxisEntry, key2 = xAxisEntry) {
         this.launch(Dispatchers.Main) {
-            yAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartPrice(it.toFormattedPrice())) }
+            yAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartPrice(it)) }
             xAxisEntry?.let { coinDetailViewModel.onEvent(event = CoinDetailEvent.AddChartDate( (it.toLong() * 1000).millisToDate("dd MMMM yyyy  HH:mm"))) }
             lineDataChart.apply {
                 onChartGestureListener = object : OnChartGestureListener {
