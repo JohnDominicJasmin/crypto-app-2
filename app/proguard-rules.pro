@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.dominic.coin_search.feature_coins.data.dto.* { *; }
+-keep class com.dominic.coin_search.feature_coins.data.dto.*.* { *; }
 -dontnote okhttp3.**, okio.**, retrofit2.**
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
