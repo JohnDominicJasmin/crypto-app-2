@@ -52,7 +52,7 @@ fun NewsItemSmall(
                         .fillMaxSize()
                         .weight(0.3f),
                     contentScale = ContentScale.Crop,
-                    error = painterResource(id = R.drawable.dark_placeholder))
+                    error = painterResource(id = R.drawable.ic_baseline_image_24))
 
 
 
