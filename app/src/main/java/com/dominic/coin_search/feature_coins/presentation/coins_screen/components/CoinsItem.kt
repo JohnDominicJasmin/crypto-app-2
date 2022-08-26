@@ -95,8 +95,10 @@ fun CoinsItem(
                 chartModel = chartModel,
                 priceChange = coinModel.priceChange1w,
                 modifier = Modifier
-                    .height(70.dp)
+                    .height(80.dp)
+                    .requiredWidthIn(max = 160.dp)
                     .weight(2.3f)
+
 
             )
 
