@@ -13,23 +13,23 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import com.dominic.coin_search.feature_coins.data.dto.fiats.FiatCurrencyItem
 import com.dominic.coin_search.ui.theme.Black920
 import java.util.*
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
+import com.dominic.coin_search.feature_coins.domain.models.coin.CoinFiatModel
 import com.dominic.coin_search.feature_coins.presentation.coin_currency_screen.components.CurrencyItem
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.SearchBar
 
 
 @Composable
 fun CoinCurrencyScreen(
-    currencies: List<FiatCurrencyItem>,
+    coinFiat: CoinFiatModel,
     onDismissRequest: (CoinCurrencyPreference? ) -> Unit
 ) {
 
     var (searchQuery, onChangeValueSearch) =  remember{mutableStateOf("")}
-    val filteredSearchQuery = remember(searchQuery, currencies){
-        currencies.filter {
+    val filteredSearchQuery = remember(searchQuery, coinFiat){
+        coinFiat.currencies.filter {
             it.name.contains(searchQuery.trim(), ignoreCase = true) ||
             it.symbol.contains(searchQuery.trim(), ignoreCase = true)||
             toCountryName(it.name).contains(searchQuery.trim(), ignoreCase = true)

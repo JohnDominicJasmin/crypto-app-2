@@ -1,6 +1,5 @@
 package com.dominic.coin_search.feature_coins.presentation.coins_screen
 
-import com.dominic.coin_search.feature_coins.data.dto.fiats.FiatCurrencyItem
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinFiatModel
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinModel

@@ -252,7 +252,7 @@ fun CoinsScreen(
                 AnimatedVisibility(visible = dialogStateVisible) {
 
                     CoinCurrencyScreen(
-                        currencies = coinsState.currencies,
+                        coinFiat = coinsState.currencies,
                         onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
                             onDialogToggle(!dialogStateVisible)
 

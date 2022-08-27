@@ -31,7 +31,7 @@ class ExampleUnitTest {
     @Test
     fun currencyTest() {
 
-        val currency = Currency.getInstance("EUR")
+        val currency = Currency.getInstance("PHP")
         val result = currency.symbol
         assertEquals("₱", result)
     }

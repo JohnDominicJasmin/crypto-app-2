@@ -134,7 +134,7 @@ class CoinsViewModel @Inject constructor(
     private suspend fun getCoinCurrencies() {
         coroutineScope {
             runCatching {
-                coinUseCase.getFiats().currencies
+                coinUseCase.getFiats()
             }.onSuccess { currencies ->
                 _state.value = state.value.copy(currencies = currencies)
             }.onFailure { exception ->
