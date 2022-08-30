@@ -44,12 +44,13 @@ import kotlinx.coroutines.flow.collectLatest
 fun FavoriteListScreen(
     innerPaddingValues: PaddingValues,
     favoritesViewModel: FavoritesViewModel = hiltViewModel(),
-    navController: NavController?
+    navController: NavController?,
+    searchBarVisible: Boolean = false,
+    onSearchIconToggle : () -> Unit,
 ) {
     val favoriteState by favoritesViewModel.state.collectAsState()
     val context = LocalContext.current
     val (isCoinSelected, onCoinSelected) = rememberSaveable { mutableStateOf(true) }
-    val (searchBarVisible, onSearchIconToggle) = rememberSaveable { mutableStateOf(false) }
     val (searchQuery, onSearchQuery) = rememberSaveable { mutableStateOf("") }
     LaunchedEffect(true) {
 
@@ -79,14 +80,7 @@ fun FavoriteListScreen(
 
 
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                currencyValue = null,
-                onSearchClick = {
-                    onSearchIconToggle(!searchBarVisible)
-                })
-        }) {
+    Scaffold() {
 
 
         Box(
@@ -108,7 +102,7 @@ fun FavoriteListScreen(
                         onValueChange = { value ->
                             onSearchQuery(value)
                         }, onTrailingIconClick = {
-                            onSearchIconToggle(!searchBarVisible)
+                            onSearchIconToggle()
                             onSearchQuery("")
                         }
                     )

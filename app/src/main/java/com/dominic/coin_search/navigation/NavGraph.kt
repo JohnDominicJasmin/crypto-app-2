@@ -3,6 +3,7 @@ package com.dominic.coin_search.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -15,26 +16,45 @@ import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_
 
 @ExperimentalMaterialApi
 @Composable
-fun BottomNavGraph(paddingValues: PaddingValues, navController: NavHostController) {
+fun BottomNavGraph(
+    paddingValues: PaddingValues,
+    navController: NavHostController,
+    currency: MutableState<String?>,
+    searchBarVisible: Boolean = false,
+    dialogStateVisible: Boolean = false,
+    onDialogToggle: () -> Unit,
+    onSearchIconToggle: () -> Unit,
+) {
 
     NavHost(
         navController = navController,
         startDestination = Screens.CoinsScreen.route
     ) {
 
-        composable(route = Screens.CoinsScreen.route){
-            CoinsScreen(innerPaddingValues = paddingValues, navController = navController)
+        composable(route = Screens.CoinsScreen.route) {
+            CoinsScreen(
+                innerPaddingValues = paddingValues,
+                navController = navController,
+                currencyValue = currency,
+                searchBarVisible = searchBarVisible,
+                dialogStateVisible = dialogStateVisible,
+                onDialogToggle = onDialogToggle,
+                onSearchIconToggle = onSearchIconToggle)
         }
 
-        composable(route = Screens.FavoriteListScreen.route){
-            FavoriteListScreen(innerPaddingValues = paddingValues, navController = navController)
+        composable(route = Screens.FavoriteListScreen.route) {
+            FavoriteListScreen(
+                innerPaddingValues = paddingValues,
+                navController = navController,
+                searchBarVisible = searchBarVisible,
+                onSearchIconToggle = onSearchIconToggle)
         }
 
-        composable(route = Screens.CoinsNews.route){
+        composable(route = Screens.CoinsNews.route) {
             NewsScreen(innerPaddingValues = paddingValues, navController = navController)
         }
 
-        composable(route = Screens.CoinDetailScreen.route + "/{coinId}"){
+        composable(route = Screens.CoinDetailScreen.route + "/{coinId}") {
             CoinDetailScreen(navController = navController)
         }
 
@@ -43,16 +63,16 @@ fun BottomNavGraph(paddingValues: PaddingValues, navController: NavHostControlle
 }
 
 
- fun NavController.navigateScreen(destination: String) {
+fun NavController.navigateScreen(destination: String) {
 
     navigate(destination) {
 
-        popUpTo(graph.findStartDestination().id){
+        popUpTo(graph.findStartDestination().id) {
             saveState = true
         }
 
         launchSingleTop = true
-        restoreState =true
+        restoreState = true
     }
 
 

@@ -74,161 +74,157 @@ fun NewsScreen(
         }
     }
 
-    Scaffold(topBar = {
-        TopBar(
-            allowSearchField = false,
-            currencyValue = null,
-        )
-    }) {
-
-        Box(
-            modifier = Modifier
-                .padding(innerPaddingValues)
-                .background(DarkGray)
-                .fillMaxSize(),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Box(
+        modifier = Modifier
+            .padding(innerPaddingValues)
+            .background(DarkGray)
+            .fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
 
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = state.isRefreshing),
+                onRefresh = { newsViewModel.onEvent(event = NewsEvent.RefreshNews) }) {
 
-                SwipeRefresh(
-                    state = rememberSwipeRefreshState(isRefreshing = state.isRefreshing),
-                    onRefresh = { newsViewModel.onEvent(event = NewsEvent.RefreshNews) }) {
+                if (!state.isLoading) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 10.dp)) {
 
-                    if (!state.isLoading) {
-                        LazyColumn(
-                            modifier = Modifier
-                                .padding(top = 10.dp)) {
+                        item {
 
-                            item {
+                            if (state.trendingNews.isNotEmpty()) {
+                                NewsTitleSection(
+                                    title = "Trending News",
+                                    modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
+                            }
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                val trendingNews = state.trendingNews.take(10)
+                                HorizontalPager(
+                                    count = trendingNews.size,
+                                    state = pagerState) { pageIndex ->
 
-                                if (state.trendingNews.isNotEmpty()) {
-                                    NewsTitleSection(
-                                        title = "Trending News",
-                                        modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
-                                }
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    val trendingNews = state.trendingNews.take(10)
-                                    HorizontalPager(
-                                        count = trendingNews.size,
-                                        state = pagerState) { pageIndex ->
-
-                                        val (news, isSaved) = trendingNews[pageIndex]
-                                        NewsItemLarge(
-                                            isSavedNews = isSaved,
-                                            newsModel = news,
-                                            onItemClick = { openUrl(news.link!!) },
-                                            onSaveClick = { isAlreadySaved ->
-                                                onToggleSaveButton(isAlreadySaved, news)
-                                            }
-                                        )
-                                    }
-                                    PagerIndicator(
-                                        pagerState = pagerState,
-                                        modifier = Modifier.padding(vertical = 10.dp)
+                                    val (news, isSaved) = trendingNews[pageIndex]
+                                    NewsItemLarge(
+                                        isSavedNews = isSaved,
+                                        newsModel = news,
+                                        onItemClick = { openUrl(news.link!!) },
+                                        onSaveClick = { isAlreadySaved ->
+                                            onToggleSaveButton(isAlreadySaved, news)
+                                        }
                                     )
-
                                 }
-
-                            }
-
-
-                            item {
-                                val forYouNews = remember { merge(state.bearishNews, state.bullishNews, state.handpickedNews)}
-
-                                if (forYouNews.isNotEmpty()) {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.fillMaxWidth()) {
-                                        NewsTitleSection(
-                                            title = "For you",
-                                            modifier = Modifier.padding(
-                                                bottom = 10.dp,
-                                                top = 15.dp))
-
-                                    }
-                                }
-                                LazyRow(modifier = Modifier.padding(bottom = 12.dp)) {
-
-                                    items(
-                                        items = forYouNews.toList(),
-                                        key = { it.first.id }) { newsModel ->
-                                        val (news, isSaved) = newsModel
-                                        NewsItemSmall(
-                                            modifier = Modifier.widthIn(290.dp),
-                                            newsModel = news,
-                                            onItemClick = { openUrl(news.link!!) },
-                                            onSaveClick = { isAlreadySaved ->
-                                                onToggleSaveButton(isAlreadySaved, news)
-                                            },
-                                            isSavedNews = isSaved
-                                        )
-
-
-                                    }
-                                }
-                            }
-
-
-
-                            if (state.latestNews.isNotEmpty()) {
-                                item {
-                                    NewsTitleSection(
-                                        title = "Latest News",
-                                        modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
-                                }
-
-                            }
-                            items(
-                                items = state.latestNews,
-                                key = { it.first.id }) { newsModel ->
-                                val (news, isSaved) = newsModel
-                                NewsItemSmall(
-                                    modifier = Modifier.padding(vertical = 2.dp),
-                                    newsModel = news,
-                                    onItemClick = { openUrl(news.link!!) },
-                                    onSaveClick = { isAlreadySaved ->
-                                        onToggleSaveButton(isAlreadySaved, news)
-                                    },
-                                    isSavedNews = isSaved
+                                PagerIndicator(
+                                    pagerState = pagerState,
+                                    modifier = Modifier.padding(vertical = 10.dp)
                                 )
+
                             }
 
                         }
+
+
+                        item {
+                            val forYouNews = remember {
+                                merge(
+                                    state.bearishNews,
+                                    state.bullishNews,
+                                    state.handpickedNews)
+                            }
+
+                            if (forYouNews.isNotEmpty()) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth()) {
+                                    NewsTitleSection(
+                                        title = "For you",
+                                        modifier = Modifier.padding(
+                                            bottom = 10.dp,
+                                            top = 15.dp))
+
+                                }
+                            }
+                            LazyRow(modifier = Modifier.padding(bottom = 12.dp)) {
+
+                                items(
+                                    items = forYouNews.toList(),
+                                    key = { it.first.id }) { newsModel ->
+                                    val (news, isSaved) = newsModel
+                                    NewsItemSmall(
+                                        modifier = Modifier.widthIn(290.dp),
+                                        newsModel = news,
+                                        onItemClick = { openUrl(news.link!!) },
+                                        onSaveClick = { isAlreadySaved ->
+                                            onToggleSaveButton(isAlreadySaved, news)
+                                        },
+                                        isSavedNews = isSaved
+                                    )
+
+
+                                }
+                            }
+                        }
+
+
+
+                        if (state.latestNews.isNotEmpty()) {
+                            item {
+                                NewsTitleSection(
+                                    title = "Latest News",
+                                    modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
+                            }
+
+                        }
+                        items(
+                            items = state.latestNews,
+                            key = { it.first.id }) { newsModel ->
+                            val (news, isSaved) = newsModel
+                            NewsItemSmall(
+                                modifier = Modifier.padding(vertical = 2.dp),
+                                newsModel = news,
+                                onItemClick = { openUrl(news.link!!) },
+                                onSaveClick = { isAlreadySaved ->
+                                    onToggleSaveButton(isAlreadySaved, news)
+                                },
+                                isSavedNews = isSaved
+                            )
+                        }
+
                     }
                 }
             }
+        }
 
 
-            if (state.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.Center),
-                    color = Green800
-                )
-            }
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                color = Green800
+            )
+        }
 
-            if (!state.hasInternet) {
-                NoInternetScreen(onTryButtonClick = {
-                    if (ConnectionStatus.hasInternetConnection(context)) {
-                        newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
-                        newsViewModel.onEvent(event = NewsEvent.RefreshNews)
-                    }
-                })
-            }
+        if (!state.hasInternet) {
+            NoInternetScreen(onTryButtonClick = {
+                if (ConnectionStatus.hasInternetConnection(context)) {
+                    newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
+                    newsViewModel.onEvent(event = NewsEvent.RefreshNews)
+                }
+            })
+        }
 
-            if (state.errorMessage.isNotEmpty()) {
-                Text(
-                    text = state.errorMessage,
-                    color = MaterialTheme.colors.error,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .align(Alignment.Center)
-                )
-            }
+        if (state.errorMessage.isNotEmpty()) {
+            Text(
+                text = state.errorMessage,
+                color = MaterialTheme.colors.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .align(Alignment.Center)
+            )
         }
     }
 }

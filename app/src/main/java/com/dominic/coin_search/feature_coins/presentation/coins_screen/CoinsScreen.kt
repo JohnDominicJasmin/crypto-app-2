@@ -2,7 +2,6 @@ package com.dominic.coin_search.feature_coins.presentation.coins_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -41,9 +40,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CoinsScreen(
+    currencyValue: MutableState<String?>,
     innerPaddingValues: PaddingValues,
     coinsViewModel: CoinsViewModel = hiltViewModel(),
-    navController: NavController?
+    navController: NavController?,
+    searchBarVisible: Boolean = false,
+    dialogStateVisible: Boolean = false,
+    onDialogToggle: () -> Unit,
+    onSearchIconToggle : () -> Unit,
 ) {
 
     val coinsState by coinsViewModel.state.collectAsState()
@@ -51,8 +55,6 @@ fun CoinsScreen(
     val context = LocalContext.current
 
 
-    val (dialogStateVisible, onDialogToggle) = rememberSaveable { mutableStateOf(false) }
-    val (searchBarVisible, onSearchIconToggle) = rememberSaveable { mutableStateOf(false) }
     val (searchQuery, onChangeValueSearch) = rememberSaveable { mutableStateOf("") }
 
 
@@ -69,29 +71,17 @@ fun CoinsScreen(
     val coroutineScope = rememberCoroutineScope()
     val isScrolling by remember { derivedStateOf { listState.firstVisibleItemScrollOffset > 15 } }
 
-    val isScrollingUp = listState.isScrollingUp() && isScrolling
+    val userScrolling = listState.isScrollingUp() && isScrolling
 
     val coinList = coinsState.coinModels
+    val currency = coinsState.coinCurrencyPreference.currency
 
-
-
+    LaunchedEffect(key1 = currency){
+        currencyValue.value = currency
+    }
 
 
     Scaffold(topBar = {
-
-        val currency = coinsState.coinCurrencyPreference.currency
-
-
-
-        Column {
-            TopBar(
-                currencyValue = currency,
-                allowSearchField = currency != null,
-                onCurrencyClick = {
-                    onDialogToggle(!dialogStateVisible)
-                }, onSearchClick = {
-                    onSearchIconToggle(!searchBarVisible)
-                })
 
             AnimatedVisibility(
                 visible = !searchBarVisible && coinsState.tickerVisible,
@@ -190,13 +180,12 @@ fun CoinsScreen(
                     )
                 }
             }
-        }
 
     },
         floatingActionButtonPosition = FabPosition.Center, floatingActionButton = {
 
             AnimatedVisibility(
-                visible = isScrollingUp,
+                visible = userScrolling,
                 enter = fadeIn(
                     animationSpec = tween(durationMillis = 3000, delayMillis = 50),
                     initialAlpha = 1f),
@@ -242,12 +231,10 @@ fun CoinsScreen(
                     CoinCurrencyScreen(
                         coinFiat = coinsState.currencies,
                         onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
-                            onDialogToggle(!dialogStateVisible)
+                            onDialogToggle()
 
                             coinsViewModel.onEvent(
-                                event = CoinsEvent.SelectCurrency(
-                                    coinCurrencyPreference = selectedCurrency
-                                                             ?: return@CoinCurrencyScreen))
+                                event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
                             coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference))
                         })
 
@@ -266,7 +253,7 @@ fun CoinsScreen(
                             hasFocusRequest = false,
                             hasTrailingIcon = true,
                             onTrailingIconClick = {
-                                onSearchIconToggle(!searchBarVisible)
+                                onSearchIconToggle()
                                 onChangeValueSearch("")
                             }
 
