@@ -81,125 +81,113 @@ fun CoinsScreen(
 
         val currency = coinsState.coinCurrencyPreference.currency
 
-        AnimatedVisibility(
-            visible = currency != null && coinsState.tickerVisible,
-            enter = slideInVertically(
-                initialOffsetY = { fullHeight -> -fullHeight },
-                animationSpec = tween(durationMillis = 150, easing = FastOutLinearInEasing)
-            ),
-            exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> -fullHeight },
-                animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing))) {
 
-            Column {
-                TopBar(
-                    currencyValue = currency,
-                    modifier = Modifier
-                        .height(55.dp)
-                        .padding(bottom = 2.dp, top = 14.dp, start = 15.dp, end = 5.dp)
-                        .fillMaxWidth(),
-                    onCurrencyClick = {
-                        onDialogToggle(!dialogStateVisible)
-                    }, onSearchClick = {
-                        onSearchIconToggle(!searchBarVisible)
-                    })
+
+        Column {
+            TopBar(
+                currencyValue = currency,
+                allowSearchField = currency != null,
+                onCurrencyClick = {
+                    onDialogToggle(!dialogStateVisible)
+                }, onSearchClick = {
+                    onSearchIconToggle(!searchBarVisible)
+                })
+
+            AnimatedVisibility(
+                visible = !searchBarVisible && coinsState.tickerVisible,
+                enter = scaleIn() + expandVertically(expandFrom = Alignment.CenterVertically),
+                exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)) {
+
 
                 AnimatedVisibility(
-                    visible = !searchBarVisible,
-                    enter = scaleIn() + expandVertically(expandFrom = Alignment.CenterVertically),
-                    exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)) {
+                    visible = !listState.isScrollInProgress,
+                    enter = fadeIn(
+                        initialAlpha = 0.4f
+                    ), exit = fadeOut(
+                        animationSpec = tween(durationMillis = 250)
+                    )) {
+                    MarqueeText(
+                        textModifier = Modifier.padding(top = 5.dp, bottom = 8.dp),
+                        annotatedText = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Black450)) {
+                                append("Number of Cryptos: ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.White)) {
+                                append("${coinsState.globalMarket.cryptocurrenciesNumber}        |        ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Black450)) {
+                                append("Market Cap: ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.White)) {
+                                append("$${(coinsState.globalMarket.marketCapUsd.formatToShortNumber())}        |        ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Black450)) {
+                                append("24h Vol: ")
+                            }
 
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.White)) {
+                                append("$${(coinsState.globalMarket.volume24hUsd.formatToShortNumber())}        |        ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Black450)) {
+                                append("BTC Dominance: ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.White)) {
+                                append("${coinsState.globalMarket.bitcoinDominancePercentage}%        |        ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Black450)) {
+                                append("Market Cap All-Time High: ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.White)) {
+                                append("${coinsState.globalMarket.marketCapAllTimeHigh.formatToShortNumber()}        |        ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Black450)) {
+                                append("Volume All-Time High(24): ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.White)) {
+                                append(coinsState.globalMarket.volume24hAllTimeHigh.formatToShortNumber())
+                            }
 
-                    AnimatedVisibility(
-                        visible = !listState.isScrollInProgress,
-                        enter = fadeIn(
-                            initialAlpha = 0.4f
-                        ), exit = fadeOut(
-                            animationSpec = tween(durationMillis = 250)
-                        )) {
-                        MarqueeText(
-                            textModifier = Modifier.padding(top = 5.dp, bottom = 8.dp),
-                            annotatedText = buildAnnotatedString {
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Black450)) {
-                                    append("Number of Cryptos: ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White)) {
-                                    append("${coinsState.globalMarket.cryptocurrenciesNumber}        |        ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Black450)) {
-                                    append("Market Cap: ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White)) {
-                                    append("$${(coinsState.globalMarket.marketCapUsd.formatToShortNumber())}        |        ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Black450)) {
-                                    append("24h Vol: ")
-                                }
-
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White)) {
-                                    append("$${(coinsState.globalMarket.volume24hUsd.formatToShortNumber())}        |        ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Black450)) {
-                                    append("BTC Dominance: ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White)) {
-                                    append("${coinsState.globalMarket.bitcoinDominancePercentage}%        |        ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Black450)) {
-                                    append("Market Cap All-Time High: ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White)) {
-                                    append("${coinsState.globalMarket.marketCapAllTimeHigh.formatToShortNumber()}        |        ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Black450)) {
-                                    append("Volume All-Time High(24): ")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        fontWeight = FontWeight.Normal,
-                                        color = Color.White)) {
-                                    append(coinsState.globalMarket.volume24hAllTimeHigh.formatToShortNumber())
-                                }
-
-                            },
-                            color = Color.White,
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
+                        },
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                    )
                 }
             }
         }
@@ -256,7 +244,10 @@ fun CoinsScreen(
                         onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
                             onDialogToggle(!dialogStateVisible)
 
-                            coinsViewModel.onEvent(event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
+                            coinsViewModel.onEvent(
+                                event = CoinsEvent.SelectCurrency(
+                                    coinCurrencyPreference = selectedCurrency
+                                                             ?: return@CoinCurrencyScreen))
                             coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference))
                         })
 
@@ -299,9 +290,11 @@ fun CoinsScreen(
                                 items = filteredCoins,
                                 key = { _, coinModel -> coinModel.id }) { index, coinModel ->
                                 CoinsItem(
-                                    currencySymbol = coinsState.coinCurrencyPreference.currencySymbol ?: "N/A",
+                                    currencySymbol = coinsState.coinCurrencyPreference.currencySymbol
+                                                     ?: "N/A",
                                     coinModel = coinModel,
-                                    chartModel = coinChart.takeIf { it.isNotEmpty() && it.size > index }?.get(index),
+                                    chartModel = coinChart.takeIf { it.isNotEmpty() && it.size > index }
+                                        ?.get(index),
                                     onItemClick = {
                                         navController?.navigate(Screens.CoinDetailScreen.route + "/${coinModel.id}")
                                     }

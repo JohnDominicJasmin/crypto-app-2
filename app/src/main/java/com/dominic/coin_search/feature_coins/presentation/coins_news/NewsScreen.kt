@@ -78,11 +78,7 @@ fun NewsScreen(
         TopBar(
             allowSearchField = false,
             currencyValue = null,
-            modifier = Modifier
-                .height(55.dp)
-                .padding(bottom = 5.dp, top = 14.dp, start = 15.dp, end = 5.dp)
-                .fillMaxWidth(),
-           )
+        )
     }) {
 
         Box(
