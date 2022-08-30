@@ -256,9 +256,8 @@ fun CoinsScreen(
                         onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
                             onDialogToggle(!dialogStateVisible)
 
-                            coinsViewModel.onEvent(
-                                event = CoinsEvent.SelectCurrency(
-                                    coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
+                            coinsViewModel.onEvent(event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
+                            coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference))
                         })
 
                 }
@@ -329,7 +328,7 @@ fun CoinsScreen(
                 NoInternetScreen(onTryButtonClick = {
                     if (ConnectionStatus.hasInternetConnection(context)) {
                         coinsViewModel.onEvent(event = CoinsEvent.CloseNoInternetDisplay)
-                        coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference))
+                        coinsViewModel.onEvent(event = CoinsEvent.RefreshInformation(coinsState.coinCurrencyPreference))
                     }
                 })
             }

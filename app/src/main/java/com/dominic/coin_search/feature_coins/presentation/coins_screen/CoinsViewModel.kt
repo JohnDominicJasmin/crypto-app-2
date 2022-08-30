@@ -16,7 +16,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.time.ExperimentalTime
 
 @HiltViewModel
 class CoinsViewModel @Inject constructor(
@@ -31,7 +30,7 @@ class CoinsViewModel @Inject constructor(
     private var job: Job? = null
 
     init {
-         loadInformation(onCurrencyCollected = ::subscribeToCoinChanges)
+        loadInformation(onCurrencyCollected = ::subscribeToCoinChanges)
     }
 
     private fun subscribeToCoinChanges(currency: String?) {
@@ -42,7 +41,8 @@ class CoinsViewModel @Inject constructor(
             }
         }
     }
-    private fun unSubscribeToCoinChanges(){
+
+    private fun unSubscribeToCoinChanges() {
         job?.cancel()
     }
 
@@ -53,8 +53,8 @@ class CoinsViewModel @Inject constructor(
             getGlobalMarket()
             getCoinCurrencies()
             getCurrency(onCurrencyCollected = { coinCurrencyPreference ->
-                onCurrencyCollected(coinCurrencyPreference.currency!!)
                 getCoins(coinCurrencyPreference.currency)
+                onCurrencyCollected(coinCurrencyPreference.currency!!)
                 getChart(state.value.coinModels)
             })
         }
@@ -103,7 +103,9 @@ class CoinsViewModel @Inject constructor(
         coroutineScope {
             coinModels.forEach { coin ->
                 runCatching {
-                    coinUseCase.getChart(coinId = coin.id, period = ChartTimeSpan.OneDay.value).toList(_coinChart)
+                    coinUseCase.getChart(
+                        coinId = coin.id,
+                        period = ChartTimeSpan.OneDay.value).toList(_coinChart)
                 }.onSuccess { chartModels ->
                     val itemsRendered = chartModels.size > VISIBLE_ITEM_COUNT
                     _state.update {
@@ -151,6 +153,7 @@ class CoinsViewModel @Inject constructor(
 
     fun onEvent(event: CoinsEvent) {
         when (event) {
+
             is CoinsEvent.RefreshCoins -> {
                 viewModelScope.launch {
                     unSubscribeToCoinChanges()
@@ -162,24 +165,18 @@ class CoinsViewModel @Inject constructor(
                 }
             }
 
+
+            is CoinsEvent.RefreshInformation -> {
+                loadInformation(onCurrencyCollected = ::subscribeToCoinChanges)
+            }
+
             is CoinsEvent.CloseNoInternetDisplay -> {
                 _state.update { it.copy(hasInternet = true) }
             }
 
             is CoinsEvent.SelectCurrency -> {
-
-                viewModelScope.launch {
-                    unSubscribeToCoinChanges()
-                    _state.update { it.copy(isLoading = true) }
-                    withContext(Dispatchers.IO) {
-                        getCoins(event.coinCurrencyPreference.currency)
-                        updateCoinCurrency(event.coinCurrencyPreference)
-
-                    }
-
-                }.invokeOnCompletion {
-                    _state.update { it.copy(isLoading = false) }
-                    subscribeToCoinChanges(event.coinCurrencyPreference.currency)
+                viewModelScope.launch(Dispatchers.IO) {
+                    updateCoinCurrency(event.coinCurrencyPreference)
                 }
             }
         }
