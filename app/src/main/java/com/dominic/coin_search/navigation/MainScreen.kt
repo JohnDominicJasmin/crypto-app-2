@@ -5,7 +5,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -35,40 +34,22 @@ fun MainScreen(
         navBackStackEntry?.destination?.route != Screens.CoinDetailScreen.route + "/{coinId}"
 
     Scaffold(topBar = {
+        TopAppBar(
+            route = navBackStackEntry?.destination?.route,
+            currency = currency.value,
+            onCurrencyDialogClick = {
+                onDialogToggle(!dialogStateVisible)
+            },
+            onSearchIconToggle = {
+                onSearchIconToggle(!searchBarVisible)
+            })
 
-        when (navBackStackEntry?.destination?.route) {
-            Screens.CoinsNews.route -> {
-                TopBar(
-                    allowSearchField = false,
-                    currencyValue = null,
-                )
-            }
-            Screens.CoinsScreen.route -> {
-                TopBar(
-                    currencyValue = currency.value,
-                    allowSearchField = currency.value != null,
-                    onCurrencyClick = {
-                        onDialogToggle(!dialogStateVisible)
-                    }, onSearchClick = {
-                        onSearchIconToggle(!searchBarVisible)
-                    })
-            }
-            Screens.FavoriteListScreen.route -> {
-                TopBar(
-                    currencyValue = null,
-                    onSearchClick = {
-                        onSearchIconToggle(!searchBarVisible)
-                    })
-            }
-
-
-        }
 
     },
         bottomBar = {
             BottomBar(
                 navController = navController,
-                state = bottomBarState
+                state = bottomBarState.value
             )
         }, content = { innerPadding ->
             BottomNavGraph(
@@ -87,9 +68,42 @@ fun MainScreen(
 }
 
 @Composable
+fun TopAppBar(
+    modifier: Modifier = Modifier,
+    route: String?,
+    currency: String?,
+    onCurrencyDialogClick: () -> Unit,
+    onSearchIconToggle: () -> Unit) {
+    when (route) {
+        Screens.CoinsNews.route -> {
+            TopBar(
+                modifier = modifier,
+                allowSearchField = false,
+                currencyValue = null,
+            )
+        }
+        Screens.CoinsScreen.route -> {
+            TopBar(
+                modifier = modifier,
+                currencyValue = currency,
+                allowSearchField = currency != null,
+                onCurrencyDialogClick = onCurrencyDialogClick, onSearchClick = onSearchIconToggle)
+        }
+        Screens.FavoriteListScreen.route -> {
+            TopBar(
+                modifier = modifier,
+                currencyValue = null,
+                onSearchClick = onSearchIconToggle)
+        }
+
+
+    }
+}
+
+@Composable
 fun BottomBar(
     navController: NavHostController,
-    state: MutableState<Boolean>
+    state: Boolean
 ) {
     val screens = listOf(
         Screens.CoinsScreen,
@@ -100,7 +114,7 @@ fun BottomBar(
 
 
     AnimatedVisibility(
-        visible = state.value,
+        visible = state,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
     ) {

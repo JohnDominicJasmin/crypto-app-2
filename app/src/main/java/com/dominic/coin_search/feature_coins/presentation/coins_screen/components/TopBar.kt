@@ -26,7 +26,7 @@ fun TopBar(
     modifier: Modifier = Modifier,
     allowSearchField: Boolean = true,
     currencyValue: String?,
-    onCurrencyClick: () -> Unit = {},
+    onCurrencyDialogClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
 
     ) {
@@ -84,7 +84,7 @@ fun TopBar(
             }*/
 
             currencyValue?.let { currency ->
-                IconButton(onClick = onCurrencyClick) {
+                IconButton(onClick = onCurrencyDialogClick) {
                     Text(
                         text = currency,
                         style = MaterialTheme.typography.button,
@@ -117,6 +117,6 @@ fun TopBar(
 fun TopBarPreview() {
     TopBar(
         modifier = Modifier.wrapContentSize(),
-        onCurrencyClick = {},
+        onCurrencyDialogClick = {},
         onSearchClick = {}, currencyValue = "USD")
 }
