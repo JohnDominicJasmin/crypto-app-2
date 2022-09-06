@@ -19,6 +19,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -276,12 +277,15 @@ fun CoinsScreen(
                             itemsIndexed(
                                 items = filteredCoins,
                                 key = { _, coinModel -> coinModel.id }) { index, coinModel ->
+
+                                val chart by remember{
+                                    derivedStateOf { coinChart.takeIf { it.isNotEmpty() && it.size > index } }
+                                }
+
                                 CoinsItem(
-                                    currencySymbol = coinsState.coinCurrencyPreference.currencySymbol
-                                                     ?: "N/A",
+                                    currencySymbol = coinsState.coinCurrencyPreference.currencySymbol ?: "N/A",
                                     coinModel = coinModel,
-                                    chartModel = coinChart.takeIf { it.isNotEmpty() && it.size > index }
-                                        ?.get(index),
+                                    chartModel = chart?.get(index),
                                     onItemClick = {
                                         navController?.navigate(Screens.CoinDetailScreen.route + "/${coinModel.id}")
                                     }
@@ -348,4 +352,9 @@ private fun LazyListState.isScrollingUp(): Boolean {
 }
 
 
+@Preview
+@Composable
+fun CoinScreenPreview() {
+
+}
 
