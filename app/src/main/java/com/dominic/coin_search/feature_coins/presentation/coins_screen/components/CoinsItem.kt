@@ -38,7 +38,10 @@ fun CoinsItem(
 ) {
 
 
-    Column {
+    Column(
+        modifier = Modifier.height(80.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,10 +66,7 @@ fun CoinsItem(
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
-                    .weight(1.6f)
-
-
-            ) {
+                    .weight(1.6f)) {
                 Text(
                     overflow = TextOverflow.Ellipsis,
                     text = buildAnnotatedString {
