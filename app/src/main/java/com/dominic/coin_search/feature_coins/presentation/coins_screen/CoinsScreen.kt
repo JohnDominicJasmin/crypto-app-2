@@ -35,13 +35,14 @@ import com.dominic.coin_search.feature_coins.presentation.coins_screen.component
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
 import com.dominic.coin_search.navigation.Screens
 import com.dominic.coin_search.ui.theme.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CoinsScreen(
-    currencyValue: MutableState<String?>,
+    onUpdatedCurrency: (String?) -> Unit,
     innerPaddingValues: PaddingValues,
     coinsViewModel: CoinsViewModel = hiltViewModel(),
     navController: NavController?,
@@ -58,9 +59,10 @@ fun CoinsScreen(
 
     val (searchQuery, onChangeValueSearch) = rememberSaveable { mutableStateOf("") }
 
+    val coinList = coinsState.coins.coinModels
 
-    val filteredCoins = remember(searchQuery, coinsState.coinModels) {
-        coinsState.coinModels.filter {
+    val filteredCoins = remember(searchQuery, coinList) {
+        coinList.filter {
             it.name.contains(searchQuery.trim(), ignoreCase = true) ||
             it.id.contains(searchQuery.trim(), ignoreCase = true) ||
             it.symbol.contains(searchQuery.trim(), ignoreCase = true)
@@ -74,13 +76,12 @@ fun CoinsScreen(
 
     val userScrolling = listState.isScrollingUp() && isScrolling
 
-    val coinList = coinsState.coinModels
+
     val currency = coinsState.coinCurrencyPreference.currency
 
     LaunchedEffect(key1 = currency){
-        currencyValue.value = currency
+        onUpdatedCurrency(currency)
     }
-
 
     Scaffold(topBar = {
 
@@ -261,7 +262,6 @@ fun CoinsScreen(
                         )
                     }
                 }
-
 
                 SwipeRefresh(
                     state = rememberSwipeRefreshState(isRefreshing = coinsState.isRefreshing),

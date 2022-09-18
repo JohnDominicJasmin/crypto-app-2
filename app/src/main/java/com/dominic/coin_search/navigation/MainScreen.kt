@@ -26,7 +26,7 @@ fun MainScreen(
 ) {
     val navController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-    val currency: MutableState<String?> = rememberSaveable { (mutableStateOf(null)) }
+    val (currency, onUpdatedCurrency) = rememberSaveable { (mutableStateOf<String?>(null)) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val (dialogStateVisible, onDialogToggle) = rememberSaveable { mutableStateOf(false) }
     val (searchBarVisible, onSearchIconToggle) = rememberSaveable { mutableStateOf(false) }
@@ -36,7 +36,7 @@ fun MainScreen(
     Scaffold(topBar = {
         TopAppBar(
             route = navBackStackEntry?.destination?.route,
-            currency = currency.value,
+            currency = currency,
             onCurrencyDialogClick = {
                 onDialogToggle(!dialogStateVisible)
             },
@@ -55,7 +55,7 @@ fun MainScreen(
             BottomNavGraph(
                 paddingValues = innerPadding,
                 navController = navController,
-                currency = currency,
+                onUpdatedCurrency = onUpdatedCurrency,
                 searchBarVisible = searchBarVisible,
                 dialogStateVisible = dialogStateVisible,
                 onDialogToggle = {
