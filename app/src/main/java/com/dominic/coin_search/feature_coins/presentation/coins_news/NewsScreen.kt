@@ -22,9 +22,9 @@ import com.dominic.coin_search.feature_coins.presentation.coins_news.components.
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsItemSmall
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsTitleSection
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.PagerIndicator
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListEvent
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
+import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoritesEvent
+import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoritesUiEvent
+import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoritesViewModel
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
 import com.dominic.coin_search.ui.theme.DarkGray
 import com.dominic.coin_search.ui.theme.Green800
@@ -57,7 +57,7 @@ fun NewsScreen(
 
     val onToggleSaveButton: (Boolean, NewsModel) -> Unit = { isAlreadySaved, news ->
         favoritesViewModel.onEvent(
-            event = if (isAlreadySaved) FavoriteListEvent.DeleteNews(news) else FavoriteListEvent.AddNews(news))
+            event = if (isAlreadySaved) FavoritesEvent.DeleteNews(news) else FavoritesEvent.AddNews(news))
     }
 
 
@@ -66,7 +66,7 @@ fun NewsScreen(
 
         favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
             when (savedListEvent) {
-                is FavoriteListUiEvent.ShowToastMessage -> {
+                is FavoritesUiEvent.ShowToastMessage -> {
                     Toast.makeText(context, savedListEvent.message, Toast.LENGTH_SHORT).show()
                 }
             }

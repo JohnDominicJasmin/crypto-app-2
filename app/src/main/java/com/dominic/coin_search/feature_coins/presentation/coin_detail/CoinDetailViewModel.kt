@@ -12,7 +12,7 @@ import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
 import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
-import com.dominic.coin_search.feature_favorite_list.domain.use_case.FavoriteUseCase
+import com.dominic.coin_search.feature_favorites.domain.use_case.FavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

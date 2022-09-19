@@ -5,8 +5,8 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import com.dominic.coin_search.feature_favorite_list.data.local.FavoriteListDatabase
-import com.dominic.coin_search.feature_favorite_list.data.local.FavoriteListDao
+import com.dominic.coin_search.feature_favorites.data.local.FavoritesDatabase
+import com.dominic.coin_search.feature_favorites.data.local.FavoritesDao
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.runTest
@@ -19,32 +19,32 @@ import org.junit.runner.RunWith
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class DashCoinModelDtoModelDatabaseTest {
-    private lateinit var favoriteListDao: FavoriteListDao
-    private lateinit var favoriteListDatabase: FavoriteListDatabase
+    private lateinit var favoritesDao: FavoritesDao
+    private lateinit var favoritesDatabase: FavoritesDatabase
 
 
     @Before
     fun setUp() {
             val context = ApplicationProvider.getApplicationContext<Context>()
-            favoriteListDatabase = Room.inMemoryDatabaseBuilder(
+            favoritesDatabase = Room.inMemoryDatabaseBuilder(
                 context,
-                FavoriteListDatabase::class.java
+                FavoritesDatabase::class.java
             ).allowMainThreadQueries().build()
 
-        favoriteListDao = favoriteListDatabase.dao
+        favoritesDao = favoritesDatabase.dao
     }
 
     @After
     fun tearDown() {
-        favoriteListDatabase.close()
+        favoritesDatabase.close()
     }
 
     @Test
     fun insertCoinToDatabase() = runTest {
         val coinById = FakeDataTest.coinDetailModel
-        favoriteListDao.insertCoin(coinById)
+        favoritesDao.insertCoin(coinById)
 
-        favoriteListDao.getAllCoins().onEach {
+        favoritesDao.getAllCoins().onEach {
             assertThat(it).isEqualTo(coinById)
         }
     }
@@ -52,10 +52,10 @@ class DashCoinModelDtoModelDatabaseTest {
     @Test
     fun deleteCoinToDatabase() = runTest {
         val coinById = FakeDataTest.coinDetailModel
-        favoriteListDao.insertCoin(coinById)
-        favoriteListDao.deleteCoin(coinById)
+        favoritesDao.insertCoin(coinById)
+        favoritesDao.deleteCoin(coinById)
 
-        favoriteListDao.getAllCoins().onEach {
+        favoritesDao.getAllCoins().onEach {
             assertThat(it).isEmpty()
         }
     }

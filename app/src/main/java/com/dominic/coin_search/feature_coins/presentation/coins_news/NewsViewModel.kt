@@ -10,7 +10,7 @@ import com.dominic.coin_search.core.util.Constants.TRENDING_NEWS
 import com.dominic.coin_search.feature_coins.domain.exceptions.CoinExceptions
 import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import com.dominic.coin_search.feature_coins.domain.use_case.CoinUseCases
-import com.dominic.coin_search.feature_favorite_list.domain.use_case.FavoriteUseCase
+import com.dominic.coin_search.feature_favorites.domain.use_case.FavoriteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

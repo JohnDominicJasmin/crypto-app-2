@@ -3,7 +3,6 @@ package com.dominic.coin_search.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -12,7 +11,7 @@ import androidx.navigation.compose.composable
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_news.NewsScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.CoinsScreen
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListScreen
+import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoriteListScreen
 
 @ExperimentalMaterialApi
 @Composable

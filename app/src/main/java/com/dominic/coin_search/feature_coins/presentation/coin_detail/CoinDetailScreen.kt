@@ -23,9 +23,9 @@ import androidx.navigation.NavController
 import com.dominic.coin_search.core.util.ConnectionStatus
 import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.components.*
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListEvent
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
-import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
+import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoritesEvent
+import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoritesUiEvent
+import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoritesViewModel
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
 import com.dominic.coin_search.ui.theme.Black450
 import com.dominic.coin_search.ui.theme.Black920
@@ -56,7 +56,7 @@ fun CoinDetailScreen(
 
         favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
             when (savedListEvent) {
-                is FavoriteListUiEvent.ShowToastMessage -> {
+                is FavoritesUiEvent.ShowToastMessage -> {
                     Toast.makeText(context, savedListEvent.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -95,11 +95,11 @@ fun CoinDetailScreen(
                             favoriteButtonOnClick = {
                                 if (!coinState.isFavorite) {
                                     favoritesViewModel.onEvent(
-                                        FavoriteListEvent.AddCoin(
+                                        FavoritesEvent.AddCoin(
                                             coinDetail))
                                 } else {
                                     favoritesViewModel.onEvent(
-                                        FavoriteListEvent.DeleteCoin(
+                                        FavoritesEvent.DeleteCoin(
                                             coinDetail))
                                 }
                                 coinDetailViewModel.onEvent(event = CoinDetailEvent.ToggleFavoriteCoin)
