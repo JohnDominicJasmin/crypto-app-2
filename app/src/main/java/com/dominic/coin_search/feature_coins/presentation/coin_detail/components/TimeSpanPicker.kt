@@ -18,8 +18,9 @@ import com.dominic.coin_search.ui.theme.GreenBlue600
 fun TimeSpanPicker(
     modifier: Modifier = Modifier,
     selectedTimeSpan: String ,
-    onTimeSpanSelected: (ChartTimeSpan) -> Unit = {}
-) {
+    onTimeSpanSelected: (ChartTimeSpan) -> Unit = {}) {
+
+
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceAround

@@ -27,7 +27,7 @@ fun CoinCurrencyScreen(
     onDismissRequest: (CoinCurrencyPreference? ) -> Unit
 ) {
 
-    var (searchQuery, onChangeValueSearch) =  remember{mutableStateOf("")}
+    val (searchQuery, onChangeValueSearch) =  remember{mutableStateOf("")}
     val filteredSearchQuery = remember(searchQuery, coinFiat){
         coinFiat.currencies.filter {
             it.name.contains(searchQuery.trim(), ignoreCase = true) ||

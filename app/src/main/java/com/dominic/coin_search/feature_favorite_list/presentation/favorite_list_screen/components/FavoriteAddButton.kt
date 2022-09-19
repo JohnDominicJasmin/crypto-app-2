@@ -23,7 +23,7 @@ import com.dominic.coin_search.ui.theme.DarkGray
 import com.dominic.coin_search.ui.theme.GreenBlue600
 
 @Composable
-fun FavoriteAddButton(modifier: Modifier = Modifier,onClick: () -> Unit) {
+fun FavoriteAddButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
     val stroke = Stroke(
         width = 7f,
         pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f,12f), 10f)
