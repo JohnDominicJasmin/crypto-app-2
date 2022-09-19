@@ -1,5 +1,8 @@
 package com.dominic.coin_search.feature_coins.domain.models.coin
 
+import androidx.compose.runtime.Stable
+
+@Stable
 data class CoinGlobalMarketModel(
     val marketCapUsd: Long = 0L,
     val volume24hUsd: Long = 0L,

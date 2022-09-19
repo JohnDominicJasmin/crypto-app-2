@@ -1,7 +1,11 @@
 package com.dominic.coin_search.feature_coins.domain.models.coin
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.dominic.coin_search.feature_coins.data.dto.coin_information.Team
 
+@Immutable
+@Stable
 data class CoinInformationModel(
     val coinId:String = "",
     val name:String = "",
