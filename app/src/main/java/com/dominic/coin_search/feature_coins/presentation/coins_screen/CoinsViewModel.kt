@@ -55,7 +55,7 @@ class CoinsViewModel @Inject constructor(
             getCurrency(onCurrencyCollected = { coinCurrencyPreference ->
                 getCoins(coinCurrencyPreference.currency)
                 onCurrencyCollected(coinCurrencyPreference.currency!!)
-                getChart(state.value.coinModels)
+                getChart(state.value.coins.coinModels)
             })
         }
 
@@ -90,7 +90,7 @@ class CoinsViewModel @Inject constructor(
                 coinUseCase.getCoins(currency ?: "USD")
                     .distinctUntilChanged().collect { coins ->
                         _state.update {
-                            it.copy(coinModels = coins)
+                            it.copy(coins = Coins(coinModels = coins))
                         }
                     }
             }.onFailure { exception ->
@@ -155,7 +155,7 @@ class CoinsViewModel @Inject constructor(
         when (event) {
 
             is CoinsEvent.RefreshCoins -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     unSubscribeToCoinChanges()
                     _state.update { it.copy(isRefreshing = true) }
                     getCoins(event.coinCurrencyPreference.currency)

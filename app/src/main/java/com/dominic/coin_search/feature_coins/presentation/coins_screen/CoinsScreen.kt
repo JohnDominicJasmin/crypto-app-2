@@ -99,7 +99,7 @@ fun CoinsScreen(
                         animationSpec = tween(durationMillis = 250)
                     )) {
                     MarqueeText(
-                        textModifier = Modifier.padding(top = 5.dp, bottom = 8.dp),
+                        modifier = Modifier.padding(top = 5.dp, bottom = 8.dp),
                         annotatedText = buildAnnotatedString {
                             withStyle(
                                 style = SpanStyle(
@@ -176,9 +176,7 @@ fun CoinsScreen(
                             }
 
                         },
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Center,
+
                     )
                 }
             }
@@ -233,11 +231,11 @@ fun CoinsScreen(
                     CoinCurrencyScreen(
                         coinFiat = coinsState.currencies,
                         onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
-                            onDialogToggle()
+                            coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference)).also{
+                                coinsViewModel.onEvent(event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
+                                onDialogToggle()
+                            }
 
-                            coinsViewModel.onEvent(
-                                event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
-                            coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference))
                         })
 
                 }

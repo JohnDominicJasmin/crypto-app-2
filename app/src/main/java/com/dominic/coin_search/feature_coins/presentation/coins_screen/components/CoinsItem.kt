@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -23,12 +24,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
 import com.dominic.coin_search.feature_coins.domain.models.chart.ChartModel
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinModel
 import com.dominic.coin_search.ui.theme.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun CoinsItem(
     coinModel: CoinModel,
@@ -51,10 +55,13 @@ fun CoinsItem(
             verticalAlignment = CenterVertically
         ) {
 
-
             Box(modifier = Modifier.padding(end = 8.dp)) {
                 AsyncImage(
-                    model = coinModel.icon,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(coinModel.icon)
+                        .dispatcher(Dispatchers.IO.limitedParallelism(2))
+                        .crossfade(true)
+                        .build(),
                     contentDescription = "Icon",
                     modifier = Modifier
                         .size(30.dp)
