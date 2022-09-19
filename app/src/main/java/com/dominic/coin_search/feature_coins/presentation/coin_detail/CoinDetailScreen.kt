@@ -189,7 +189,7 @@ fun CoinDetailScreen(
                                 CoinTagsSection(
                                     modifier = Modifier.padding(
                                         start = 15.dp, end = 15.dp, top = 15.dp),
-                                    tags = this@with.tags)
+                                    tags = Tags(this@with.tags))
 
                                 CoinTeamMembers(
                                     modifier = Modifier.padding(

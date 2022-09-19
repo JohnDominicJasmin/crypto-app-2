@@ -11,11 +11,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dominic.coin_search.feature_coins.presentation.coin_detail.Tags
 import com.google.accompanist.flowlayout.FlowRow
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CoinTagsSection(modifier: Modifier, tags: List<String>) {
+fun CoinTagsSection(modifier: Modifier, tags: Tags) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = "Tags",
@@ -29,7 +30,7 @@ fun CoinTagsSection(modifier: Modifier, tags: List<String>) {
             mainAxisSpacing = 5.dp,
             crossAxisSpacing = 1.dp,
             modifier = Modifier.fillMaxWidth()) {
-            tags.forEach { CoinTag(it) }
+            tags.keywordTags.forEach { CoinTag(it) }
         }
     }
 }
@@ -39,7 +40,7 @@ fun CoinTagsSection(modifier: Modifier, tags: List<String>) {
 fun CoinTagsSectionPreview() {
 
     CoinTagsSection(
-        tags = listOf("tag1", "tag2", "tag3", "tag4", "tag5"),
+        tags = Tags(keywordTags = listOf("tag1", "tag2", "tag3", "tag4", "tag5")),
         modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp))
 
 }

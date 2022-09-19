@@ -5,6 +5,7 @@ import com.dominic.coin_search.feature_coins.domain.models.chart.ChartTimeSpan
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinInformationModel
+import javax.annotation.concurrent.Immutable
 
 data class CoinDetailState(
 
@@ -23,3 +24,7 @@ data class CoinDetailState(
     val coinCurrencyPreference: CoinCurrencyPreference = CoinCurrencyPreference()
 )
 
+@Immutable
+data class Tags(
+    val keywordTags: List<String> = emptyList()
+)
