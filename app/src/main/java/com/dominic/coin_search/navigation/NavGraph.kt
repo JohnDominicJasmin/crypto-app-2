@@ -19,7 +19,7 @@ import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_
 fun BottomNavGraph(
     paddingValues: PaddingValues,
     navController: NavHostController,
-    currency: MutableState<String?>,
+    onUpdatedCurrency: (String?) -> Unit,
     searchBarVisible: Boolean = false,
     dialogStateVisible: Boolean = false,
     onDialogToggle: () -> Unit,
@@ -35,7 +35,7 @@ fun BottomNavGraph(
             CoinsScreen(
                 innerPaddingValues = paddingValues,
                 navController = navController,
-                currencyValue = currency,
+                onUpdatedCurrency = onUpdatedCurrency,
                 searchBarVisible = searchBarVisible,
                 dialogStateVisible = dialogStateVisible,
                 onDialogToggle = onDialogToggle,
@@ -51,7 +51,7 @@ fun BottomNavGraph(
         }
 
         composable(route = Screens.CoinsNews.route) {
-            NewsScreen(innerPaddingValues = paddingValues, navController = navController)
+            NewsScreen(innerPaddingValues = paddingValues)
         }
 
         composable(route = Screens.CoinDetailScreen.route + "/{coinId}") {

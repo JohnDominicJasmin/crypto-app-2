@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.dominic.coin_search.core.util.ConnectionStatus
 import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.components.openBrowser
@@ -23,7 +22,6 @@ import com.dominic.coin_search.feature_coins.presentation.coins_news.components.
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsItemSmall
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsTitleSection
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.PagerIndicator
-import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.TopBar
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListEvent
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoriteListUiEvent
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.FavoritesViewModel
@@ -37,6 +35,9 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.flow.collectLatest
 
+
+const val TRENDING_NEWS_COUNT = 10
+
 @OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalMaterialApi
@@ -45,7 +46,6 @@ fun NewsScreen(
     innerPaddingValues: PaddingValues,
     newsViewModel: NewsViewModel = hiltViewModel(),
     favoritesViewModel: FavoritesViewModel = hiltViewModel(),
-    navController: NavController?
 ) {
     val state by newsViewModel.state.collectAsState()
     val context = LocalContext.current
@@ -57,8 +57,7 @@ fun NewsScreen(
 
     val onToggleSaveButton: (Boolean, NewsModel) -> Unit = { isAlreadySaved, news ->
         favoritesViewModel.onEvent(
-            event = if (isAlreadySaved) FavoriteListEvent.DeleteNews(news) else FavoriteListEvent.AddNews(
-                news))
+            event = if (isAlreadySaved) FavoriteListEvent.DeleteNews(news) else FavoriteListEvent.AddNews(news))
     }
 
 
@@ -94,19 +93,19 @@ fun NewsScreen(
                             .padding(top = 10.dp)) {
 
                         item {
-
-                            if (state.trendingNews.isNotEmpty()) {
+                            val trendingNews = state.trendingNews.news
+                            if (trendingNews.isNotEmpty()) {
                                 NewsTitleSection(
                                     title = "Trending News",
                                     modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
                             }
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                val trendingNews = state.trendingNews.take(10)
+
                                 HorizontalPager(
-                                    count = trendingNews.size,
+                                    count = TRENDING_NEWS_COUNT,
                                     state = pagerState) { pageIndex ->
 
-                                    val (news, isSaved) = trendingNews[pageIndex]
+                                    val (news, isSaved) = trendingNews.take(TRENDING_NEWS_COUNT)[pageIndex]
                                     NewsItemLarge(
                                         isSavedNews = isSaved,
                                         newsModel = news,
@@ -127,11 +126,12 @@ fun NewsScreen(
 
 
                         item {
+                            //TODO: add derivedStateOf here
                             val forYouNews = remember {
                                 merge(
-                                    state.bearishNews,
-                                    state.bullishNews,
-                                    state.handpickedNews)
+                                    state.bearishNews.news,
+                                    state.bullishNews.news,
+                                    state.handpickedNews.news)
                             }
 
                             if (forYouNews.isNotEmpty()) {
@@ -168,8 +168,8 @@ fun NewsScreen(
                         }
 
 
-
-                        if (state.latestNews.isNotEmpty()) {
+                        val latestNews = state.latestNews.news
+                        if (latestNews.isNotEmpty()) {
                             item {
                                 NewsTitleSection(
                                     title = "Latest News",
@@ -178,7 +178,7 @@ fun NewsScreen(
 
                         }
                         items(
-                            items = state.latestNews,
+                            items = latestNews,
                             key = { it.first.id }) { newsModel ->
                             val (news, isSaved) = newsModel
                             NewsItemSmall(

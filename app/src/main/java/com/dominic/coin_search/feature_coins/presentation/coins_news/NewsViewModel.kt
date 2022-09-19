@@ -39,23 +39,23 @@ class NewsViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true) }
 
             getNews(filter = TRENDING_NEWS) { newsDetails ->
-                _state.update { it.copy(trendingNews = newsDetails) }
+                _state.update { it.copy(trendingNews = TrendingNews(newsDetails)) }
             }
 
             getNews(filter = HAND_PICKED) { newsDetails ->
-                _state.update { it.copy(handpickedNews = newsDetails) }
+                _state.update { it.copy(handpickedNews = HandpickedNews(newsDetails)) }
             }
 
             getNews(filter = LATEST_NEWS, newsResult = { newsDetails ->
-                _state.update { it.copy(latestNews = newsDetails) }
+                _state.update { it.copy(latestNews = LatestNews(newsDetails)) }
             })
 
             getNews(filter = BEARISH_NEWS, newsResult = { newsDetails ->
-                _state.update { it.copy(bearishNews = newsDetails) }
+                _state.update { it.copy(bearishNews = BearishNews(newsDetails)) }
             })
 
             getNews(filter = BULLISH_NEWS, newsResult = { newsDetails ->
-                _state.update { it.copy(bullishNews = newsDetails) }
+                _state.update { it.copy(bullishNews = BullishNews(newsDetails)) }
             })
 
         }.invokeOnCompletion {
