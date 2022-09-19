@@ -2,9 +2,18 @@ package com.dominic.coin_search.feature_favorite_list.presentation.favorite_list
 
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinDetailModel
 import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
+import javax.annotation.concurrent.Immutable
+
+
+@Immutable
+data class CoinDetails(val listOfCoins: List<CoinDetailModel> = emptyList())
+
+@Immutable
+data class News(val listOfNews: List<NewsModel> = emptyList())
+
 
 data class FavoriteListState(
-    val coins: List<CoinDetailModel> = emptyList(),
-    val news: List<NewsModel> = emptyList(),
+    val coinDetails: CoinDetails = CoinDetails(),
+    val news: News = News(),
 
 )

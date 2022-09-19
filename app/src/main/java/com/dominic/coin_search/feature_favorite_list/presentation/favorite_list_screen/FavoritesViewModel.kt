@@ -89,7 +89,7 @@ class FavoritesViewModel @Inject constructor(
     private fun getSavedCoins() {
         getCoinsJob?.cancel()
         getCoinsJob = favoriteUseCase.getCoins().onEach { coins ->
-            _state.update { it.copy(coins = coins) }
+            _state.update { it.copy(coinDetails = CoinDetails(coins)) }
         }.launchIn(viewModelScope)
     }
 
@@ -97,7 +97,7 @@ class FavoritesViewModel @Inject constructor(
     private fun getSavedNews() {
         getNewsJob?.cancel()
         getNewsJob = favoriteUseCase.getNews().onEach { news ->
-            _state.update { it.copy(news = news) }
+            _state.update { it.copy(news = News(news)) }
         }.launchIn(viewModelScope)
     }
 

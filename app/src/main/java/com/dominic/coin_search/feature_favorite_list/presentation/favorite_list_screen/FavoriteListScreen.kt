@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.components.openBrowser
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.SearchBar
-import com.dominic.coin_search.feature_coins.presentation.coins_screen.components.TopBar
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.FavoriteAddButton
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.FavoriteCoinItem
 import com.dominic.coin_search.feature_favorite_list.presentation.favorite_list_screen.components.FavoriteNewsItem
@@ -52,6 +51,7 @@ fun FavoriteListScreen(
     val context = LocalContext.current
     val (isCoinSelected, onCoinSelected) = rememberSaveable { mutableStateOf(true) }
     val (searchQuery, onSearchQuery) = rememberSaveable { mutableStateOf("") }
+
     LaunchedEffect(true) {
 
         favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
@@ -63,16 +63,20 @@ fun FavoriteListScreen(
         }
     }
 
+    val coins = favoriteState.coinDetails.listOfCoins
+    val news = favoriteState.news.listOfNews
 
-    val filteredCoins = remember(searchQuery, favoriteState.coins) {
-        favoriteState.coins.filter {
+
+    val filteredCoins = remember(searchQuery, coins) {
+        coins.filter {
             it.name.contains(searchQuery.trim(), ignoreCase = true) ||
             it.id.contains(searchQuery.trim(), ignoreCase = true) ||
             it.symbol.contains(searchQuery.trim(), ignoreCase = true)
         }
     }
-    val filteredNews = remember(searchQuery, favoriteState.news) {
-        favoriteState.news.filter {
+
+    val filteredNews = remember(searchQuery, news) {
+        news.filter {
             it.title.contains(searchQuery.trim(), ignoreCase = true) ||
             it.source.contains(searchQuery.trim(), ignoreCase = true)
         }
@@ -155,7 +159,7 @@ fun FavoriteListScreen(
                     }
                 }
             }
-            if (favoriteState.coins.isEmpty() && isCoinSelected) {
+            if (coins.isEmpty() && isCoinSelected) {
                 EmptyItemsPlaceholder(
                     modifier = Modifier.align(Alignment.Center),
                     textPlaceholder = "No saved coins to display",
@@ -164,7 +168,7 @@ fun FavoriteListScreen(
                     })
             }
 
-            if (favoriteState.news.isEmpty() && !isCoinSelected) {
+            if (news.isEmpty() && !isCoinSelected) {
                 EmptyItemsPlaceholder(
                     modifier = Modifier.align(Alignment.Center),
                     textPlaceholder = "No saved news to display",
