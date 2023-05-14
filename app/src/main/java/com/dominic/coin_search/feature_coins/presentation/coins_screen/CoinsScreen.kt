@@ -35,7 +35,6 @@ import com.dominic.coin_search.feature_coins.presentation.coins_screen.component
 import com.dominic.coin_search.feature_no_internet.presentation.NoInternetScreen
 import com.dominic.coin_search.navigation.Screens
 import com.dominic.coin_search.ui.theme.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -231,9 +230,10 @@ fun CoinsScreen(
                     CoinCurrencyScreen(
                         coinFiat = coinsState.currencies,
                         onDismissRequest = { selectedCurrency: CoinCurrencyPreference? ->
+                            onDialogToggle()
                             coinsViewModel.onEvent(event = CoinsEvent.RefreshCoins(coinsState.coinCurrencyPreference)).also{
                                 coinsViewModel.onEvent(event = CoinsEvent.SelectCurrency(coinCurrencyPreference = selectedCurrency ?: return@CoinCurrencyScreen))
-                                onDialogToggle()
+
                             }
 
                         })
