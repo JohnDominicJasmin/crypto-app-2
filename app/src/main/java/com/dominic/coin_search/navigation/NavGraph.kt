@@ -15,7 +15,7 @@ import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.F
 
 @ExperimentalMaterialApi
 @Composable
-fun BottomNavGraph(
+fun NavGraph(
     paddingValues: PaddingValues,
     navController: NavHostController,
     onUpdatedCurrency: (String?) -> Unit,
