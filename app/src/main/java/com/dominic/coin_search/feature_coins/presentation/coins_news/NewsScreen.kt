@@ -34,9 +34,10 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 
-const val TRENDING_NEWS_COUNT = 10
+const val TRENDING_NEWS_COUNT = 12
 
 @OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -57,13 +58,14 @@ fun NewsScreen(
 
     val onToggleSaveButton: (Boolean, NewsModel) -> Unit = { isAlreadySaved, news ->
         favoritesViewModel.onEvent(
-            event = if (isAlreadySaved) FavoritesEvent.DeleteNews(news) else FavoritesEvent.AddNews(news))
+            event = if (isAlreadySaved) FavoritesEvent.DeleteNews(news) else FavoritesEvent.AddNews(
+                news))
     }
 
 
 
     LaunchedEffect(true) {
-
+        Timber.v("LaunchedEffect NewsScreen")
         favoritesViewModel.eventFlow.collectLatest { savedListEvent ->
             when (savedListEvent) {
                 is FavoritesUiEvent.ShowToastMessage -> {
@@ -98,35 +100,35 @@ fun NewsScreen(
                                 NewsTitleSection(
                                     title = "Trending News",
                                     modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
-                            }
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                                HorizontalPager(
-                                    count = TRENDING_NEWS_COUNT,
-                                    state = pagerState) { pageIndex ->
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                                    val (news, isSaved) = trendingNews.take(TRENDING_NEWS_COUNT)[pageIndex]
-                                    NewsItemLarge(
-                                        isSavedNews = isSaved,
-                                        newsModel = news,
-                                        onItemClick = { openUrl(news.link!!) },
-                                        onSaveClick = { isAlreadySaved ->
-                                            onToggleSaveButton(isAlreadySaved, news)
-                                        }
+                                    HorizontalPager(
+                                        count = TRENDING_NEWS_COUNT,
+                                        state = pagerState) { pageIndex ->
+
+                                        val (news, isSaved) = trendingNews.take(TRENDING_NEWS_COUNT)[pageIndex]
+                                        NewsItemLarge(
+                                            isSavedNews = isSaved,
+                                            newsModel = news,
+                                            onItemClick = { openUrl(news.link!!) },
+                                            onSaveClick = { isAlreadySaved ->
+                                                onToggleSaveButton(isAlreadySaved, news)
+                                            }
+                                        )
+                                    }
+                                    PagerIndicator(
+                                        pagerState = pagerState,
+                                        modifier = Modifier.padding(vertical = 10.dp)
                                     )
                                 }
-                                PagerIndicator(
-                                    pagerState = pagerState,
-                                    modifier = Modifier.padding(vertical = 10.dp)
-                                )
-
                             }
 
                         }
 
 
                         item {
-                            //TODO: add derivedStateOf here
+
                             val forYouNews = remember {
                                 merge(
                                     state.bearishNews.news,
@@ -145,23 +147,23 @@ fun NewsScreen(
                                             top = 15.dp))
 
                                 }
-                            }
-                            LazyRow(modifier = Modifier.padding(bottom = 12.dp)) {
+                                LazyRow(modifier = Modifier.padding(bottom = 12.dp)) {
 
-                                items(
-                                    items = forYouNews.toList(),
-                                    key = { it.first.id }) { newsModel ->
-                                    val (news, isSaved) = newsModel
-                                    NewsItemSmall(
-                                        modifier = Modifier.widthIn(290.dp),
-                                        newsModel = news,
-                                        onItemClick = { openUrl(news.link!!) },
-                                        onSaveClick = { isAlreadySaved ->
-                                            onToggleSaveButton(isAlreadySaved, news)
-                                        },
-                                        isSavedNews = isSaved
-                                    )
+                                    items(
+                                        items = forYouNews.toList(),
+                                        key = { it.first.id }) { newsModel ->
+                                        val (news, isSaved) = newsModel
+                                        NewsItemSmall(
+                                            modifier = Modifier.widthIn(290.dp),
+                                            newsModel = news,
+                                            onItemClick = { openUrl(news.link!!) },
+                                            onSaveClick = { isAlreadySaved ->
+                                                onToggleSaveButton(isAlreadySaved, news)
+                                            },
+                                            isSavedNews = isSaved
+                                        )
 
+                                    }
 
                                 }
                             }
@@ -176,22 +178,22 @@ fun NewsScreen(
                                     modifier = Modifier.padding(bottom = 10.dp, top = 15.dp))
                             }
 
-                        }
-                        items(
-                            items = latestNews,
-                            key = { it.first.id }) { newsModel ->
-                            val (news, isSaved) = newsModel
-                            NewsItemSmall(
-                                modifier = Modifier.padding(vertical = 2.dp),
-                                newsModel = news,
-                                onItemClick = { openUrl(news.link!!) },
-                                onSaveClick = { isAlreadySaved ->
-                                    onToggleSaveButton(isAlreadySaved, news)
-                                },
-                                isSavedNews = isSaved
-                            )
-                        }
+                            items(
+                                items = latestNews,
+                                key = { it.first.id }) { newsModel ->
+                                val (news, isSaved) = newsModel
+                                NewsItemSmall(
+                                    modifier = Modifier.padding(vertical = 2.dp),
+                                    newsModel = news,
+                                    onItemClick = { openUrl(news.link!!) },
+                                    onSaveClick = { isAlreadySaved ->
+                                        onToggleSaveButton(isAlreadySaved, news)
+                                    },
+                                    isSavedNews = isSaved
+                                )
+                            }
 
+                        }
                     }
                 }
             }
