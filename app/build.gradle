@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.dominic.coin_search"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -46,6 +46,24 @@ android {
                 "-Xjvm-default=all",
         ]
     }
+    subprojects {
+        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = "1.8"
+                if (project.findProperty("myapp.enableComposeCompilerReports") == "true") {
+                    freeCompilerArgs += [
+                            "-P",
+                            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination="+"/home/miko/AndroidStudioProjects/Dash-Coin-App"
+                    ]
+                    freeCompilerArgs += [
+                            "-P",
+                            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination="+"/home/miko/AndroidStudioProjects/Dash-Coin-App"
+                    ]
+                }
+            }
+        }
+    }
+
 
 
     buildFeatures {
@@ -53,12 +71,14 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
+
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
     namespace 'com.dominic.coin_search'
 }
 

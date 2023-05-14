@@ -52,7 +52,7 @@ fun MainScreen(
                 state = bottomBarState.value
             )
         }, content = { innerPadding ->
-            BottomNavGraph(
+            NavGraph(
                 paddingValues = innerPadding,
                 navController = navController,
                 onUpdatedCurrency = onUpdatedCurrency,
