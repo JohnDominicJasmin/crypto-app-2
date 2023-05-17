@@ -118,6 +118,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
 
     //coil
 
@@ -187,5 +189,10 @@ dependencies {
     //accompanist pager indicator
     implementation "com.google.accompanist:accompanist-pager-indicators:0.24.3-alpha"
     implementation "com.google.accompanist:accompanist-webview:0.26.1-alpha"
+
+
+    implementation 'com.opencsv:opencsv:5.5.2'
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
 }
