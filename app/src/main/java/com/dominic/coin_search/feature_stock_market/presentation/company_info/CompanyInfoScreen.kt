@@ -86,7 +86,7 @@ fun CompanyInfoContent(state: CompanyInfoState) {
                 state.company?.let { company ->
 
                     Text(
-                        text = company.name,
+                        text = company.name.takeIf { it.isNotEmpty() } ?: "Company name is unavailable.",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         overflow = TextOverflow.Ellipsis,
@@ -97,7 +97,7 @@ fun CompanyInfoContent(state: CompanyInfoState) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = company.symbol,
+                        text = company.symbol.takeIf { it.isNotEmpty() } ?: "Company Symbol is unavailable.",
                         fontStyle = FontStyle.Italic,
                         fontSize = 14.sp,
                         modifier = Modifier.fillMaxWidth(),
@@ -113,7 +113,7 @@ fun CompanyInfoContent(state: CompanyInfoState) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "Industry: ${company.industry}",
+                        text = if(company.industry.isEmpty()) "Industry is unavailable" else "Industry: ${company.industry}",
                         fontSize = 14.sp,
                         modifier = Modifier.fillMaxWidth(),
                         overflow = TextOverflow.Ellipsis,
@@ -123,7 +123,7 @@ fun CompanyInfoContent(state: CompanyInfoState) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "Country: ${company.country}",
+                        text = if(company.country.isEmpty()) "Country is unavailable" else "Country: ${company.country}",
                         fontSize = 14.sp,
                         modifier = Modifier.fillMaxWidth(),
                         overflow = TextOverflow.Ellipsis,
