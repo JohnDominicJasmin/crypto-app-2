@@ -1,5 +1,6 @@
 package com.dominic.coin_search.core.util
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -33,5 +34,6 @@ object Constants {
     const val MINUTE_MILLIS = 60 * SECOND_MILLIS
     const val HOUR_MILLIS = 60 * MINUTE_MILLIS
     const val DAY_MILLIS = 24 * HOUR_MILLIS
+     val DATA_STORE_INTRO_SLIDER_KEY = booleanPreferencesKey("intro_slider_completed")
 
 }

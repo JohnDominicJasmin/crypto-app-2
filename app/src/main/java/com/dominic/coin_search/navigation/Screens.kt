@@ -19,14 +19,27 @@ sealed class Screens(
     object FavoriteListScreen: Screens(
         route = "favorite_list_screen",
         title = "Favorites",
-        icon = R.drawable.ic_baseline_bookmark_filled
+        icon = R.drawable.save_2_svgrepo_com
     )
 
     object CoinsNews: Screens(
         route = "coins_news",
         title = "News",
-        icon = Icons.Default.List
+        icon = R.drawable.news_svgrepo_com
     )
+
+    object StockMarketScreen: Screens(
+        route = "stock_market_screen",
+        title = "Stock Market",
+        icon = R.drawable.stock_market_svgrepo_com
+    )
+
+    object CompanyInfoScreen: Screens(
+        route = "company_info_screen",
+        title = "Company Info",
+        icon = null
+    )
+
     object CoinDetailScreen: Screens("coin_detail_screen")
 
 

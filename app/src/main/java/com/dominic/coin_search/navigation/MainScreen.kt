@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -108,7 +109,8 @@ fun BottomBar(
     val screens = listOf(
         Screens.CoinsScreen,
         Screens.FavoriteListScreen,
-        Screens.CoinsNews
+        Screens.CoinsNews,
+        Screens.StockMarketScreen
     )
 
 
@@ -132,7 +134,7 @@ fun BottomBar(
 
                     BottomNavigationItem(
                         label = {
-                            Text(text = screen.title!!)
+                            Text(text = screen.title!!, overflow = TextOverflow.Ellipsis, maxLines = 1)
                         },
                         icon = {
                             when (screen.icon) {

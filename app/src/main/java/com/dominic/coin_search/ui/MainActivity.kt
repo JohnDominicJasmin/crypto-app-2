@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContent {
-            DashCoinTheme {
+            DashCoinTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

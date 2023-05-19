@@ -6,12 +6,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_news.NewsScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.CoinsScreen
 import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoriteListScreen
+import com.dominic.coin_search.feature_stock_market.presentation.company_info.CompanyInfoScreen
+import com.dominic.coin_search.feature_stock_market.presentation.company_listings.CompanyListingsScreen
 
 @ExperimentalMaterialApi
 @Composable
@@ -41,6 +45,16 @@ fun NavGraph(
                 onSearchIconToggle = onSearchIconToggle)
         }
 
+        composable(route = "${Screens.CompanyInfoScreen.route}/{symbol}",
+            arguments = listOf(navArgument("symbol"){ type = NavType.StringType }
+        )) {
+            CompanyInfoScreen()
+        }
+
+        composable(route = Screens.StockMarketScreen.route) {
+            CompanyListingsScreen(navController = navController)
+        }
+
         composable(route = Screens.FavoriteListScreen.route) {
             FavoriteListScreen(
                 innerPaddingValues = paddingValues,
@@ -61,6 +75,16 @@ fun NavGraph(
     }
 }
 
+fun NavController.navigateScreenInclusively(
+    destination: String,
+    popUpToDestination: String) {
+    navigate(destination) {
+        popUpTo(popUpToDestination) {
+            inclusive = true
+        }
+        launchSingleTop = true
+    }
+}
 
 fun NavController.navigateScreen(destination: String) {
 
