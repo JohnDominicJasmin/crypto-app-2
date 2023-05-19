@@ -108,7 +108,8 @@ fun BottomBar(
     val screens = listOf(
         Screens.CoinsScreen,
         Screens.FavoriteListScreen,
-        Screens.CoinsNews
+        Screens.CoinsNews,
+        Screens.StockMarketScreen
     )
 
 
