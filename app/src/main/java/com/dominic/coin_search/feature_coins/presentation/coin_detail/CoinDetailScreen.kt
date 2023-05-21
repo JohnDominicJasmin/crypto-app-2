@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.dominic.coin_search.core.util.ConnectionStatus
+import com.dominic.coin_search.core.util.ConnectionStatus.hasInternetConnection
 import com.dominic.coin_search.core.util.Formatters.toFormattedPrice
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.components.*
 import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoritesEvent
@@ -244,7 +245,7 @@ fun CoinDetailScreen(
 
             if (!coinState.hasInternet) {
                 NoInternetScreen(onTryButtonClick = {
-                    if (ConnectionStatus.hasInternetConnection(context)) {
+                    if (context.hasInternetConnection()) {
                         coinDetailViewModel.onEvent(event = CoinDetailEvent.CloseNoInternetDisplay)
                         coinDetailViewModel.onEvent(event = CoinDetailEvent.LoadCoinDetail)
                     }

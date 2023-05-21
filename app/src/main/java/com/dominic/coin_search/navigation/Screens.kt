@@ -37,10 +37,22 @@ sealed class Screens(
     object CompanyInfoScreen: Screens(
         route = "company_info_screen",
         title = "Company Info",
-        icon = null
     )
 
-    object CoinDetailScreen: Screens("coin_detail_screen")
+    object SignInScreen: Screens(
+        route = "sign_in_screen",
+    )
+
+    object SignUpScreen: Screens(
+        route = "sign_up_screen",
+    )
+
+    object EmailAuthScreen: Screens(
+        route = "email_auth_screen",
+    )
+
+    object CoinDetailScreen: Screens(route = "coin_detail_screen")
+
 
 
 

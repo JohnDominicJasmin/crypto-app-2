@@ -28,6 +28,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.dominic.coin_search.R
 import com.dominic.coin_search.core.util.ConnectionStatus
+import com.dominic.coin_search.core.util.ConnectionStatus.hasInternetConnection
 import com.dominic.coin_search.core.util.Formatters.formatToShortNumber
 import com.dominic.coin_search.feature_coins.domain.models.coin.CoinCurrencyPreference
 import com.dominic.coin_search.feature_coins.presentation.coin_currency_screen.CoinCurrencyScreen
@@ -308,7 +309,7 @@ fun CoinsScreen(
 
             if (coinList.isEmpty() && !coinsState.hasInternet) {
                 NoInternetScreen(onTryButtonClick = {
-                    if (ConnectionStatus.hasInternetConnection(context)) {
+                    if (context.hasInternetConnection()) {
                         coinsViewModel.onEvent(event = CoinsEvent.CloseNoInternetDisplay)
                         coinsViewModel.onEvent(event = CoinsEvent.RefreshInformation(coinsState.coinCurrencyPreference))
                     }

@@ -2,11 +2,12 @@ package com.dominic.coin_search.core.util
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 
 object ConnectionStatus {
-    @Suppress("Deprecation")
-    fun hasInternetConnection(context: Context): Boolean =
-        (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo.let { networkInfo->
-            networkInfo?.isConnected == true && networkInfo.isAvailable
-        }
+    fun Context.hasInternetConnection(): Boolean {
+        return NetworkConnectivityUtil(this).hasInternet()
+    }
+
 }
