@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -24,6 +26,7 @@ import com.dominic.coin_search.ui.theme.Black920
 @ExperimentalMaterialApi
 @Composable
 fun MainScreen(
+    navViewModel: NavViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
@@ -31,8 +34,17 @@ fun MainScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val (dialogStateVisible, onDialogToggle) = rememberSaveable { mutableStateOf(false) }
     val (searchBarVisible, onSearchIconToggle) = rememberSaveable { mutableStateOf(false) }
+    val navState by navViewModel.state.collectAsStateWithLifecycle()
     bottomBarState.value =
-        navBackStackEntry?.destination?.route != Screens.CoinDetailScreen.route + "/{coinId}"
+        run {
+
+            navBackStackEntry?.destination?.route != Screens.CoinDetailScreen.route + "/{coinId}" &&
+            navBackStackEntry?.destination?.route != Screens.SignInScreen.route &&
+            navBackStackEntry?.destination?.route != Screens.SignUpScreen.route &&
+            navBackStackEntry?.destination?.route != Screens.EmailAuthScreen.route &&
+            navBackStackEntry?.destination?.route != Screens.IntroSliderScreen.route &&
+            navBackStackEntry?.destination?.route != "${Screens.CompanyInfoScreen.route}/{symbol}"
+        }
 
     Scaffold(topBar = {
         TopAppBar(
@@ -50,21 +62,24 @@ fun MainScreen(
         bottomBar = {
             BottomBar(
                 navController = navController,
-                state = bottomBarState.value
+                bottomBarVisibility = bottomBarState.value
             )
         }, content = { innerPadding ->
-            NavGraph(
-                paddingValues = innerPadding,
-                navController = navController,
-                onUpdatedCurrency = onUpdatedCurrency,
-                searchBarVisible = searchBarVisible,
-                dialogStateVisible = dialogStateVisible,
-                onDialogToggle = {
-                    onDialogToggle(!dialogStateVisible)
-                },
-                onSearchIconToggle = {
-                    onSearchIconToggle(!searchBarVisible)
-                })
+            navState.navigationStartingDestination?.let {
+                NavGraph(
+                    paddingValues = innerPadding,
+                    navController = navController,
+                    onUpdatedCurrency = onUpdatedCurrency,
+                    searchBarVisible = searchBarVisible,
+                    dialogStateVisible = dialogStateVisible,
+                    startingDestination = it,
+                    onDialogToggle = {
+                        onDialogToggle(!dialogStateVisible)
+                    },
+                    onSearchIconToggle = {
+                        onSearchIconToggle(!searchBarVisible)
+                    })
+            }
         })
 }
 
@@ -83,6 +98,7 @@ fun TopAppBar(
                 currencyValue = null,
             )
         }
+
         Screens.CoinsScreen.route -> {
             TopBar(
                 modifier = modifier,
@@ -90,11 +106,18 @@ fun TopAppBar(
                 allowSearchField = currency != null,
                 onCurrencyDialogClick = onCurrencyDialogClick, onSearchClick = onSearchIconToggle)
         }
+
         Screens.FavoriteListScreen.route -> {
             TopBar(
                 modifier = modifier,
                 currencyValue = null,
                 onSearchClick = onSearchIconToggle)
+        }
+
+        Screens.StockMarketScreen.route -> {
+            TopBar(modifier = modifier,
+                allowSearchField = false,
+                currencyValue = null,)
         }
 
 
@@ -104,7 +127,7 @@ fun TopAppBar(
 @Composable
 fun BottomBar(
     navController: NavHostController,
-    state: Boolean
+    bottomBarVisibility: Boolean
 ) {
     val screens = listOf(
         Screens.CoinsScreen,
@@ -116,7 +139,7 @@ fun BottomBar(
 
 
     AnimatedVisibility(
-        visible = state,
+        visible = bottomBarVisibility,
         enter = slideInVertically(initialOffsetY = { it }),
         exit = slideOutVertically(targetOffsetY = { it }),
     ) {
@@ -134,7 +157,10 @@ fun BottomBar(
 
                     BottomNavigationItem(
                         label = {
-                            Text(text = screen.title!!, overflow = TextOverflow.Ellipsis, maxLines = 1)
+                            Text(
+                                text = screen.title!!,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1)
                         },
                         icon = {
                             when (screen.icon) {
@@ -143,6 +169,7 @@ fun BottomBar(
                                         painter = painterResource(screen.icon),
                                         contentDescription = null)
                                 }
+
                                 is ImageVector -> {
                                     Icon(imageVector = screen.icon, contentDescription = null)
                                 }
