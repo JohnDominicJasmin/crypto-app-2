@@ -1,4 +1,4 @@
-package com.dominic.coin_search.feature_intro_slider_screen.repository
+package com.dominic.coin_search.feature_intro_slider_screen.data.repository
 
 import android.content.Context
 import com.dominic.coin_search.core.util.Constants.DATA_STORE_INTRO_SLIDER_KEY

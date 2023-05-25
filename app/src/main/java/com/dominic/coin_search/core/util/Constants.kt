@@ -3,12 +3,12 @@ package com.dominic.coin_search.core.util
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
 object Constants {
     const val COIN_STATS_API_URL = "https://api.coinstats.app/public/"
     const val COIN_PAPRIKA_API_URL = "https://api.coinpaprika.com/"
     const val EXCHANGE_RATE_API_URL = "https://api.exchangerate.host/"
+    const val STOCK_MARKET_API_URL = "https://alphavantage.co"
     const val PARAM_COIN_ID = "coinId" //default value for get coin by id parameter
     const val DATABASE_NAME = "coins_db"
     const val TRENDING_NEWS = "trending"
@@ -61,4 +61,5 @@ object Constants {
     const val EMAIL_AUTH_VM_STATE_KEY = "email_auth_vm_state_key"
     const val SIGN_IN_VM_STATE_KEY = "sign_in_vm_state_key"
     const val SIGN_UP_VM_STATE_KEY = "sign_up_vm_state_key"
+    const val NAV_VM_STATE_KEY = "nav_vm_state_key"
 }
