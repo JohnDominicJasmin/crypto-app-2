@@ -10,9 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,11 +22,13 @@ import com.dominic.coin_search.ui.theme.Black440
 import com.google.accompanist.pager.*
 
 
-private val introSliderItems =
+ val introSliderItems =
     listOf(
         IntroSliderScreenItem.CoinGlobalMarket,
         IntroSliderScreenItem.CoinNewsUpdates,
-        IntroSliderScreenItem.StockMarket
+        IntroSliderScreenItem.ExchangeCurrency,
+        IntroSliderScreenItem.StockMarket,
+
     )
 
 
@@ -91,7 +91,7 @@ fun IntroSliderItem(
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier
                             .fillMaxWidth(0.76f)
-                            .weight(0.2f)
+                            .weight(0.3f)
                    )
 
                     Spacer(modifier = Modifier.weight(0.2f))
