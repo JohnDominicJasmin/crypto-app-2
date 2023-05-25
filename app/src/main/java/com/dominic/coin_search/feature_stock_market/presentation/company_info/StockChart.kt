@@ -1,7 +1,8 @@
-package com.plcoding.stockmarketapp.presentation.company_info
+package com.dominic.coin_search.feature_stock_market.presentation.company_info
 
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -18,8 +19,9 @@ import kotlin.math.roundToInt
 fun StockChart(
     infos: List<IntradayInfo> = emptyList(),
     modifier: Modifier = Modifier,
-    graphColor: Color = Color.Green
+
 ) {
+    val graphColor: Color = MaterialTheme.colors.primary
     val spacing = 100f
     val transparentGraphColor = remember {
         graphColor.copy(alpha = 0.5f)

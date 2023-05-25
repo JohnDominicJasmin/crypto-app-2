@@ -1,9 +1,9 @@
-package com.plcoding.stockmarketapp.di
+package com.dominic.coin_search.core.di
 
 import com.plcoding.stockmarketapp.data.csv.CSVParser
 import com.plcoding.stockmarketapp.data.csv.CompanyListingsParser
 import com.plcoding.stockmarketapp.data.csv.IntradayInfoParser
-import com.plcoding.stockmarketapp.data.repository.StockRepositoryImpl
+import com.dominic.coin_search.feature_stock_market.data.repository.StockRepositoryImpl
 import com.plcoding.stockmarketapp.domain.model.CompanyListing
 import com.plcoding.stockmarketapp.domain.model.IntradayInfo
 import com.plcoding.stockmarketapp.domain.repository.StockRepository
