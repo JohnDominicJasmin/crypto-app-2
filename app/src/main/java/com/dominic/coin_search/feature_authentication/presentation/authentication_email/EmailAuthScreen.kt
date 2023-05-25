@@ -1,4 +1,4 @@
-package com.example.cyclistance.feature_authentication.presentation.authentication_email
+package com.dominic.coin_search.feature_authentication.presentation.authentication_email
 
 import android.content.Intent
 import android.widget.Toast
@@ -52,13 +52,13 @@ import com.dominic.coin_search.feature_authentication.presentation.common.visibl
 import com.dominic.coin_search.navigation.Screens
 import com.dominic.coin_search.navigation.navigateScreenInclusively
 import com.dominic.coin_search.ui.theme.DashCoinTheme
+import com.example.cyclistance.feature_authentication.presentation.authentication_email.EmailAuthViewModel
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 
 @Composable
 fun EmailAuthScreen(
-    isDarkTheme: Boolean,
     emailAuthViewModel: EmailAuthViewModel = hiltViewModel(),
     paddingValues: PaddingValues,
     navController: NavController) {
@@ -184,7 +184,6 @@ fun EmailAuthScreen(
     EmailAuthScreenContent(
         modifier = Modifier.padding(paddingValues),
         emailAuthState = emailAuthState,
-        isDarkTheme = isDarkTheme,
         uiState = uiState,
         event = { event ->
             when (event) {
@@ -203,7 +202,6 @@ fun EmailAuthScreen(
 fun EmailAuthScreenPreview() {
     DashCoinTheme(true) {
         EmailAuthScreenContent(
-            isDarkTheme = true,
             emailAuthState = EmailAuthState(
                 savedAccountEmail = "johndoe@gmail.com",
                 secondsLeft = 10,
@@ -218,7 +216,6 @@ fun EmailAuthScreenPreview() {
 fun EmailAuthScreenContent(
     modifier: Modifier = Modifier,
     emailAuthState: EmailAuthState = EmailAuthState(),
-    isDarkTheme: Boolean,
     uiState: EmailAuthUiState = EmailAuthUiState(),
     event: (EmailUiEvent) -> Unit = {}) {
 
