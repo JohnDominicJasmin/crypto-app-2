@@ -28,19 +28,48 @@ sealed class Screens(
         icon = R.drawable.news_svgrepo_com
     )
 
+
     object StockMarketScreen: Screens(
         route = "stock_market_screen",
         title = "Stock Market",
         icon = R.drawable.stock_market_svgrepo_com
     )
 
+
+
+
+
+
+
+
+    object CoinDetailScreen: Screens(route = "coin_detail_screen")
+
     object CompanyInfoScreen: Screens(
         route = "company_info_screen",
         title = "Company Info",
-        icon = null
     )
 
-    object CoinDetailScreen: Screens("coin_detail_screen")
+
+    object SignInScreen: Screens(
+        route = "sign_in_screen",
+    )
+
+    object SignUpScreen: Screens(
+        route = "sign_up_screen",
+    )
+
+    object EmailAuthScreen: Screens(
+        route = "email_auth_screen",
+    )
+
+
+    object IntroSliderScreen: Screens(
+        route = "intro_slider_screen",
+    )
+
+
+
+
 
 
 

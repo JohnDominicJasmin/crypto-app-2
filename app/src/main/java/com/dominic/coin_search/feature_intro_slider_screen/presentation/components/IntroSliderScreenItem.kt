@@ -20,15 +20,15 @@ sealed class IntroSliderScreenItem(
         description = "Delivers real-time and comprehensive cryptocurrency updates, including news aggregation, empowering users to make informed decisions in the dynamic world of cryptocurrencies."
     )
 
-    /*object ExchangeCurrency : IntroSliderScreenItem(
-        image = R.drawable.,
+    object ExchangeCurrency : IntroSliderScreenItem(
+        image = R.drawable.ic_currency,
         title = "Exchange Rate to any Currency",
-        description = "Delivers real-time and comprehensive cryptocurrency updates, including news aggregation, empowering users to make informed decisions in the dynamic world of cryptocurrencies."
-    )*/
+        description = "Effortlessly compare the value of cryptocurrencies against a comprehensive selection of national and international currencies, providing accurate and up-to-date conversion rates for traders, investors, and the curious."
+    )
 
     object StockMarket: IntroSliderScreenItem(
         image = R.drawable.stock_market,
-        title = "Stock Market Updates",
-        description = "Delivers real-time and comprehensive cryptocurrency updates, including news aggregation, empowering users to make informed decisions in the dynamic world of cryptocurrencies."
+        title = "Stock Market",
+        description = "Stay ahead in the world of company stocks with real-time updates, intuitive charting tools, and valuable insights for informed financial decision-making."
     )
 }

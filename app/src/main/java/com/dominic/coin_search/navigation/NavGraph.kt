@@ -10,12 +10,16 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.dominic.coin_search.feature_authentication.presentation.authentication_sign_in.SignInScreen
+import com.dominic.coin_search.feature_authentication.presentation.authentication_sign_up.SignUpScreen
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.CoinDetailScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_news.NewsScreen
 import com.dominic.coin_search.feature_coins.presentation.coins_screen.CoinsScreen
 import com.dominic.coin_search.feature_favorites.presentation.favorites_screen.FavoriteListScreen
 import com.dominic.coin_search.feature_stock_market.presentation.company_info.CompanyInfoScreen
 import com.dominic.coin_search.feature_stock_market.presentation.company_listings.CompanyListingsScreen
+import com.dominic.coin_search.feature_authentication.presentation.authentication_email.EmailAuthScreen
+import com.dominic.coin_search.feature_intro_slider_screen.presentation.IntroSliderScreen
 
 @ExperimentalMaterialApi
 @Composable
@@ -25,13 +29,14 @@ fun NavGraph(
     onUpdatedCurrency: (String?) -> Unit,
     searchBarVisible: Boolean = false,
     dialogStateVisible: Boolean = false,
+    startingDestination: String,
     onDialogToggle: () -> Unit,
     onSearchIconToggle: () -> Unit,
 ) {
 
     NavHost(
         navController = navController,
-        startDestination = Screens.CoinsScreen.route
+        startDestination = startingDestination
     ) {
 
         composable(route = Screens.CoinsScreen.route) {
@@ -53,6 +58,20 @@ fun NavGraph(
 
         composable(route = Screens.StockMarketScreen.route) {
             CompanyListingsScreen(navController = navController)
+        }
+
+        composable(route = Screens.SignInScreen.route){
+            SignInScreen(paddingValues = paddingValues, navController = navController)
+        }
+
+        composable(route = Screens.SignUpScreen.route){
+            SignUpScreen(paddingValues = paddingValues, navController = navController)
+        }
+        composable(route = Screens.EmailAuthScreen.route){
+            EmailAuthScreen(paddingValues = paddingValues, navController = navController)
+        }
+        composable(route = Screens.IntroSliderScreen.route){
+            IntroSliderScreen(paddingValues = paddingValues, navController = navController)
         }
 
         composable(route = Screens.FavoriteListScreen.route) {

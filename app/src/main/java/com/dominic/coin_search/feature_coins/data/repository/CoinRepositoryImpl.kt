@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.dominic.coin_search.core.util.Constants.CHART_PERIOD
 import com.dominic.coin_search.core.util.Constants.CURRENCY_SYMBOL
 import com.dominic.coin_search.core.util.Constants.CURRENCY
+import com.dominic.coin_search.core.util.extension.dataStore
 import com.dominic.coin_search.feature_coins.data.remote.CoinStatsApi
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toChart
 import com.dominic.coin_search.feature_coins.data.mapper.CoinMapper.toCoinDetail
@@ -33,7 +34,6 @@ import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
-val Context.dataStore by preferencesDataStore(name = "preferences")
 
 class CoinRepositoryImpl @Inject constructor(
     private val coinStatsApi: CoinStatsApi,

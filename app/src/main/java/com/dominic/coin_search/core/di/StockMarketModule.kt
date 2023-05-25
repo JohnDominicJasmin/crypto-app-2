@@ -1,9 +1,10 @@
-package com.plcoding.stockmarketapp.di
+package com.dominic.coin_search.core.di
 
 import android.app.Application
 import androidx.room.Room
+import com.dominic.coin_search.core.util.Constants.STOCK_MARKET_API_URL
 import com.plcoding.stockmarketapp.data.local.StockDatabase
-import com.plcoding.stockmarketapp.data.remote.StockApi
+import com.dominic.coin_search.feature_stock_market.data.remote.StockApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,13 +18,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object StockMarketModule {
 
     @Provides
     @Singleton
     fun provideStockApi(): StockApi {
         return Retrofit.Builder()
-            .baseUrl(StockApi.BASE_URL)
+            .baseUrl(STOCK_MARKET_API_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .client(OkHttpClient.Builder()
                 .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }).build())

@@ -23,7 +23,6 @@ import com.dominic.coin_search.ui.theme.DashCoinTheme
 import com.plcoding.stockmarketapp.domain.model.CompanyInfo
 import com.plcoding.stockmarketapp.domain.model.IntradayInfo
 import com.plcoding.stockmarketapp.presentation.company_info.CompanyInfoState
-import com.plcoding.stockmarketapp.presentation.company_info.StockChart
 import java.time.LocalDateTime
 
 @Composable

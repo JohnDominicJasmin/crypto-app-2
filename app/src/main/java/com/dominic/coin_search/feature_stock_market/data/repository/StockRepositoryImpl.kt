@@ -1,11 +1,11 @@
-package com.plcoding.stockmarketapp.data.repository
+package com.dominic.coin_search.feature_stock_market.data.repository
 
 import com.plcoding.stockmarketapp.data.csv.CSVParser
 import com.plcoding.stockmarketapp.data.local.StockDatabase
 import com.plcoding.stockmarketapp.data.mapper.toCompanyInfo
 import com.plcoding.stockmarketapp.data.mapper.toCompanyListing
 import com.plcoding.stockmarketapp.data.mapper.toCompanyListingEntity
-import com.plcoding.stockmarketapp.data.remote.StockApi
+import com.dominic.coin_search.feature_stock_market.data.remote.StockApi
 import com.plcoding.stockmarketapp.domain.model.CompanyInfo
 import com.plcoding.stockmarketapp.domain.model.CompanyListing
 import com.plcoding.stockmarketapp.domain.model.IntradayInfo

@@ -3,6 +3,7 @@ package com.dominic.coin_search.core.di
 import android.content.Context
 import androidx.annotation.Keep
 import com.dominic.coin_search.core.util.ConnectionStatus
+import com.dominic.coin_search.core.util.ConnectionStatus.hasInternetConnection
 import com.dominic.coin_search.core.util.Constants
 import com.dominic.coin_search.core.util.Constants.HEADER_CACHE_CONTROL
 import com.dominic.coin_search.core.util.Constants.HEADER_PRAGMA
@@ -138,7 +139,7 @@ object CoinsModule {
     fun providesOfflineInterceptor(@ApplicationContext context: Context): Interceptor {
         return Interceptor { chain ->
             var request = chain.request()
-            if (!ConnectionStatus.hasInternetConnection(context)) {
+            if (!context.hasInternetConnection()) {
                 val cacheControl = CacheControl.Builder()
                     .maxStale(900, TimeUnit.DAYS)
                     .build()

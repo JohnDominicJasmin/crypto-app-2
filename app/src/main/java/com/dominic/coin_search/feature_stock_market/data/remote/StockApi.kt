@@ -1,7 +1,6 @@
-package com.plcoding.stockmarketapp.data.remote
+package com.dominic.coin_search.feature_stock_market.data.remote
 
 import com.plcoding.stockmarketapp.data.remote.dto.CompanyInfoDto
-import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -27,6 +26,6 @@ interface StockApi {
 
     companion object {
         const val API_KEY = "G1USXWKX272RK4BP"
-        const val BASE_URL = "https://alphavantage.co"
+
     }
 }

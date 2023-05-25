@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dominic.coin_search.core.util.ConnectionStatus
+import com.dominic.coin_search.core.util.ConnectionStatus.hasInternetConnection
 import com.dominic.coin_search.feature_coins.domain.models.news.NewsModel
 import com.dominic.coin_search.feature_coins.presentation.coin_detail.components.openBrowser
 import com.dominic.coin_search.feature_coins.presentation.coins_news.components.NewsItemLarge
@@ -210,7 +211,7 @@ fun NewsScreen(
 
         if (!state.hasInternet) {
             NoInternetScreen(onTryButtonClick = {
-                if (ConnectionStatus.hasInternetConnection(context)) {
+                if (context.hasInternetConnection()) {
                     newsViewModel.onEvent(event = NewsEvent.CloseNoInternetDisplay)
                     newsViewModel.onEvent(event = NewsEvent.RefreshNews)
                 }

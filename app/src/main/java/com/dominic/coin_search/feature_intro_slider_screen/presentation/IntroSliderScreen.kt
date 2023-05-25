@@ -15,6 +15,8 @@ import androidx.navigation.NavController
 import com.dominic.coin_search.ui.theme.DashCoinTheme
 import com.dominic.coin_search.feature_intro_slider_screen.presentation.components.IntroSliderButtonSection
 import com.dominic.coin_search.feature_intro_slider_screen.presentation.components.IntroSliderItem
+import com.dominic.coin_search.navigation.Screens
+import com.dominic.coin_search.navigation.navigateScreenInclusively
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -32,15 +34,15 @@ fun IntroSliderScreen(
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
     val isOnLastPage by remember {
-        derivedStateOf { pagerState.currentPage == 2 }
+        derivedStateOf { pagerState.currentPage == 3 }
     }
 
     val onClickSkipButton = remember {
         {
             introSliderViewModel.onEvent(event = IntroSliderEvent.UserCompletedWalkThrough)
-            /*navController.navigateScreenInclusively(
+            navController.navigateScreenInclusively(
                 Screens.SignInScreen.route,
-                Screens.IntroSliderScreen.route)*/
+                Screens.IntroSliderScreen.route)
         }
     }
     val onClickNextButton = remember(pagerState.currentPage) {
@@ -48,9 +50,9 @@ fun IntroSliderScreen(
 
             if(isOnLastPage){
                 introSliderViewModel.onEvent(event = IntroSliderEvent.UserCompletedWalkThrough)
-                /* navController.navigateScreenInclusively(
+                 navController.navigateScreenInclusively(
                      Screens.SignInScreen.route,
-                     Screens.IntroSliderScreen.route)*/
+                     Screens.IntroSliderScreen.route)
             }else{
                 scope.launch {
                     pagerState.animateScrollToPage(

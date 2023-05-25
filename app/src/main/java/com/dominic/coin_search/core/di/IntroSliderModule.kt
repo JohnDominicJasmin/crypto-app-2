@@ -1,7 +1,7 @@
 package com.dominic.coin_search.core.di
 
 import android.content.Context
-import com.dominic.coin_search.feature_intro_slider_screen.repository.IntroSliderRepositoryImpl
+import com.dominic.coin_search.feature_intro_slider_screen.data.repository.IntroSliderRepositoryImpl
 import com.dominic.coin_search.feature_intro_slider_screen.domain.repository.IntroSliderRepository
 import com.dominic.coin_search.feature_intro_slider_screen.domain.use_case.IntroSliderUseCase
 import com.dominic.coin_search.feature_intro_slider_screen.domain.use_case.completed_intro_slider.CompletedIntroSliderUseCase
