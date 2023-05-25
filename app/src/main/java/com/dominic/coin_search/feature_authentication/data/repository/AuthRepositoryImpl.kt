@@ -176,6 +176,15 @@ class AuthRepositoryImpl(
                                     message = context.getString(
                                         R.string.no_internet_message)))
                         }
+
+                        if(exception is FirebaseNetworkException){
+                            continuation.resumeWithException(
+                                AuthExceptions.NetworkException(
+                                    message = context.getString(
+                                        R.string.no_internet_message)))
+                            return@addOnCompleteListener
+                        }
+
                         continuation.resumeWithException(
                             AuthExceptions.ConflictFBTokenException(
                                 exception.message
