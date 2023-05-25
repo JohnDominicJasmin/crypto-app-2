@@ -69,7 +69,7 @@ class SignInViewModel @Inject constructor(
                 _state.update { it.copy(isLoading = true) }
                 event.activity?.let {
                     LoginManager.getInstance()
-                        .logInWithReadPermissions(it, listOf("email", "public_profile", "user_friends"))
+                        .logInWithReadPermissions(it, listOf("email", "public_profile", ))
                 }
             }
 
